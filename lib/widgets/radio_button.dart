@@ -4,19 +4,21 @@ import 'package:sis_progress/data%20class/radio_button_handler.dart';
 
 class CustomRadio extends StatefulWidget {
   final RadioButtonHandler handler;
+  VoidCallback? methodParent;
   final List<String> groupValue;
 
-  const CustomRadio({
+  CustomRadio({
+    this.methodParent,
     required this.handler, 
     required this.groupValue, 
     super.key, 
   });
 
   @override
-  State<StatefulWidget> createState() => _CustomRadioState();
+  State<StatefulWidget> createState() => CustomRadioState();
 }
 
-class _CustomRadioState extends State<CustomRadio> {
+class CustomRadioState extends State<CustomRadio> {
   bool selectedFirst = true;
   bool selectedSecond = false;
 
@@ -37,7 +39,7 @@ class _CustomRadioState extends State<CustomRadio> {
                   key: UniqueKey(),
                   onTap: () {
                     setState(() {
-                      widget.handler.visible = false;
+                      widget.methodParent!();
                       widget.handler.value = widget.groupValue[0];
                       selectedFirst = true;
                       selectedSecond = false;
@@ -75,7 +77,8 @@ class _CustomRadioState extends State<CustomRadio> {
                   key: UniqueKey(),
                   onTap: () {
                     setState(() {
-                      widget.handler.visible = true;
+                      widget.methodParent!();
+                      // widget.handler.visible = true;
                       widget.handler.value = widget.groupValue[1];
                       selectedFirst = false;
                       selectedSecond = true;

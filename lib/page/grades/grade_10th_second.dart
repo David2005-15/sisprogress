@@ -22,7 +22,7 @@ class Grade10thSecond extends StatefulWidget {
   final RadioButtonHandler thirdQuest = RadioButtonHandler(value: "SAT");
   final RadioButtonHandler fifthQuest = RadioButtonHandler(value: "Yes");
   final RadioButtonHandler sixthQuest = RadioButtonHandler(value: "Yes");
-  final RadioButtonHandler ninthQuest = RadioButtonHandler(value: "No", visible: false);
+  final RadioButtonHandler ninthQuest = RadioButtonHandler(value: "No");
 
   Grade10thSecond({
     required this.reg,
@@ -40,11 +40,14 @@ class _Grade10thSecond extends State<Grade10thSecond> {
   List<String> yesOrNo = ["Yes", "No"];
   List<String> noOrYes = ["No", "Yes"];
 
-  bool? isVisible = false;
+  final GlobalKey<CustomRadioState> _key = GlobalKey();
+
+  bool isVisible = false;
 
   void changeIsVisible() {
     setState(() {
-      isVisible = widget.ninthQuest.visible;
+      isVisible = !isVisible;
+      // print()
     });
   }
 
@@ -59,7 +62,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
   @override
   void dispose() {
-    timer?.cancel();
+    // timer?.cancel();
     super.dispose();
   }
 
@@ -156,9 +159,9 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 ),
               ),
               buildQuestion("9. Do you wish to provide details of circumstances or qualifications not reflected in the registration form"),
-              CustomRadio(handler: widget.ninthQuest, groupValue: noOrYes),
+              CustomRadio(handler: widget.ninthQuest, groupValue: noOrYes, key: _key, methodParent: changeIsVisible,),
               Visibility(
-                visible: isVisible ?? false,
+                visible: isVisible,
                 maintainSize: false,
                 child: Column(
                   children: <Widget> [
@@ -179,15 +182,22 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                     fontSize: 12,
                     color: const Color(0xffD2DAFF)
                   ),
-                  decoration: const InputDecoration(
-                    enabledBorder: OutlineInputBorder(
+                  decoration: InputDecoration(
+                    hintText: "Type about your activites or work experiance",
+                    hintStyle: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                      fontStyle: FontStyle.normal,
+                      color: const Color(0xffD2DAFF)
+                    ),
+                    enabledBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
                     ),
-                    border: OutlineInputBorder(
+                    border: const OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
                     ),
-                    focusColor: Color(0xffD2DAFF),
-                    focusedBorder: OutlineInputBorder(
+                    focusColor: const Color(0xffD2DAFF),
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xffD2DAFF))
                     ),
                   ),

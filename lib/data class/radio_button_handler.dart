@@ -1,9 +1,9 @@
 class RadioButtonHandler {
   String? value;
-  bool? visible;
+  // bool? visible;
 
   RadioButtonHandler({
     required this.value,
-    this.visible
+    // this.visible
   });
 }
