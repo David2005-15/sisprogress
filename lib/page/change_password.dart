@@ -20,46 +20,37 @@ class ChangePassword extends StatefulWidget {
 class _ChangePassword extends State<ChangePassword> {
   Color color = const Color(0xffD4D4D4);
 
-  bool length8 = false;
-  bool hasNumber = false;
-  bool hasCapital = false;
-  bool hasSmall = false;
-
   bool isVisible = false;
 
-  void changeValidation() {
+  Color capitalLetter = const Color(0xffFE8F8F);
+  Color containNumber= const Color(0xffFE8F8F);
+  Color containSmall = const Color(0xffFE8F8F);
+  Color cotain8charecters = const Color(0xffFE8F8F);
+  Color containSpecial = const Color(0xffFE8F8F);
+
+  void changeColor() {
+    capitalLetter = const Color(0xffFE8F8F);
+    containNumber= const Color(0xffFE8F8F);
+    containSmall = const Color(0xffFE8F8F);
+    cotain8charecters = const Color(0xffFE8F8F);
+    containSpecial = const Color(0xffFE8F8F);
+
     setState(() {
-      length8 = false;
-      hasNumber = false;
-      hasCapital = false;
-      hasSmall = false;
-
-      if(widget.password.text.length >= 8) {
-        length8 = true;
-      }
-
       if(widget.password.text.contains(RegExp(r'[0-9]'))) {
-        hasNumber = true;
+        containNumber = const Color(0xff94B49F);
       }
-
+      
       if(widget.password.text.contains(RegExp(r'[A-Z]'))) {
-        hasCapital = true;
+        capitalLetter = const Color(0xff94B49F);
       }
 
       if(widget.password.text.contains(RegExp(r'[a-z]'))) {
-        hasSmall = true;
+        containSmall = const Color(0xff94B49F);
       }
-    });
-  }
 
-  void changeColor() {
-    setState(() {
-      color = const Color(0xffFE8F8F);
-
-      if(length8 == true && hasNumber == true && hasCapital == true && hasSmall == true) {
-        color = const Color(0xff94B49F);
-      } else {
-        color = const Color(0xffFE8F8F);
+      if(widget.password.text.contains(RegExp(r'[^\w\s]+')) && widget.password.text.length >= 8) {
+        cotain8charecters = const Color(0xff94B49F);
+        containSpecial = const Color(0xff94B49F);
       }
     });
   }
@@ -86,22 +77,40 @@ class _ChangePassword extends State<ChangePassword> {
               setState(() {
                 isVisible = value;
               });
-            }), child: InputBox(controller: widget.password, context: context, isPassword: true, initialValue: "Password", onChanged: (String val) {changeValidation(); changeColor();}, textInputType: TextInputType.text)),
-            Visibility(
-              visible: isVisible,
-              child: Container(
-                  margin: const EdgeInsets.fromLTRB(31, 5, 23, 0),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Aa123456*",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                      color: color
-                    ),
-                  )
-                ),
-            ),
+            }), child: InputBox(controller: widget.password, context: context, isPassword: true, initialValue: "Password", onChanged: (String val) {changeColor();}, textInputType: TextInputType.text)),
+           Visibility(
+                visible: isVisible,
+                child: Container(
+                    margin: const EdgeInsets.fromLTRB(31, 5, 23, 0),
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        children: <TextSpan> [
+                          TextSpan(text: "A", style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            color: capitalLetter,
+                            fontSize: 13
+                          )),
+                          TextSpan(text: "a", style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            color: containSmall,
+                            fontSize: 13
+                          )),
+                          TextSpan(text: 123456.toString(), style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            color: containNumber,
+                            fontSize: 13
+                          )),
+                          TextSpan(text: "*", style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            color: containSpecial,
+                            fontSize: 13
+                          ))
+                        ]
+                      ),
+                    )
+                  ),
+              ),
             InputBox(controller: widget.confirmPassword, context: context, isPassword: true, initialValue: "Confirm Password", onChanged: (String val) {print(val);}, textInputType: TextInputType.text),
             Button(text: "Change password", onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));}, height: 38, width: double.infinity, margin: const EdgeInsets.fromLTRB(22, 47, 22, 10),)
           ],

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:sis_progress/data%20class/date.dart';
 import 'package:sis_progress/widgets/bottom_nav_bar.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
@@ -24,6 +23,7 @@ class Dashboard extends StatefulWidget {
 class _Dashboard extends State<Dashboard> {
   List<Color> colors = [const Color(0xffFCD2D1),const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1)];
   List<String> days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  List<int> weekDays = getDays();
 
   @override
   void initState() {
@@ -42,8 +42,54 @@ class _Dashboard extends State<Dashboard> {
     });
   }
 
+
+  void leftSlide() {
+    print("Hello World");
+    setState(() {
+      List<int> swap = weekDays;
+      DateTime now = DateTime.now();
+      var monthDaysCount = getDaysInMonth(now.year, now.month);
+      
+      for(int i = 0; i < swap.length; i++) {
+        if(swap[i] - 7 < 1) {
+          var temp = 7 - swap[i];
+          swap[i] = monthDaysCount;
+          swap[i] -= temp;
+
+        } else {
+          swap[i] -= 7;
+        }
+      }
+
+      weekDays = swap;
+    });
+  }
+
+  void rightSlide() {
+    print("Hello World");
+    setState(() {
+      List<int> swap = weekDays;
+      DateTime now = DateTime.now();
+      var monthDaysCount = getDaysInMonth(now.year, now.month);
+
+      for(int i = 0; i < swap.length; i++) {
+        if(swap[i] + 7 > monthDaysCount) {
+          var temp = swap[i] + 7;
+          swap[i] = temp - monthDaysCount;
+        } else{
+          swap[i] += 7;
+        }
+      }
+
+      weekDays = swap;
+    });
+  }
+
+  final GlobalKey<LittleCalendarWidget> _key = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
+
     List<int> fonts = getFontSize(MediaQuery.of(context).size.width);
 
     return Scaffold(
@@ -57,12 +103,11 @@ class _Dashboard extends State<Dashboard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget> [
               buildTitle([fonts[0].toDouble(), fonts[1].toDouble()], widget.fullName),
-              buildTileRow([const Color(0xffD2DAFF), const Color(0xffAAC4FF)], [Icon(Icons.rocket, size: 24,), Icon(Icons.calculate, size: 24,)], ["Description", "Description"], [10, 32]),
-              buildTileRow([const Color(0xffFCD2D1), const Color(0xffFE8F8F)], [Icon(Icons.book, size: 24,), Icon(Icons.bar_chart, size: 24,)], ["Description", "Description"], [10, 145]),
-              LittleCalendar(date: "December, 2022", colors: colors, onTaps: onTaps, days: days,),
-              PieChart(context: context, title: "Overall Progress", metadata: const {"points": "1400 / 1600 pt"}),
-              ElevatedButton(onPressed: () {print(MediaQuery.of(context).size.width);}, child: Text("Click"))
-
+              buildTileRow([const Color(0xffD2DAFF), const Color(0xffAAC4FF)], [const Icon(Icons.rocket, size: 24,), const Icon(Icons.calculate, size: 24,)], ["Description", "Description"], [10, 32]),
+              buildTileRow([const Color(0xffFCD2D1), const Color(0xffFE8F8F)], [const Icon(Icons.book, size: 24,), const Icon(Icons.bar_chart, size: 24,)], ["Description", "Description"], [10, 145]),
+              LittleCalendar(date: "December, 2022", colors: colors, onTaps: onTaps, days: days, dayNumber: weekDays, slideFunctions: [leftSlide, rightSlide], key: _key,),
+              PieChart(context: context, title: "Overall Progress", metadata: const {"points": "1400 / 1600 pt"},),
+              // ElevatedButton(onPressed: () {getDaysInMonth(2022, 12);}, child: Text("Click"))
               // buildLittleCalendar("December, 2022")
               // buildChart()
               // Tile(icon: Icon(Icons.rocket, color:Colors.white), point: 15, description: "Descrption", color: Colors.red)
@@ -142,4 +187,35 @@ List<int> getFontSize(double height) {
   return [20, 13];
 }
 
+List<int> getDays() {
+  DateTime today = DateTime.now();
+
+  DateTime firstDayOfTheweek =
+        today.subtract(Duration(days: today.weekday - 1));
+
+  var monday = 26;
+  var monthDays = getDaysInMonth(firstDayOfTheweek.year, firstDayOfTheweek.month);
+
+  List<int> days = [];
+
+  for(int i = 0; i < 7; i++) {
+    days.add(monday);
+    if(monday + 1 > monthDays) {
+      monday = 0;
+    }
+
+    monday += 1;
+  }
+
+  return days;
+}
+
+int getDaysInMonth(int year, int month) {
+  if (month == DateTime.february) {
+    final bool isLeapYear = (year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0);
+    return isLeapYear ? 29 : 28;
+  }
+  const List<int> daysInMonth = <int>[31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  return daysInMonth[month - 1];
+}
 

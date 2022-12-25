@@ -55,20 +55,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
   Timer? timer;
 
   @override
-  void initState() {
-    super.initState();
-    // timer = Timer.periodic(const Duration(milliseconds: 100), (Timer t) => changeIsVisible());
-  }
-
-  @override
-  void dispose() {
-    // timer?.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // changeIsVisible();
 
     return Scaffold(
       appBar: CustomAppBar(buildLogoIcon(), List.empty()),
@@ -90,17 +77,17 @@ class _Grade10thSecond extends State<Grade10thSecond> {
               buildActivity([1, 2, 1], widget.activites, ["Write", "Chemestry", "Math"]),
               buildQuestion("2. Are you applying from a school outside the US and Canada?"),
               // buildAnswer(getSeconeQuest, secondQuestion, secondQuest),
-              CustomRadio(handler: widget.secondQuest, groupValue: secondQuestion),
+              CustomRadio(handler: widget.secondQuest, groupValue: secondQuestion, methodParent: () => print("Hello")),
               buildQuestion("3. Do you wish to submit SAT or ACT test scores?"),
-              CustomRadio(handler: widget.thirdQuest, groupValue: thirdQuestion),
+              CustomRadio(handler: widget.thirdQuest, groupValue: thirdQuestion, methodParent: () => print("Hello")),
               buildQuestion("4. What is your current or most recent secondary/high school?"),
               InputBox(textInputType: TextInputType.text, onChanged: (String val) {print("Hello World");}, context: context, controller: widget.controller, isPassword: false, initialValue: "School"),
               buildQuestion("5. Do you wish to report any honors related to your aademic achievements?"),
               // buildAnswer(getFifthQuest, yesOrNo, fifthQuest),
-              CustomRadio(handler: widget.fifthQuest, groupValue: yesOrNo),
+              CustomRadio(handler: widget.fifthQuest, groupValue: yesOrNo, methodParent: () => print("Hello")),
               buildQuestion("6. Did you take any admission tests?"),
               // buildAnswer(getSixthQuest, yesOrNo, sixthQuest),
-              CustomRadio(handler: widget.sixthQuest, groupValue: yesOrNo),
+              CustomRadio(handler: widget.sixthQuest, groupValue: yesOrNo, methodParent: () => print("Hello")),
               buildQuestion("7. Please report up to 10 activities that can help colleges better understand your life outside of the classroom"),
               buildActivity([2, 1, 1], widget.activites2, ["Reading", "Sport", "Run"]),
               buildActivity([1, 2, 1], widget.activites2, ["Games", "Writing", "Walk"]),

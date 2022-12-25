@@ -4,11 +4,11 @@ import 'package:sis_progress/data%20class/radio_button_handler.dart';
 
 class CustomRadio extends StatefulWidget {
   final RadioButtonHandler handler;
-  VoidCallback? methodParent;
+  final VoidCallback methodParent;
   final List<String> groupValue;
 
-  CustomRadio({
-    this.methodParent,
+  const CustomRadio({
+    required this.methodParent,
     required this.handler, 
     required this.groupValue, 
     super.key, 
@@ -36,10 +36,10 @@ class CustomRadioState extends State<CustomRadio> {
                 width: 24,
                 height: 24,
                 child: InkWell(
-                  key: UniqueKey(),
+                  // key: UniqueKey(),
                   onTap: () {
                     setState(() {
-                      widget.methodParent!();
+                      widget.methodParent();
                       widget.handler.value = widget.groupValue[0];
                       selectedFirst = true;
                       selectedSecond = false;
@@ -74,10 +74,11 @@ class CustomRadioState extends State<CustomRadio> {
                 width: 24,
                 height: 24,
                 child: InkWell(
-                  key: UniqueKey(),
+                  // key: UniqueKey(),
                   onTap: () {
                     setState(() {
-                      widget.methodParent!();
+                      widget.methodParent();
+                      // widget.methodParent!();
                       // widget.handler.visible = true;
                       widget.handler.value = widget.groupValue[1];
                       selectedFirst = false;

@@ -130,15 +130,15 @@ Container buildLowerRow(bool isVisible, Function(bool?) onChange, BuildContext c
     child: FittedBox(
       fit: BoxFit.contain,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget> [
           Container(
-            margin: const EdgeInsets.fromLTRB(20, 5, 0, 0),
+            margin: const EdgeInsets.fromLTRB(5, 5, 15, 0),
             child: Row(
               children: <Widget> [
                 CustomCheckBox(
-                  borderRadius: 2,
+                  borderRadius: 5,
                   uncheckedFillColor: Colors.transparent,
                   checkedFillColor: const Color(0xff355CCA),
                   uncheckedIcon: Icons.check,
@@ -160,7 +160,7 @@ Container buildLowerRow(bool isVisible, Function(bool?) onChange, BuildContext c
           ),
     
           Container(
-            margin: const EdgeInsets.fromLTRB(0, 5, 20, 0),
+            margin: const EdgeInsets.fromLTRB(15, 5, 5, 0),
             child: TextButton(
               child: Text(
                 "Forget Password?",

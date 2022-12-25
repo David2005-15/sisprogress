@@ -34,10 +34,10 @@ class _Grade9thFirst extends State<Grade9thFirst> {
   List<String> plans = ["Early Desicion", "Regular Desicion"];
   List<String> scores = ["Yes", "No"];
   List<String> legacys = ["Yes", "No"];
-  // String term = "Start term";
-  // String plan = "Early Desicion";
-  // String score = "Yes";
-  // String legacy = "Yes";
+  String term = "Start term";
+  String plan = "Early Desicion";
+  String score = "Yes";
+  String legacy = "Yes";
 
   // void changeTerms(String? item) {
   //   setState(() {
@@ -85,16 +85,16 @@ class _Grade9thFirst extends State<Grade9thFirst> {
               // CustomRadio(value: term, groupValue: terms),
               buildQuestion("1. Preferred start term (mandatory)"),
               // buildAnswer(changeTerms, terms, term),
-              CustomRadio(handler: widget.term, groupValue: terms,),
+              CustomRadio(handler: widget.term, groupValue: terms, methodParent: () => print("Hello")),
               buildQuestion("2. Preferred admission plan."),
               // buildAnswer(changePlan, plans, plan),
-              CustomRadio(handler: widget.plan, groupValue: plans),
+              CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => print("Hello"),),
               buildQuestion("3. Do you instead to pursue need-based finanial AID?"),
               // buildAnswer(changeScore, scores, score),
-              CustomRadio(handler: widget.score, groupValue: scores),
+              CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => print("Hello")),
               buildQuestion("4. Are you a legacy?"),
               // buildAnswer(changeLegacy, legacys, legacy),
-              CustomRadio(handler: widget.legacy, groupValue: legacys),
+              CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => print("Hello")),
             
               Container(
                 padding: const EdgeInsets.fromLTRB(0, 27, 0, 0),
