@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:sis_progress/data%20class/graph_data.dart';
 import 'package:sis_progress/widgets/bottom_nav_bar.dart';
+import 'package:sis_progress/widgets/dashboard/graph.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart.dart';
+import 'package:sis_progress/widgets/dashboard/pie_chart_with_progress.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/tile.dart';
-
 import '../../widgets/dashboard/little_calendar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -21,6 +23,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _Dashboard extends State<Dashboard> {
+  final int index = 0;
+
   List<Color> colors = [const Color(0xffFCD2D1),const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1)];
   List<String> days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   List<int> weekDays = getDays();
@@ -91,13 +95,28 @@ class _Dashboard extends State<Dashboard> {
   Widget build(BuildContext context) {
 
     List<int> fonts = getFontSize(MediaQuery.of(context).size.width);
+    final List<GraphData> chartData = [
+      GraphData(0, 37),
+      GraphData(5, 33),
+      GraphData(10, 30),
+      GraphData(15, 27),
+      GraphData(20, 26),
+      GraphData(25, 23)
+    ];
 
-    return Scaffold(
-      bottomNavigationBar: const NavBar(),
-      appBar: CustomAppBar(buildLogoIcon(), List.empty()),
-      body: Container(
+    final List<GraphData> chartLine = [
+      GraphData(0, 35),
+      GraphData(5, 30),
+      GraphData(10, 25),
+      GraphData(15, 20),
+      GraphData(20, 15),
+      GraphData(25, 10)
+    ];
+
+    return Container(
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
+          
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,16 +125,13 @@ class _Dashboard extends State<Dashboard> {
               buildTileRow([const Color(0xffD2DAFF), const Color(0xffAAC4FF)], [const Icon(Icons.rocket, size: 24,), const Icon(Icons.calculate, size: 24,)], ["Description", "Description"], [10, 32]),
               buildTileRow([const Color(0xffFCD2D1), const Color(0xffFE8F8F)], [const Icon(Icons.book, size: 24,), const Icon(Icons.bar_chart, size: 24,)], ["Description", "Description"], [10, 145]),
               LittleCalendar(date: "December, 2022", colors: colors, onTaps: onTaps, days: days, dayNumber: weekDays, slideFunctions: [leftSlide, rightSlide], key: _key,),
+              Graph(data: chartData, lineData: chartLine,),
               PieChart(context: context, title: "Overall Progress", metadata: const {"points": "1400 / 1600 pt"},),
-              // ElevatedButton(onPressed: () {getDaysInMonth(2022, 12);}, child: Text("Click"))
-              // buildLittleCalendar("December, 2022")
-              // buildChart()
-              // Tile(icon: Icon(Icons.rocket, color:Colors.white), point: 15, description: "Descrption", color: Colors.red)
+              const PieChartWithProgressBar(values: <int>[45, 65, 2, 3, 1]),
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -218,4 +234,3 @@ int getDaysInMonth(int year, int month) {
   const List<int> daysInMonth = <int>[31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   return daysInMonth[month - 1];
 }
-

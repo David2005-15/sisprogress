@@ -1,12 +1,13 @@
 import 'package:custom_check_box/custom_check_box.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sis_progress/page/dashboard/dashboard.dart';
 import 'package:sis_progress/page/forgot_password.dart';
 import 'package:sis_progress/page/registration.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/input_box.dart';
+
+import 'dashboard/scaffold_keeper.dart';
 
 class LoginPage extends StatefulWidget {
   final TextEditingController fullName = TextEditingController();
@@ -54,7 +55,7 @@ class _LoginPage extends State<LoginPage> {
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                 child: Button(text: "Log In", onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(fullName: widget.fullName.text,)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
                 }, height: 38, width: 280)
               ),
               Container(
