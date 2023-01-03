@@ -6,6 +6,7 @@ import 'package:sis_progress/data%20class/registration_data_grade9.dart';
 import 'package:sis_progress/page/grades/grade_9th_first.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
+import 'package:sis_progress/widgets/drawers/network_row.dart';
 import 'package:sis_progress/widgets/drop_down.dart';
 import 'package:sis_progress/widgets/input_box.dart';
 import 'package:sis_progress/widgets/progress/progress_bar.dart';
@@ -174,6 +175,7 @@ class _Registration extends State<Registration> {
               InputBox(controller: widget.country, context: context, isPassword: false, initialValue: "Country", onChanged: (String val) {print(val);}, textInputType: TextInputType.text),
               // InputBox(controller: widget.grade, context: context, isPassword: false, initialValue: "Grade",),
               DropDown(context: context, dropDownDataClass: widget.dropDown),
+              const NetworkRow(),
               Button(text: "Next", height: 38, width: double.infinity, onPressed: () {
                 if(widget.dropDown.value == "9th Grade") {
                   widget.registration.fullName = widget.fullName.text;

@@ -41,60 +41,63 @@ class _DropDown extends State<DropDown> {
 
     return Container(
       margin: EdgeInsets.fromLTRB(23, getTopMargin(widget.context), 23, 0),
-      child: DropdownButtonFormField(
-        hint: Text(
-          "Grade",
-          style:  GoogleFonts.poppins(
+      child: Center(
+        child: DropdownButtonFormField(
+          // isExpanded: true,
+          hint: Text(
+            "Grade",
+            style:  GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: 15,
+              color: const Color(0xffD2DAFF),
+            ),
+          ),
+          dropdownColor: const Color(0xffD2DAFF),
+          decoration: const InputDecoration(
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
+            ),
+        
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
+            ),
+        
+            focusColor: Color(0xffD2DAFF)
+          ),
+          style: GoogleFonts.poppins(
             fontWeight: FontWeight.w400,
             fontSize: 15,
-            color: const Color(0xffD2DAFF),
+            color: const Color(0xff121623),
           ),
+          value: widget.dropDownDataClass.value,
+          onSaved: (value) {
+            setState(() {
+              widget.dropDownDataClass.value = value;
+            });
+          },
+          items: items,
+          onChanged: (value) {
+            setState(() {
+              widget.dropDownDataClass.value = value;
+            });
+          },
+        
+          selectedItemBuilder: (context) {
+            return ["9th Grade", "10th Grade"].map<Widget>((e) {
+              return DropdownMenuItem(
+                value: e,
+                child: Text(
+                  e,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),                  
+                ),
+              );
+            }).toList();
+          },
         ),
-        dropdownColor: const Color(0xffD2DAFF),
-        decoration: const InputDecoration(
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
-          ),
-      
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
-          ),
-      
-          focusColor: Color(0xffD2DAFF)
-        ),
-        style: GoogleFonts.poppins(
-          fontWeight: FontWeight.w400,
-          fontSize: 15,
-          color: const Color(0xff121623),
-        ),
-        value: widget.dropDownDataClass.value,
-        onSaved: (value) {
-          setState(() {
-            widget.dropDownDataClass.value = value;
-          });
-        },
-        items: items,
-        onChanged: (value) {
-          setState(() {
-            widget.dropDownDataClass.value = value;
-          });
-        },
-      
-        selectedItemBuilder: (context) {
-          return ["9th Grade", "10th Grade"].map<Widget>((e) {
-            return DropdownMenuItem(
-              value: e,
-              child: Text(
-                e,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 15,
-                  color: const Color(0xffD2DAFF),
-                ),                  
-              ),
-            );
-          }).toList();
-        },
       ),
     );
   }

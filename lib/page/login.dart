@@ -5,6 +5,7 @@ import 'package:sis_progress/page/forgot_password.dart';
 import 'package:sis_progress/page/registration.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
+import 'package:sis_progress/widgets/drawers/network_row.dart';
 import 'package:sis_progress/widgets/input_box.dart';
 
 import 'dashboard/scaffold_keeper.dart';
@@ -23,6 +24,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   bool isVisible = false;
+  Color iconColor = Colors.transparent;
+  Color borderColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +50,27 @@ class _LoginPage extends State<LoginPage> {
               InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.fullName, isPassword: false, initialValue: "Full Name"),
               InputBox(textInputType: TextInputType.emailAddress, onChanged: (String val) {print(val);}, context: context, controller: widget.email, isPassword: false, initialValue: "Email"),
               InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.password, isPassword: true, initialValue: "Password"),
-              buildLowerRow(isVisible, (val) {
+              buildLowerRow(isVisible, () {
                 setState(() {
-                  isVisible = val ?? false;
+                  isVisible = !isVisible;
+                  if(isVisible) {
+                    iconColor = const Color(0xff355CCA);
+                    borderColor = const Color(0xff355CCA);
+                  } else {
+                    iconColor = Colors.transparent;
+                    borderColor = const Color(0xffBFBFBF);
+                  }
                 });
-              }, context),
+              }, context, iconColor, borderColor),
+              const NetworkRow(),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                 child: Button(text: "Log In", onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
                 }, height: 38, width: 280)
               ),
+
+
               Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.fromLTRB(35, 30, 35, 20),
@@ -101,6 +114,8 @@ class _LoginPage extends State<LoginPage> {
   }
 }
 
+
+
 Image buildLogoIcon() {
   return Image.asset(
     "assets/logo.png",
@@ -126,7 +141,7 @@ Container buildTitle() {
   );
 }
 
-Container buildLowerRow(bool isVisible, Function(bool?) onChange, BuildContext context) {
+Container buildLowerRow(bool isVisible, Function() onChange, BuildContext context, Color iconColor, Color borderColor) {
   return Container(
     child: FittedBox(
       fit: BoxFit.contain,
@@ -138,16 +153,8 @@ Container buildLowerRow(bool isVisible, Function(bool?) onChange, BuildContext c
             margin: const EdgeInsets.fromLTRB(5, 5, 15, 0),
             child: Row(
               children: <Widget> [
-                CustomCheckBox(
-                  borderRadius: 5,
-                  uncheckedFillColor: Colors.transparent,
-                  checkedFillColor: const Color(0xff355CCA),
-                  uncheckedIcon: Icons.check,
-                  uncheckedIconColor: Colors.transparent,
-                  borderColor: const Color(0xffAAC4FF),
-                  value: isVisible, 
-                  onChanged: onChange
-                ),
+                buildCheckbox(iconColor: iconColor, borderColor: borderColor, onChange: onChange),
+                
                 Text(
                   "Remember me",
                   style: GoogleFonts.poppins(
@@ -178,6 +185,24 @@ Container buildLowerRow(bool isVisible, Function(bool?) onChange, BuildContext c
           )
         ],
       ),
+    ),
+  );
+}
+
+Container buildCheckbox({required Color iconColor, required Function() onChange, required Color borderColor}) {
+  return Container(
+    margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+    width: 24,
+    height: 24,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(5),
+      border: Border.all(color: borderColor, width: 1),
+      color: Colors.transparent
+    ),
+
+    child: InkWell(
+      onTap: onChange,
+      child: Icon(Icons.check, color: iconColor, size: 11,),
     ),
   );
 }

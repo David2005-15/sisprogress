@@ -20,6 +20,7 @@ dependencies:
   custom_check_box: ^0.0.4
   dropdown_button2: ^1.9.2
   syncfusion_flutter_charts: ^20.4.38
+  dropdownfield: ^1.0.3
   intl: ^0.17.0
   dio: ^4.0.6
 
