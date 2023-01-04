@@ -18,6 +18,7 @@ class NavBar extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(10, 5, 10, 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),     
+        color: Colors.transparent
       ),
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -39,6 +40,10 @@ class NavBar extends StatelessWidget {
               label: "Home"
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month_outlined, size: 24,),
+              label: "Calendar"
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.rocket_outlined, size: 24),
               label: "Dashboard"
             ),
@@ -49,7 +54,7 @@ class NavBar extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.people_outlined, size: 24,),
               label: "Profile"
-            )
+            ),
           ],
           currentIndex: selected,
           onTap: onChange,

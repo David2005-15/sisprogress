@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
 
 import '../../widgets/dashboard/profile_university_tile.dart';
 
@@ -13,6 +14,7 @@ class Profile extends StatefulWidget {
 
 class _Profile extends State<Profile> {
   bool isEditable = false;
+  bool editPersonal = false;
 
   void changeMode() {
     setState(() {
@@ -26,6 +28,19 @@ class _Profile extends State<Profile> {
     });
   }
 
+  void onPersonalEdit() {
+    setState(() {
+      editPersonal = true;
+    });
+  }
+
+  void onPersonalSave() {
+    setState(() {
+      editPersonal = false;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,6 +49,78 @@ class _Profile extends State<Profile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget> [
             buildTitle(),
+            Container(
+              width: double.infinity,
+              height: 200,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                    width: 120,
+                    height: 120,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: const CircleAvatar(
+                              backgroundColor: Colors.yellow,
+                              radius: 55,
+                            ),
+                          ),
+                        ),
+                  
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: InkWell(
+                            onTap: () {},
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle
+                              ),
+                              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: const Icon(
+                                Icons.camera_outlined,
+                                size: 30,
+                              )
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget> [
+                      Text(
+                        "Montana",
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                          color: Colors.white
+                        ),
+                      ),
+                      Text(
+                        "Yerevan, Armenia",
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          color: const Color(0xffBFBFBF)
+                        ),
+                      )
+                    ],
+                  )     
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget> [
@@ -43,7 +130,8 @@ class _Profile extends State<Profile> {
               ],
             ),
 
-            UniversityTile(onEdit: changeMode, mode: isEditable, onSave: onSave,)
+            UniversityTile(onEdit: changeMode, mode: isEditable, onSave: onSave,),
+            PersonalDetails(mode: editPersonal, onEdit: onPersonalEdit, onSave: onPersonalSave,)
           ],
         ),
       ),

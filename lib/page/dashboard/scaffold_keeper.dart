@@ -7,6 +7,7 @@ import 'package:sis_progress/page/dashboard/profile.dart';
 import 'package:sis_progress/widgets/bottom_nav_bar.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 
+import 'calendar_page.dart';
 import 'lectures.dart';
 
 class ScaffoldHome extends StatefulWidget {
@@ -21,7 +22,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   int _selected = 0;
   late Widget body;
 
-  List<Widget> pages = [const Dashboard(fullName: "Montana",), const ExploreMoreGoals(), const Lectures(), const Profile()]; 
+  List<Widget> pages = [const Dashboard(fullName: "Montana",), const CalendarPage(), const ExploreMoreGoals(), const Lectures(), const Profile()]; 
 
   Future<bool> _onBackButtonPressed() {
     setState(() {

@@ -25,7 +25,7 @@ class _UniversityTile extends State<UniversityTile> {
   late TextEditingController _controller2;
   late TextEditingController _controller3;
   late TextEditingController _controller4;
-  List<String> items = ['Harvard University', 'MIT', 'Standford', ''];
+  List<String> items = ['Harvard University', 'MIT', 'Standford'];
 
   @override
   void initState() {
