@@ -180,7 +180,7 @@ class PieChart extends StatelessWidget {
 }
 
 List<int> getFontSize(double height) {
-  if(height > 400) {
+  if(height > 500) {
     return [25, 22, 18, 100, 90, 20];
   } else if(height < 360) {
     return [14, 12, 12, 40, 30, 0];
