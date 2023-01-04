@@ -125,6 +125,7 @@ Image buildLogoIcon() {
 Container buildTitle() {
   return Container(
     margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+    // alignment: Alignment.centerLeft,
     child: FittedBox(
       fit: BoxFit.contain,
       child: Text(

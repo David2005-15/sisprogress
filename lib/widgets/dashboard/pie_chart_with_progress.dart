@@ -94,7 +94,7 @@ class _PieChart extends State<PieChartWithProgressBar> {
 
 
 List<double> getPointerSize(double width) {
-  if(width > 400) {
+  if(width > 500) {
     return [-100, -80, -60, -40, -20];
   } else if(width < 360) {
     return [50, 70, 90, 110, 130];
@@ -106,7 +106,7 @@ List<double> getPointerSize(double width) {
 }
 
 List<double> getTextPlace(double width) {
-  if(width > 400) {
+  if(width > 500) {
     return [-115, -95, -75, -55, -35];
   } else if(width < 360) {
     return [35, 55, 75, 95, 115];
@@ -173,7 +173,7 @@ class LinearProgressIndicator extends CustomPainter {
 }
 
 Map<String, List<double>> getPoint(double width) {
-  if(width > 400) {
+  if(width > 500) {
     return {
       "first": [40, 50],
       "second": [40, 80],
@@ -193,7 +193,7 @@ Map<String, List<double>> getPoint(double width) {
 }
 
 Map<String, List<double>> getPointCoord(double width) {
-  if(width > 400) {
+  if(width > 500) {
     return {
       "first": [95, 90],
       "second": [90, 120],
@@ -277,7 +277,7 @@ class ProgressBarPainter extends CustomPainter {
 }
 
 List<double> getProgressBarSize(double width) {
-  if(width > 400) {
+  if(width > 500) {
     return [200, 185, 170, 155, 140];
   } else if(width < 360) {
     return [80, 65, 50, 35, 20];
@@ -289,7 +289,7 @@ List<double> getProgressBarSize(double width) {
 }
 
 List<double> getContainerSize(double width) {
-  if(width > 400) {
+  if(width > 500) {
     return [300, 300];
   } else if(width < 360) {
     return [140, 75];
@@ -301,7 +301,7 @@ List<double> getContainerSize(double width) {
 }
 
 List<int> getFontSize(double height) {
-  if(height > 400) {
+  if(height > 500) {
     return [25, 22, 18, 100, 90, 20];
   } else if(height < 360) {
     return [14, 12, 12, 40, 30, 0];

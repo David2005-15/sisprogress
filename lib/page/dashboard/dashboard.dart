@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:sis_progress/data%20class/graph_data.dart';
 import 'package:sis_progress/widgets/bottom_nav_bar.dart';
+import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/dashboard/graph.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart_with_progress.dart';

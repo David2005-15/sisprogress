@@ -5,8 +5,10 @@ class CustomAppBar extends AppBar {
   final Widget child;
   final List<Widget> action;
 
+
   CustomAppBar(this.child, this.action, {super.key}):super(
     automaticallyImplyLeading: false,
+    centerTitle: false,
     backgroundColor: Colors.transparent,
     elevation: 0,
     actions: action,

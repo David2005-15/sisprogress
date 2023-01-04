@@ -115,7 +115,7 @@ class CalendarTile extends StatelessWidget {
 }
 
 List<int> getSize(double width) {
-  if(width > 400) {
+  if(width > 500) {
     return [60, 83, 18, 20];
   }
 

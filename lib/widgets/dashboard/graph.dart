@@ -181,7 +181,7 @@ int getFontSize(double width) {
 }
 
 int getChartSize(double width) {
-  if(width > 400) {
+  if(width > 500) {
     return 250;
   }
 
