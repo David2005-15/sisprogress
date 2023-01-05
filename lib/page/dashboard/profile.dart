@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
-
 import '../../widgets/dashboard/profile_university_tile.dart';
 
 class Profile extends StatefulWidget {
@@ -15,6 +17,17 @@ class Profile extends StatefulWidget {
 class _Profile extends State<Profile> {
   bool isEditable = false;
   bool editPersonal = false;
+  XFile? _image;
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future getImage() async {
+    var image = await _picker.pickImage(source: ImageSource.gallery, maxWidth: 120, maxHeight: 120);
+
+    setState(() {
+      _image = image;
+    });
+  }
 
   void changeMode() {
     setState(() {
@@ -66,8 +79,12 @@ class _Profile extends State<Profile> {
                             width: 100,
                             height: 100,
                             margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            child: const CircleAvatar(
+                            child: CircleAvatar(
                               backgroundColor: Colors.yellow,
+                              backgroundImage: _image != null ? Image.file(
+                                File(_image!.path),
+                                fit: BoxFit.contain,
+                              ).image : Image.asset("assets/logo.png").image,
                               radius: 55,
                             ),
                           ),
@@ -76,7 +93,7 @@ class _Profile extends State<Profile> {
                         Align(
                           alignment: Alignment.bottomRight,
                           child: InkWell(
-                            onTap: () {},
+                            onTap: getImage,
                             child: Container(
                               width: 50,
                               height: 50,

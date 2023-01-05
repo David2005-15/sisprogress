@@ -20,6 +20,7 @@ class NavBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),     
         color: Colors.transparent
       ),
+      height: 60,
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         child: BottomNavigationBar(
@@ -34,6 +35,7 @@ class NavBar extends StatelessWidget {
           selectedItemColor: const Color(0xffAAC4FF),
           showSelectedLabels: true,
           showUnselectedLabels: false,
+
           items: const <BottomNavigationBarItem> [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined, size: 24,),
@@ -62,5 +64,4 @@ class NavBar extends StatelessWidget {
     ),
   );
   }
-
 }

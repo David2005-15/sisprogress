@@ -21,7 +21,7 @@ class CalendarWidget extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            children: [
+            children: <Widget> [
               RichText(
                 text: TextSpan(
                   text: "December ",
@@ -46,9 +46,9 @@ class CalendarWidget extends StatelessWidget {
               PopupMenuButton(
                 onSelected: onSelected,
                 offset: Offset(20, 50),
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back_outlined, 
-                  color: const Color(0xffB1B2FF)
+                  color: Color(0xffB1B2FF)
                 ),
                 color: const Color(0xff3A3D4C),
                 itemBuilder: (BuildContext context) {  
@@ -63,6 +63,69 @@ class CalendarWidget extends StatelessWidget {
               )
             ],
           ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget> [
+              Text(
+                "M",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 24,
+                  color: const Color(0xffB1B2FF)
+                ),
+              ),
+              Text(
+                "T",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 24,
+                  color: const Color(0xffB1B2FF)
+                ),
+              ),
+              Text(
+                "W",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 24,
+                  color: const Color(0xffB1B2FF)
+                ),
+              ),
+              Text(
+                "T",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 24,
+                  color: const Color(0xffB1B2FF)
+                ),
+              ),
+              Text(
+                "F",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 24,
+                  color: const Color(0xffB1B2FF)
+                ),
+              ),
+              Text(
+                "S",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 24,
+                  color: const Color(0xffB1B2FF)
+                ),
+              ),
+              Text(
+                "S",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 24,
+                  color: const Color(0xffB1B2FF)
+                ),
+              )
+            ],
+          )
         ],
       )
     );

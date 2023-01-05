@@ -22,6 +22,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.4.38
   dropdownfield: ^1.0.3
   table_calendar: ^3.0.8
+  image_picker: ^0.8.6
   intl: ^0.17.0
   dio: ^4.0.6
 
