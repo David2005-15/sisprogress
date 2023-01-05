@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,11 +18,12 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 5, 10, 14),
+      // alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),     
         color: Colors.transparent
       ),
-      height: 60,
+      height: Platform.isIOS ? 86 : 60,
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         child: BottomNavigationBar(
@@ -55,13 +58,13 @@ class NavBar extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.people_outlined, size: 24,),
-              label: "Profile"
-            ),
-          ],
-          currentIndex: selected,
-          onTap: onChange,
+                label: "Profile"
+              ),
+            ],
+            currentIndex: selected,
+            onTap: onChange,
+        ),
       ),
-    ),
-  );
+    );
   }
 }
