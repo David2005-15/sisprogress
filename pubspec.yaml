@@ -13,13 +13,13 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  custom_navigation_bar: ^0.8.2
   google_fonts: ^3.0.1
   flutter_svg: ^1.1.6
   percent_indicator: ^4.0.1
   custom_check_box: ^0.0.4
   dropdown_button2: ^1.9.2
   syncfusion_flutter_charts: ^20.4.38
+  permission_handler: ^10.2.0
   dropdownfield: ^1.0.3
   table_calendar: ^3.0.8
   image_picker: ^0.8.6

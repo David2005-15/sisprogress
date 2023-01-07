@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
 import '../../widgets/dashboard/profile_university_tile.dart';
 
@@ -23,9 +24,12 @@ class _Profile extends State<Profile> {
 
   Future getImage() async {
     var image = await _picker.pickImage(source: ImageSource.gallery, maxWidth: 120, maxHeight: 120);
+    var status = await Permission.camera.request();
 
     setState(() {
-      _image = image;
+      if(status.isGranted){
+        _image = image;
+      }
     });
   }
 

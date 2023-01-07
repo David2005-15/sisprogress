@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:sis_progress/data%20class/event_process.dart';
+import 'package:sis_progress/data%20class/popup_menu_status.dart';
+import 'package:sis_progress/page/dashboard/even_tile.dart';
 import 'package:sis_progress/widgets/dashboard/calendar_widget.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -21,6 +26,11 @@ class _CalendarPage extends State<CalendarPage> {
     year = years[0].toString();
     super.initState();
   }
+
+  var date = DateTime.now();
+  var choosenDate = DateTime.now();
+
+  PopupMenuStatus status = PopupMenuStatus.closed;
   
 
   @override
@@ -105,12 +115,108 @@ class _CalendarPage extends State<CalendarPage> {
                 ],
               ),
             ),
-            CalendarWidget(years: years, value: year, onSelected: (val) {
-              setState(() {
-                year = val;
-              });
-            },)
-          
+            CalendarWidget(
+              onCanceled: () {
+                setState(() {
+                  status = PopupMenuStatus.closed;
+                });
+              },
+              onSelected: (val) {
+                setState(() {
+                  year = val;
+                  status = PopupMenuStatus.opened;
+                  choosenDate = DateTime(int.parse(year), date.month, date.day);
+                  print(choosenDate);
+                });
+              }, 
+              value: year, 
+              years: years,
+              status: status,
+            ),
+            Container(
+              width: double.infinity,
+              height: 500,
+              margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: TableCalendar(
+                availableGestures: AvailableGestures.all,
+                daysOfWeekHeight: 50,
+                rowHeight: 40,
+                selectedDayPredicate: (day) => isSameDay(day, choosenDate),
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    choosenDate = selectedDay;
+                  });
+                },
+                calendarBuilders: CalendarBuilders(
+                  selectedBuilder: (context, day, focusedDay) {
+                    return Container(
+                      height: 38,
+                      width: 38,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.transparent,
+                        border: Border.all(color: Colors.white, width: 1)
+                      ),
+                      child: Text(
+                        "${day.day}",
+                        style:  GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                          color: Colors.white
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 24,
+                    color: const Color(0xffD2DAFF)
+                  ),
+                  weekendStyle: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 24,
+                    color: const Color(0xffD2DAFF)
+                  ),
+                  dowTextFormatter: (date, locale) => DateFormat.E(locale).format(date)[0],
+                ),
+                firstDay: DateTime.utc(2010, 10, 16),
+                lastDay: DateTime.utc(2030, 3, 14),
+                focusedDay: choosenDate,
+                headerVisible: false,
+                headerStyle: const HeaderStyle(
+                  formatButtonVisible: false,
+                  leftChevronVisible: false,
+                  rightChevronVisible: false,
+                ),
+                calendarStyle: CalendarStyle(
+                  outsideDaysVisible: false,
+                  defaultTextStyle: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                  holidayTextStyle: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                  weekendTextStyle: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),   
+           ),
+
+           EventTile(proccess: EventProccess.later, title: "Leadership"),
+           EventTile(proccess: EventProccess.overdue, title: "OOP"),
+           EventTile(proccess: EventProccess.completed, title: "OOP"),
+           EventTile(proccess: EventProccess.planned, title: "OOP"),
+           EventTile(proccess: EventProccess.progress, title: "OOP")              
           ],
         ),
       ),

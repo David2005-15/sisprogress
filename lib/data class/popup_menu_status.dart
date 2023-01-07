@@ -1,0 +1,4 @@
+enum PopupMenuStatus {
+  opened,
+  closed,
+}
