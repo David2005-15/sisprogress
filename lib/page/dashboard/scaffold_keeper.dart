@@ -75,6 +75,15 @@ class _ScaffoldHome extends State<ScaffoldHome> {
         }),
         appBar: CustomAppBar(buildLogoIcon(onIcon), <Widget> [buildNotification(onTap: onNotification), buildAvatar(onTap: onAvatar)]),
         body: body,
+        floatingActionButton: SizedBox(
+          width: 45,
+          height: 45,  
+          child: _selected == 1 ? FloatingActionButton(
+            onPressed: () {},
+            backgroundColor: const Color(0xff355CCA),
+            child: const Icon(Icons.add_rounded, color: Colors.white, size: 16,),
+          ): null,
+        ),
       ),
     );
   }

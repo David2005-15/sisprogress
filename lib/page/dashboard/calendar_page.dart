@@ -19,6 +19,10 @@ class _CalendarPage extends State<CalendarPage> {
   List<int> years = [2023, 2024, 2025, 2026, 2027];
   late String year;
 
+
+  List<String> months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  String month = "Dectember";
+
   List<Color> colors = [const Color(0xffB1B2FF), Colors.white, Colors.white];
 
   @override
@@ -29,6 +33,7 @@ class _CalendarPage extends State<CalendarPage> {
 
   var date = DateTime.now();
   var choosenDate = DateTime.now();
+  var calendarType = "Day";
 
   PopupMenuStatus status = PopupMenuStatus.closed;
   
@@ -67,6 +72,7 @@ class _CalendarPage extends State<CalendarPage> {
                   TextButton(
                     onPressed: () {
                       setState(() {
+                        calendarType = "Day";
                         colors = [Colors.white, Colors.white, Colors.white];
                         colors[0] = const Color(0xffB1B2FF);
                       });
@@ -83,6 +89,7 @@ class _CalendarPage extends State<CalendarPage> {
                   TextButton(
                     onPressed: () {
                       setState(() {
+                        calendarType = "Week";
                         colors = [Colors.white, Colors.white, Colors.white];
                         colors[1] = const Color(0xffB1B2FF);
                       });
@@ -99,6 +106,7 @@ class _CalendarPage extends State<CalendarPage> {
                   TextButton(
                     onPressed: () {
                       setState(() {
+                        calendarType = "Year";
                         colors = [Colors.white, Colors.white, Colors.white];
                         colors[2] = const Color(0xffB1B2FF);
                       });
@@ -116,6 +124,9 @@ class _CalendarPage extends State<CalendarPage> {
               ),
             ),
             CalendarWidget(
+              month: month,
+              months: months,
+              calendarType: calendarType,
               onCanceled: () {
                 setState(() {
                   status = PopupMenuStatus.closed;
@@ -129,13 +140,23 @@ class _CalendarPage extends State<CalendarPage> {
                   print(choosenDate);
                 });
               }, 
+
+              onMonthSelect: (val) {
+                setState(() {
+                  month = val;
+                  DateFormat monthFormat = DateFormat.MMMM();
+                  DateTime monthr = monthFormat.parse(month);
+                  int monthIndex = monthr.month;
+                  choosenDate = DateTime(date.year, monthIndex, date.day);
+                });
+              },
               value: year, 
               years: years,
               status: status,
             ),
-            Container(
+            calendarType == "Day" || calendarType == "Year" ? Container(
               width: double.infinity,
-              height: 500,
+              height: 290,
               margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: TableCalendar(
                 availableGestures: AvailableGestures.all,
@@ -210,13 +231,88 @@ class _CalendarPage extends State<CalendarPage> {
                   ),
                 ),
               ),   
-           ),
-
-           EventTile(proccess: EventProccess.later, title: "Leadership"),
-           EventTile(proccess: EventProccess.overdue, title: "OOP"),
-           EventTile(proccess: EventProccess.completed, title: "OOP"),
-           EventTile(proccess: EventProccess.planned, title: "OOP"),
-           EventTile(proccess: EventProccess.progress, title: "OOP")              
+           ) : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+             children: [
+               Container(
+                child: IconButton(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  icon: const Icon(
+                    Icons.chevron_left,
+                    size: 36,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      choosenDate = choosenDate.subtract(const Duration(days: 7));
+                    });
+                  },
+                ),
+               ),
+               Expanded(
+                 child: TableCalendar(
+                    calendarFormat: CalendarFormat.week,
+                    firstDay: DateTime.utc(2010, 10, 16),
+                    lastDay: DateTime.utc(2030, 3, 14),
+                    focusedDay: choosenDate,
+                    daysOfWeekVisible: false,
+                    selectedDayPredicate: (day) => isSameDay(day, choosenDate),
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        choosenDate = selectedDay;
+                      });
+                    },
+                    headerVisible: false,
+                    headerStyle: const HeaderStyle(
+                        formatButtonVisible: false,
+                        leftChevronVisible: false,
+                        rightChevronVisible: false,
+                      ),
+                    calendarStyle: buildCalendarStyle(),
+                    calendarBuilders: CalendarBuilders(
+                      selectedBuilder: (context, day, focusedDay) {
+                        return Container(
+                          height: 38,
+                          width: 38,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.transparent,
+                            border: Border.all(color: Colors.white, width: 1)
+                          ),
+                          child: Text(
+                            "${day.day}",
+                            style:  GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                              color: Colors.white
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+               ),
+               Container(
+                child: IconButton(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  icon: const Icon(
+                    Icons.chevron_right,
+                    size: 36,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      choosenDate = choosenDate.add(const Duration(days: 7));
+                    });
+                  },
+                ),
+               ),
+             ],
+           ),             
           ],
         ),
       ),
@@ -239,6 +335,88 @@ Container buildTitle() {
           color: Colors.white
         ),
       ),
+    ),
+  );
+}
+
+
+Widget buildDayCalendar(var choosenDate, Function(DateTime, DateTime) onDaySelect) {
+  return Container(
+    width: double.infinity,
+    height: 275,
+    margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+    child: TableCalendar(
+      availableGestures: AvailableGestures.all,
+      daysOfWeekHeight: 50,
+      rowHeight: 40,
+      selectedDayPredicate: (day) => isSameDay(day, choosenDate),
+      onDaySelected: onDaySelect,
+      calendarBuilders: CalendarBuilders(
+      selectedBuilder: (context, day, focusedDay) {
+        return Container(
+          height: 38,
+          width: 38,
+          alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.transparent,
+              border: Border.all(color: Colors.white, width: 1)
+            ),
+          child: Text(
+            "${day.day}",
+            style:  GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: 20,
+              color: Colors.white
+            ),
+          ),
+        );
+      },
+      ),
+      daysOfWeekStyle: DaysOfWeekStyle(
+        weekdayStyle: GoogleFonts.montserrat(
+          fontWeight: FontWeight.w500,
+          fontSize: 24,
+          color: const Color(0xffD2DAFF)
+        ),
+        weekendStyle: GoogleFonts.montserrat(
+          fontWeight: FontWeight.w500,
+          fontSize: 24,
+          color: const Color(0xffD2DAFF)
+        ),
+        dowTextFormatter: (date, locale) => DateFormat.E(locale).format(date)[0],
+      ),
+      firstDay: DateTime.utc(2010, 10, 16),
+      lastDay: DateTime.utc(2030, 3, 14),
+      focusedDay: choosenDate,
+      headerVisible: false,
+      headerStyle: const HeaderStyle(
+        formatButtonVisible: false,
+        leftChevronVisible: false,
+         rightChevronVisible: false,
+      ),
+      calendarStyle: buildCalendarStyle(),
+    ),   
+  );
+}
+
+CalendarStyle buildCalendarStyle() {
+  return CalendarStyle(
+    outsideDaysVisible: false,
+    defaultTextStyle: GoogleFonts.poppins(
+      fontWeight: FontWeight.w400,
+      fontSize: 20,
+      color: Colors.white,
+    ),
+    holidayTextStyle: GoogleFonts.poppins(
+      fontWeight: FontWeight.w400,
+      fontSize: 20,
+      color: Colors.white,
+    ),
+    weekendTextStyle: GoogleFonts.poppins(
+      fontWeight: FontWeight.w400,
+      fontSize: 20,
+      color: Colors.white,
     ),
   );
 }
