@@ -3,12 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/input_box.dart';
 
+typedef University = List<String>;
+
 class UniversityTile extends StatefulWidget {
   final VoidCallback onEdit;
   final VoidCallback onSave;
   final bool mode;
+  final University university;
 
   const UniversityTile({
+    required this.university,
     required this.onSave,
     required this.onEdit,
     required this.mode,
@@ -25,7 +29,7 @@ class _UniversityTile extends State<UniversityTile> {
   late TextEditingController _controller2;
   late TextEditingController _controller3;
   late TextEditingController _controller4;
-  List<String> items = ['Harvard University', 'MIT', 'Standford'];
+  // List<String> items = ['Harvard University', 'MIT', 'Standford'];
 
   @override
   void initState() {
@@ -103,7 +107,7 @@ class _UniversityTile extends State<UniversityTile> {
             ],
           ),
       
-          widget.mode ?  buildMode(_controller1, items):Container(
+          widget.mode ?  buildMode(_controller1, widget.university):Container(
             margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -134,7 +138,7 @@ class _UniversityTile extends State<UniversityTile> {
             ),
           ),
       
-          widget.mode ? buildMode(_controller2, items) : Container(
+          widget.mode ? buildMode(_controller2, widget.university) : Container(
             margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -166,7 +170,7 @@ class _UniversityTile extends State<UniversityTile> {
             ),
           ),
       
-          widget.mode ? buildMode(_controller3, items) : Container(),
+          widget.mode ? buildMode(_controller3, widget.university) : Container(),
 
           widget.mode ? InputBox(textInputType: TextInputType.number, onChanged: (val) {}, context: context, controller: _controller4, isPassword: false, initialValue: "Dream Point",): Container(),
           widget.mode ? InputBox(textInputType: TextInputType.number, onChanged: (val) {}, context: context, controller: _controller4, isPassword: false, initialValue: "Target Point",): Container(),
@@ -176,12 +180,167 @@ class _UniversityTile extends State<UniversityTile> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(),
-              Button(text: "Change ", onPressed: widget.onSave, height: 38, width: 128),
+              Button(text: "Change ", onPressed: () 
+              {
+                _dialogBuilder(context, widget.onSave);
+                widget.onSave;
+
+              }, height: 38, width: 128),
             ],
           ): Container()
         ],
       )],
     ),
+    );
+  }
+
+  
+Future<void> _dialogBuilder(BuildContext context, VoidCallback onSave) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xff121623),
+          title: Text('Are you sure to change your university?', 
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+              color: Colors.white
+            ),
+          ),
+          content: Text('After you make a change, the tasks that have been already completed or in progress will not be deleted. ', 
+            textAlign: TextAlign.center,
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w400,
+              fontSize: 12,
+              color: Colors.white
+            ),
+          ),
+          actions: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: ButtonBar(
+                alignment: MainAxisAlignment.center,
+                children: <Widget> [
+                  // Button(text: "Ok", 
+                  // onPressed: () {
+                  //     onSave();
+                  //     Navigator.pop(context);
+                  //   }, height: 36, width: 104
+                  // ),
+
+                  SizedBox(
+                    width: 104,
+                    height: 36,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff355CCA),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        )
+                      ),
+                      onPressed: () {
+                        onSave();
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Ok",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                          color: const Color(0xffD2DAFF)
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(
+                    width: 104,
+                    height: 36,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Colors.transparent,
+                        backgroundColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          side: const BorderSide(
+                            color: Color(0xffD2DAFF),
+                            width: 2
+                          )
+                        )
+                      ),
+                      
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }, 
+                      child: Text(
+                          "Cancel",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            color: const Color(0xffD2DAFF)
+                          ),
+                        ),
+                    ),
+                  )
+
+                  // 
+                  // InkWell(
+                  //   onTap: () {
+                  //     Navigator.pop(context);
+                  //   },
+                  //   child: Container(
+                  //     alignment: Alignment.center,
+                  //     width: 104,
+                  //     height: 36,
+                  //     decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(5),
+                  //       border: Border.all(
+                  //         width: 2.0,
+                  //         color: const Color(0xffD2DAFF),
+                  //       ),
+                  //     ),
+                  //     child: Text(
+                  //       "Cancel",
+                  //       style: GoogleFonts.poppins(
+                  //         fontWeight: FontWeight.w400,
+                  //         fontSize: 15,
+                  //         color: const Color(0xffD2DAFF)
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
+                ],
+              ),
+              // alignment: Alignment.center,
+              // child: ButtonBar(
+              //   alignment: MainAxisAlignment.center,
+              //   children: <Widget>[
+              //      TextButton(
+              // style: TextButton.styleFrom(
+              //   textStyle: Theme.of(context).textTheme.labelLarge,
+              // ),
+              // child: const Text('Disable'),
+              // onPressed: () {
+              //   Navigator.of(context).pop();
+              // },
+            ),
+            // ElevatedButton(
+            //   style: ButtonStyle(
+            //     b
+            //   ),
+            //    child: const Text('Enable'),
+            //   onPressed: () {
+
+            //     onSave();
+            //     Navigator.pop(context);
+            //   },
+            // ),
+          ],
+        );
+      },
     );
   }
 }

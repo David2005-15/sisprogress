@@ -5,10 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
+import '../../http client/http_client.dart';
 import '../../widgets/dashboard/profile_university_tile.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+
+  const Profile({
+    super.key
+  });
 
   @override
   State<StatefulWidget> createState() => _Profile();
@@ -16,11 +20,16 @@ class Profile extends StatefulWidget {
 } 
 
 class _Profile extends State<Profile> {
+  final Client httpClient = Client();
+
+
   bool isEditable = false;
   bool editPersonal = false;
   XFile? _image;
 
   final ImagePicker _picker = ImagePicker();
+
+  List<String> uni = [""];
 
   Future getImage() async {
     var image = await _picker.pickImage(source: ImageSource.gallery, maxWidth: 120, maxHeight: 120);
@@ -56,6 +65,21 @@ class _Profile extends State<Profile> {
       editPersonal = false;
     });
   }
+
+  @override
+  void initState() {
+    getUniver();
+    super.initState();
+  }
+
+  void getUniver() async {
+    var temp = await httpClient.getAllUniversities();
+    setState(() {
+      uni = temp;
+    });
+  }
+
+
 
 
   @override
@@ -151,7 +175,7 @@ class _Profile extends State<Profile> {
               ],
             ),
 
-            UniversityTile(onEdit: changeMode, mode: isEditable, onSave: onSave,),
+            UniversityTile(onEdit: changeMode, mode: isEditable, onSave: onSave, university: uni,),
             PersonalDetails(mode: editPersonal, onEdit: onPersonalEdit, onSave: onPersonalSave,)
           ],
         ),

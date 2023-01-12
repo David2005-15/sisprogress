@@ -22,7 +22,16 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   int _selected = 0;
   late Widget body;
 
-  List<Widget> pages = [const Dashboard(fullName: "Montana",), const CalendarPage(), const ExploreMoreGoals(), const Lectures(), const Profile()]; 
+  DateTime todayDate = DateTime.now();
+  DateTime choosenDate = DateTime.now();
+
+  late CalendarPage page;
+  late List<Widget> pages;
+
+  _ScaffoldHome() {
+    page = CalendarPage();
+    pages = [const Dashboard(fullName: "Montana",), page, const ExploreMoreGoals(), const Lectures(), const Profile()]; 
+  }
 
   Future<bool> _onBackButtonPressed() {
     setState(() {
@@ -79,7 +88,10 @@ class _ScaffoldHome extends State<ScaffoldHome> {
           width: 45,
           height: 45,  
           child: _selected == 1 ? FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              print(page.getChoosenDate());
+              print(todayDate);
+            },
             backgroundColor: const Color(0xff355CCA),
             child: const Icon(Icons.add_rounded, color: Colors.white, size: 16,),
           ): null,

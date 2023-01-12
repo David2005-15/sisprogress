@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:sis_progress/data%20class/event_process.dart';
 import 'package:sis_progress/data%20class/popup_menu_status.dart';
-import 'package:sis_progress/page/dashboard/even_tile.dart';
 import 'package:sis_progress/widgets/dashboard/calendar_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({super.key});
+  CalendarPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _CalendarPage();
+
+  var date = DateTime.now();
+  var choosenDate = DateTime.now();
+
+  DateTime getChoosenDate() {
+    return choosenDate;
+  }
 
 }
 
@@ -31,12 +36,9 @@ class _CalendarPage extends State<CalendarPage> {
     super.initState();
   }
 
-  var date = DateTime.now();
-  var choosenDate = DateTime.now();
   var calendarType = "Day";
 
   PopupMenuStatus status = PopupMenuStatus.closed;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -136,8 +138,8 @@ class _CalendarPage extends State<CalendarPage> {
                 setState(() {
                   year = val;
                   status = PopupMenuStatus.opened;
-                  choosenDate = DateTime(int.parse(year), date.month, date.day);
-                  print(choosenDate);
+                  widget.choosenDate = DateTime(int.parse(year), widget.date.month, widget.date.day);
+                  print(widget.choosenDate);
                 });
               }, 
 
@@ -147,7 +149,7 @@ class _CalendarPage extends State<CalendarPage> {
                   DateFormat monthFormat = DateFormat.MMMM();
                   DateTime monthr = monthFormat.parse(month);
                   int monthIndex = monthr.month;
-                  choosenDate = DateTime(date.year, monthIndex, date.day);
+                  widget.choosenDate = DateTime(widget.date.year, monthIndex, widget.date.day);
                 });
               },
               value: year, 
@@ -162,10 +164,10 @@ class _CalendarPage extends State<CalendarPage> {
                 availableGestures: AvailableGestures.all,
                 daysOfWeekHeight: 50,
                 rowHeight: 40,
-                selectedDayPredicate: (day) => isSameDay(day, choosenDate),
+                selectedDayPredicate: (day) => isSameDay(day, widget.choosenDate),
                 onDaySelected: (selectedDay, focusedDay) {
                   setState(() {
-                    choosenDate = selectedDay;
+                    widget.choosenDate = selectedDay;
                   });
                 },
                 calendarBuilders: CalendarBuilders(
@@ -205,7 +207,7 @@ class _CalendarPage extends State<CalendarPage> {
                 ),
                 firstDay: DateTime.utc(2010, 10, 16),
                 lastDay: DateTime.utc(2030, 3, 14),
-                focusedDay: choosenDate,
+                focusedDay: widget.choosenDate,
                 headerVisible: false,
                 headerStyle: const HeaderStyle(
                   formatButtonVisible: false,
@@ -246,7 +248,7 @@ class _CalendarPage extends State<CalendarPage> {
                   ),
                   onPressed: () {
                     setState(() {
-                      choosenDate = choosenDate.subtract(const Duration(days: 7));
+                      widget.choosenDate = widget.choosenDate.subtract(const Duration(days: 7));
                     });
                   },
                 ),
@@ -256,12 +258,12 @@ class _CalendarPage extends State<CalendarPage> {
                     calendarFormat: CalendarFormat.week,
                     firstDay: DateTime.utc(2010, 10, 16),
                     lastDay: DateTime.utc(2030, 3, 14),
-                    focusedDay: choosenDate,
+                    focusedDay: widget.choosenDate,
                     daysOfWeekVisible: false,
-                    selectedDayPredicate: (day) => isSameDay(day, choosenDate),
+                    selectedDayPredicate: (day) => isSameDay(day, widget.choosenDate),
                     onDaySelected: (selectedDay, focusedDay) {
                       setState(() {
-                        choosenDate = selectedDay;
+                        widget.choosenDate = selectedDay;
                       });
                     },
                     headerVisible: false,
@@ -306,7 +308,7 @@ class _CalendarPage extends State<CalendarPage> {
                   ),
                   onPressed: () {
                     setState(() {
-                      choosenDate = choosenDate.add(const Duration(days: 7));
+                      widget.choosenDate = widget.choosenDate.add(const Duration(days: 7));
                     });
                   },
                 ),
