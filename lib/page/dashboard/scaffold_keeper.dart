@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:sis_progress/page/dashboard/notification_page.dart';
 import 'package:sis_progress/page/dashboard/profile.dart';
 import 'package:sis_progress/widgets/bottom_nav_bar.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
+import 'package:watcher/watcher.dart';
 
 import 'calendar_page.dart';
 import 'lectures.dart';
@@ -79,14 +81,45 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   @override
   void initState() {
     body = pages[0];
+     Timer.periodic(const Duration(milliseconds: 200), (timer) {
+      setState(() {
+        if(page.getChoosenDate().day < DateTime.now().day) {
+          isFloatingButtonVisisble = false;
+        } else {
+          isFloatingButtonVisisble = true;
+        }
+      });
+    });
     super.initState();
+
+    
+  }
+
+  void onCheckboxChange() {
+    setState(() {
+      isVisible = !isVisible;
+    });
   }
 
   bool isVisible = false;
   bool isFloatingButtonVisisble = true;
 
+
+  void changeFloatingButtonState() {
+    setState(() {
+      if(page.getChoosenDate().day < DateTime.now().day) {
+        isFloatingButtonVisisble = false;
+      } else {
+        isFloatingButtonVisisble = true;
+      }
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    changeFloatingButtonState();
+
     return WillPopScope(
       onWillPop: _onBackButtonPressed,
       child: Scaffold(
@@ -105,23 +138,11 @@ class _ScaffoldHome extends State<ScaffoldHome> {
             height: 45,  
             child: _selected == 1 ? FloatingActionButton(
               onPressed: () {
+                List<String> tasks = [];
                 print(page.getChoosenDate());
                 print(todayDate);
                 if(page.getChoosenDate().day >= DateTime.now().day) {
-                  _dialogBuilder(context, ["Leadership"],  ["156 points"], [
-                  StatefulBuilder(
-                    builder:(context, setState) {
-                      return  Checkbox(
-                      value: isVisible,
-                      onChanged: (changedValue){
-                        setState(() {
-                          isVisible = changedValue!;
-                        });
-                      }
-                  );
-                    },
-                  )
-                ]);
+                  _dialogBuilder(context, ["Leadership", "OOP"],  ["156 points", "600 points"], tasks);
                 }
               },
               backgroundColor: const Color(0xff355CCA),
@@ -184,9 +205,9 @@ Container buildNotification({required VoidCallback onTap}) {
   );
 }
 
-Future<void> _dialogBuilder(BuildContext context, List<String> tasks, List<String> points, List<Widget> checkboxes) {
+Future<void> _dialogBuilder(BuildContext context, List<String> tasks, List<String> points, List<String> addedTasks) {
   List<Widget> taskContent = [];
-
+  bool isVisible = false;
 
   for(int i = 0; i < tasks.length; i++) {
     taskContent.add(
@@ -221,7 +242,19 @@ Future<void> _dialogBuilder(BuildContext context, List<String> tasks, List<Strin
                   ],
                 ),
 
-                checkboxes[i]
+                StatefulBuilder(builder: ((context, setState) {
+                  return Checkbox(
+                    fillColor: MaterialStateProperty.resolveWith(getColor),
+                     value: isVisible,
+                     onChanged: ((value) {
+                       setState(() {
+                        isVisible = value!;
+                        addedTasks.add(tasks[i]);
+                        print(addedTasks);
+                       });
+                     })
+                    );
+                }))
               ],
             ),
           ),
@@ -336,7 +369,7 @@ Color getColor(Set<MaterialState> states) {
       if (states.any(interactiveStates.contains)) {
         return Colors.blue;
       }
-      return Colors.red;
+      return Colors.blue;
     }
 
 

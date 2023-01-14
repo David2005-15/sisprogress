@@ -19,6 +19,7 @@ dependencies:
   custom_check_box: ^0.0.4
   dropdown_button2: ^1.9.2
   syncfusion_flutter_charts: ^20.4.38
+  watcher: ^1.0.2
   shared_preferences: ^2.0.16
   dropdownfield: ^1.0.3
   table_calendar: ^3.0.8

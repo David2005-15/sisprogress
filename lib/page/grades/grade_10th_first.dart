@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/radio_button_handler.dart';
+import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/widgets/radio_button.dart';
 import '../../data class/registration_data_grade10.dart';
 import '../../widgets/drawers/app_bar.dart';
@@ -30,6 +32,10 @@ class _Grade10thFirst extends State<Grade10thFirst> {
   List<String> scores = ["Yes", "No"];
   List<String> legacys = ["Yes", "No"];
 
+  final dynamic _controller1 = TextEditingController();
+  final dynamic _controller2 = TextEditingController();
+  final dynamic _controller3 = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,6 +55,12 @@ class _Grade10thFirst extends State<Grade10thFirst> {
             children: <Widget> [
               const ProgressBar(isPassed: [true, false, false]),
               buildTitle(),
+              buildQuestion("1. Choose the university"),
+              buildMode(_controller1, Universities().universities, "University"),
+              buildQuestion("2. Choose the school"),
+              buildMode(_controller2, Universities().universities, "School"),
+              buildQuestion("3. Choose your profession"),
+              buildMode(_controller3, Universities().universities, "Profession"),
               // CustomRadio(value: term, groupValue: terms),
               buildQuestion("1. Preferred start term (mandatory)"),
               // buildAnswer(changeTerms, terms, term),
@@ -102,13 +114,16 @@ class _Grade10thFirst extends State<Grade10thFirst> {
                             fontSize: 18
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          
+                          prefs.setString("university", _controller1.text);
                           widget.registration.term = widget.term.value;
                           widget.registration.addmision = widget.plan.value;
                           widget.registration.aid = widget.score.value;
                           widget.registration.legacy = widget.legacy.value;
               
-                          Navigator.push(context,  MaterialPageRoute(builder: (context) => Grade10thSecond(reg: widget.registration,)));
+                          await Navigator.push(context,  MaterialPageRoute(builder: (context) => Grade10thSecond(reg: widget.registration,)));
                         },
                       ),
                     )
@@ -162,5 +177,73 @@ Container buildQuestion(String question) {
         color: Colors.white
       ),
     ),
+  );
+}
+
+Container buildMode(
+    TextEditingController controller,
+    List<String> items,
+    String lableText) {
+  return Container(
+    margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
+    child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return TextFormField(
+        style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w400,
+            fontSize: 15,
+            fontStyle: FontStyle.normal,
+            color: Colors.white),
+        controller: controller,
+        decoration: InputDecoration(
+          alignLabelWithHint: true,
+          labelText: lableText,
+          // hintText: widget.hintText,
+          labelStyle: GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: 15,
+              fontStyle: FontStyle.normal,
+              color: const Color(0xffD2DAFF)),
+          hintStyle: GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: 15,
+              fontStyle: FontStyle.normal,
+              color: const Color(0xffD2DAFF)),
+          enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+          border: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+          focusColor: const Color(0xffD2DAFF),
+          focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xff36519D))),
+          suffixIcon: PopupMenuButton<String>(
+            color: const Color(0xffD2DAFF),
+            constraints:
+                BoxConstraints.expand(height: 150, width: constraints.maxWidth),
+            icon: const Icon(
+              Icons.arrow_drop_down,
+              color: Color(0xffD2DAFF),
+            ),
+            onSelected: (String value) {
+              controller.text = value;
+            },
+            itemBuilder: (BuildContext context) {
+              return items.map<PopupMenuItem<String>>((String value) {
+                return PopupMenuItem(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
+                        color: const Color(0xff121623),
+                      ),
+                    ));
+              }).toList();
+            },
+          ),
+        ),
+      );
+    }),
   );
 }

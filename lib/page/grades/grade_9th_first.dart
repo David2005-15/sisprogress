@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/radio_button_handler.dart';
 import 'package:sis_progress/data%20class/registration_data_grade9.dart';
+import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/grades/grade_9th_second.dart';
 import 'package:sis_progress/widgets/radio_button.dart';
@@ -49,22 +50,11 @@ class _Grade9thFirst extends State<Grade9thFirst> {
 
   late List<String> uni;
 
-  void getUniver() async {
-    var temp = await httpClient.getAllUniversities();
-    // await httpClient.getPoints();
-    setState(() {
-      uni = temp;
-    });
-  }
-
-
   @override
   void initState() {
     _controller1 = TextEditingController();
     _controller2 = TextEditingController();
     _controller3 = TextEditingController();
-
-    getUniver();
     super.initState();
   }
 
@@ -111,19 +101,24 @@ class _Grade9thFirst extends State<Grade9thFirst> {
             children: <Widget> [
               const ProgressBar(isPassed: [true, false, false]),
               buildTitle(),
-              buildMode(_controller1, uni, "University"),
+              buildQuestion("1. Choose the university"),
+              buildMode(_controller1, Universities().universities, "University"),
+              buildQuestion("2. Choose the school"),
+              buildMode(_controller2, Universities().universities, "School"),
+              buildQuestion("3. Choose your profession"),
+              buildMode(_controller3, Universities().universities, "Profession"),
               // buildMode(_controller2, , lableText),
               // CustomRadio(value: term, groupValue: terms),
-              buildQuestion("1. Preferred start term (mandatory)"),
+              buildQuestion("4. Preferred start term (mandatory)"),
               // buildAnswer(changeTerms, terms, term),
               CustomRadio(handler: widget.term, groupValue: terms, methodParent: () => print("Hello")),
-              buildQuestion("2. Preferred admission plan."),
+              buildQuestion("5. Preferred admission plan."),
               // buildAnswer(changePlan, plans, plan),
               CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => print("Hello"),),
-              buildQuestion("3. Do you instead to pursue need-based finanial AID?"),
+              buildQuestion("6. Do you instead to pursue need-based finanial AID?"),
               // buildAnswer(changeScore, scores, score),
               CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => print("Hello")),
-              buildQuestion("4. Are you a legacy?"),
+              buildQuestion("7. Are you a legacy?"),
               // buildAnswer(changeLegacy, legacys, legacy),
               CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => print("Hello")),
             
@@ -240,7 +235,7 @@ Container buildMode(
     List<String> items,
     String lableText) {
   return Container(
-    margin: const EdgeInsets.fromLTRB(23, 16, 23, 0),
+    margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
     child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       return TextFormField(
