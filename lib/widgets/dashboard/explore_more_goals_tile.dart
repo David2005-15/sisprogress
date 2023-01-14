@@ -9,7 +9,7 @@ class ExploreTile extends StatelessWidget {
     return Container(
       width: 154,
       height: 190,
-      margin: const EdgeInsets.fromLTRB(15, 14, 15, 0),
+      margin: const EdgeInsets.fromLTRB(12, 14, 12, 0),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
         color: Color(0xFFD2DAFF),

@@ -222,7 +222,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   widget.reg.details = "No";
                 }
 
-                Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.reg.email)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.reg.email,)));
               }),
 
             ],

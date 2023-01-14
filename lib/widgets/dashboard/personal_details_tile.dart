@@ -20,7 +20,9 @@ class PersonalDetails extends StatelessWidget {
     super.key
   });
 
-  TextEditingController controller = TextEditingController();
+  TextEditingController number = TextEditingController();
+  TextEditingController mail = TextEditingController();
+  TextEditingController instagram = TextEditingController();
 
 
   @override
@@ -78,7 +80,7 @@ class PersonalDetails extends StatelessWidget {
               )
             ],
           ),
-            mode ?  InputBox(textInputType: TextInputType.phone, onChanged: (val) {}, context: context, controller: controller, isPassword: false, initialValue: "Phone",) : Container(
+            mode ?  InputBox(textInputType: TextInputType.phone, onChanged: (val) {}, context: context, controller: number, isPassword: false, initialValue: "Phone",) : Container(
             margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -108,7 +110,7 @@ class PersonalDetails extends StatelessWidget {
               ],
             ),
           ),
-            mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: controller, isPassword: false, initialValue: "Email",) :Container(
+            mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: mail, isPassword: false, initialValue: "Email",) :Container(
             margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -138,7 +140,7 @@ class PersonalDetails extends StatelessWidget {
               ],
             ),
           ),
-            mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: controller, isPassword: false, initialValue: "Instagram",) :Container(
+            mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: instagram, isPassword: false, initialValue: "Instagram",) :Container(
             margin: const EdgeInsets.fromLTRB(0, 10, 0, 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -172,7 +174,10 @@ class PersonalDetails extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(),
-              Button(text: "Change ", onPressed: onSave, height: 38, width: 128),
+              Button(text: "Change ", onPressed: () async {
+                await _dialogBuilder(context, () { });
+                onSave();
+              }, height: 38, width: 128),
             ],
           ): Container()
             ],
@@ -183,3 +188,83 @@ class PersonalDetails extends StatelessWidget {
   }
 
 }
+
+Future<void> _dialogBuilder(BuildContext context, VoidCallback onSave,) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xff121623),
+          title: Text(
+            'Are you sure to change your university?',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600, fontSize: 15, color: Colors.white),
+          ),
+          content: Text(
+            'After you make a change, the tasks that have been already completed or in progress will not be deleted. ',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.w400, fontSize: 12, color: Colors.white),
+          ),
+          actions: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: ButtonBar(
+                alignment: MainAxisAlignment.center,
+                children: <Widget>[
+
+                  SizedBox(
+                    width: 104,
+                    height: 36,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff355CCA),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          )),
+                      onPressed: () async {
+                        onSave();
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Ok",
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            color: const Color(0xffD2DAFF)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 104,
+                    height: 36,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shadowColor: Colors.transparent,
+                          backgroundColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              side: const BorderSide(
+                                  color: Color(0xffD2DAFF), width: 2))),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Cancel",
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            color: const Color(0xffD2DAFF)),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }

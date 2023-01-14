@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/page/login.dart';
 import 'package:sis_progress/page/registration.dart';
-import 'package:sis_progress/widgets/drawers/material.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -124,8 +124,11 @@ class _HomePage extends State<HomePage> {
                         height: 50,
                         margin: const EdgeInsets.fromLTRB(24, 0, 24, 15),
                         child: OutlinedButton(
-                          onPressed: () => {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()))
+                          onPressed: () async {
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            print(prefs.getKeys());
+                            // print(prefs.getAll());
+                            await Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()));
                           },
                           style: OutlinedButton.styleFrom(
                             shape: const StadiumBorder(),

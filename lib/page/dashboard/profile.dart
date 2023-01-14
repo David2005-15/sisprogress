@@ -35,6 +35,7 @@ class _Profile extends State<Profile> {
 
   late String phone;
   late String mail;
+  late String fullName;
 
 
   Future getImage() async {
@@ -54,6 +55,7 @@ class _Profile extends State<Profile> {
   void onSave() async {
     setState(() {
       isEditable = false;
+      setUniversity();
     });
   }
 
@@ -106,8 +108,11 @@ class _Profile extends State<Profile> {
     setState(() {
       mail = prefs.getString("email").toString();
       phone = prefs.getString("number").toString();
+      fullName = prefs.getString("full name").toString();
     });
   }
+
+  
 
 
   @override
@@ -156,13 +161,14 @@ class _Profile extends State<Profile> {
                               width: 50,
                               height: 50,
                               decoration: const BoxDecoration(
-                                color: Colors.red,
+                                color: Color(0xff3A3D4C),
                                 shape: BoxShape.circle
                               ),
                               margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                               child: const Icon(
                                 Icons.camera_outlined,
                                 size: 30,
+                                color: Color(0xffD2DAFF),
                               )
                             ),
                           ),
@@ -176,7 +182,7 @@ class _Profile extends State<Profile> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget> [
                       Text(
-                        "Montana",
+                        fullName,
                         style: GoogleFonts.montserrat(
                           fontWeight: FontWeight.w700,
                           fontSize: 20,

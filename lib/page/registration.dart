@@ -182,6 +182,7 @@ class _Registration extends State<Registration> {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   prefs.setString("email", widget.email.text);
                   prefs.setString("number", widget.phone.text);
+                  prefs.setString("full name", widget.fullName.text);
 
                   widget.registration.fullName = widget.fullName.text;
                   widget.registration.email = widget.email.text;

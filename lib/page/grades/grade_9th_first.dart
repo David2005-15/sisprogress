@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/radio_button_handler.dart';
 import 'package:sis_progress/data%20class/registration_data_grade9.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
@@ -111,7 +112,7 @@ class _Grade9thFirst extends State<Grade9thFirst> {
               const ProgressBar(isPassed: [true, false, false]),
               buildTitle(),
               buildMode(_controller1, uni, "University"),
-              buildMode(_controller2, , lableText),
+              // buildMode(_controller2, , lableText),
               // CustomRadio(value: term, groupValue: terms),
               buildQuestion("1. Preferred start term (mandatory)"),
               // buildAnswer(changeTerms, terms, term),
@@ -166,7 +167,12 @@ class _Grade9thFirst extends State<Grade9thFirst> {
                             fontSize: 18
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          
+                          prefs.setString("university", _controller1.text);
+                
+
                           widget.registration.term = widget.term.value;
                           widget.registration.addmision = widget.plan.value;
                           widget.registration.aid = widget.score.value;

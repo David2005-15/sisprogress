@@ -7,7 +7,6 @@ import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/dashboard/graph.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart_with_progress.dart';
-import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/tile.dart';
 import '../../widgets/dashboard/little_calendar.dart';
 

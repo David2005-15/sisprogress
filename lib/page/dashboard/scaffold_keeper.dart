@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/data%20class/notification_data.dart';
@@ -12,6 +14,7 @@ import 'calendar_page.dart';
 import 'lectures.dart';
 
 class ScaffoldHome extends StatefulWidget {
+
   const ScaffoldHome({super.key});
 
   @override
@@ -20,6 +23,7 @@ class ScaffoldHome extends StatefulWidget {
 }
 
 class _ScaffoldHome extends State<ScaffoldHome> {
+
   int _selected = 0;
   late Widget body;
 
@@ -33,7 +37,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   Color iconColor = Colors.blue;
   Color backgroundColor = Colors.white; 
 
-  bool isVisible = false;
+  String? fullName;
 
   _ScaffoldHome() {
     page = CalendarPage();
@@ -72,17 +76,14 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     });
   }
 
-  void onCheckboxChange() {
-    setState(() {
-      isVisible = !isVisible;
-    });
-  }
-
   @override
   void initState() {
     body = pages[0];
     super.initState();
   }
+
+  bool isVisible = false;
+  bool isFloatingButtonVisisble = true;
 
   @override
   Widget build(BuildContext context) {
@@ -97,18 +98,36 @@ class _ScaffoldHome extends State<ScaffoldHome> {
         }),
         appBar: CustomAppBar(buildLogoIcon(onIcon), <Widget> [buildNotification(onTap: onNotification), buildAvatar(onTap: onAvatar)]),
         body: body,
-        floatingActionButton: SizedBox(
-          width: 45,
-          height: 45,  
-          child: _selected == 1 ? FloatingActionButton(
-            onPressed: () {
-              print(page.getChoosenDate());
-              print(todayDate);
-              _dialogBuilder(context, () { }, onCheckboxChange, isVisible ? Colors.white : Colors.blue, isVisible ? Colors.blue: Colors.white);
-            },
-            backgroundColor: const Color(0xff355CCA),
-            child: const Icon(Icons.add_rounded, color: Colors.white, size: 16,),
-          ): null,
+        floatingActionButton: Visibility(
+          visible: isFloatingButtonVisisble,
+          child: SizedBox(
+            width: 45,
+            height: 45,  
+            child: _selected == 1 ? FloatingActionButton(
+              onPressed: () {
+                print(page.getChoosenDate());
+                print(todayDate);
+                if(page.getChoosenDate().day >= DateTime.now().day) {
+                  _dialogBuilder(context, ["Leadership"],  ["156 points"], [
+                  StatefulBuilder(
+                    builder:(context, setState) {
+                      return  Checkbox(
+                      value: isVisible,
+                      onChanged: (changedValue){
+                        setState(() {
+                          isVisible = changedValue!;
+                        });
+                      }
+                  );
+                    },
+                  )
+                ]);
+                }
+              },
+              backgroundColor: const Color(0xff355CCA),
+              child: const Icon(Icons.add_rounded, color: Colors.white, size: 16,),
+            ): null,
+          ),
         ),
       ),
     );
@@ -165,7 +184,50 @@ Container buildNotification({required VoidCallback onTap}) {
   );
 }
 
-Future<void> _dialogBuilder(BuildContext context, VoidCallback onSave, Function() onChange, Color iconColor, Color backgroundColor) {
+Future<void> _dialogBuilder(BuildContext context, List<String> tasks, List<String> points, List<Widget> checkboxes) {
+  List<Widget> taskContent = [];
+
+
+  for(int i = 0; i < tasks.length; i++) {
+    taskContent.add(
+      Container(
+            margin: const EdgeInsets.fromLTRB(16, 5, 0, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget> [
+                Text(
+                  tasks[i],
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    color: const Color(0xff2E2323)
+                  ),
+                ),
+
+                Row(
+                  children: <Widget> [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: Text(
+                        points[i],
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 11,
+                          color: const Color(0xff151515)
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                checkboxes[i]
+              ],
+            ),
+          ),
+    );
+  }
+
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
@@ -183,52 +245,99 @@ Future<void> _dialogBuilder(BuildContext context, VoidCallback onSave, Function(
         ),
       actions: <Widget>[
         Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: taskContent
         // mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget> [
-          Container(
-            margin: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget> [
-                Text(
-                  "Task 1",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: const Color(0xff2E2323)
-                  ),
-                ),
+        // children: <Widget> [
+        //     tasks
 
-                Row(
-                  children: <Widget> [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: Text(
-                        "156 point",
-                        style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 11,
-                          color: const Color(0xff151515)
-                        ),
-                      ),
-                    ),
+          // Container(
+          //   margin: const EdgeInsets.fromLTRB(16, 5, 0, 0),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: <Widget> [
+          //       Text(
+          //         "Task 1",
+          //         style: GoogleFonts.poppins(
+          //           fontWeight: FontWeight.w400,
+          //           fontSize: 14,
+          //           color: const Color(0xff2E2323)
+          //         ),
+          //       ),
 
-                    buildCheckbox(iconColor: iconColor, onChange: () {
-                      onChange();
-                    }, borderColor: Colors.blue, backgroundColor: backgroundColor)
-                  ],
-                )
-              ],
-            ),
-          )
-        ],
+          //       Row(
+          //         children: <Widget> [
+          //           Container(
+          //             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+          //             child: Text(
+          //               "156 point",
+          //               style: GoogleFonts.montserrat(
+          //                 fontWeight: FontWeight.w400,
+          //                 fontSize: 11,
+          //                 color: const Color(0xff151515)
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       )
+          //     ],
+          //   ),
+          // ),
+
+          // Container(
+          //   margin: const EdgeInsets.fromLTRB(16, 5, 0, 0),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: <Widget> [
+          //       Text(
+          //         "Task 1",
+          //         style: GoogleFonts.poppins(
+          //           fontWeight: FontWeight.w400,
+          //           fontSize: 14,
+          //           color: const Color(0xff2E2323)
+          //         ),
+          //       ),
+
+          //       Row(
+          //         children: <Widget> [
+          //           Container(
+          //             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+          //             child: Text(
+          //               "156 point",
+          //               style: GoogleFonts.montserrat(
+          //                 fontWeight: FontWeight.w400,
+          //                 fontSize: 11,
+          //                 color: const Color(0xff151515)
+          //               ),
+          //             ),
+          //           ),
+
+          //         ],
+          //       )
+          //     ],
+          //   ),
+          // )
+        // ],
       )
       ]
       );
     },
   );
 }
+
+Color getColor(Set<MaterialState> states) {
+      const Set<MaterialState> interactiveStates = <MaterialState>{
+        MaterialState.pressed,
+        MaterialState.hovered,
+        MaterialState.focused,
+      };
+      if (states.any(interactiveStates.contains)) {
+        return Colors.blue;
+      }
+      return Colors.red;
+    }
 
 
 Container buildCheckbox({required Color iconColor, required Function() onChange, required Color borderColor, required Color backgroundColor}) {
@@ -243,7 +352,7 @@ Container buildCheckbox({required Color iconColor, required Function() onChange,
     ),
 
     child: InkWell(
-      onTap: () {onChange();},
+      onTap: () {onChange;},
       child: Icon(Icons.check, color: iconColor, size: 11,),
     ),
   );
