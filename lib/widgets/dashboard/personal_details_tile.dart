@@ -7,9 +7,13 @@ class PersonalDetails extends StatelessWidget {
   final bool mode;
   final VoidCallback onEdit;
   final VoidCallback onSave;
+  final String phone;
+  final String email;
 
 
   PersonalDetails({
+    required this.phone,
+    required this.email,
     required this.onSave,
     required this.onEdit,
     required this.mode,
@@ -93,7 +97,7 @@ class PersonalDetails extends StatelessWidget {
           
                 Container(
                   child: Text(
-                    "+374 43 804 726",
+                    phone,
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w300,
                       fontSize: 12,
@@ -123,7 +127,7 @@ class PersonalDetails extends StatelessWidget {
           
                 Container(
                   child: Text(
-                    "Test@gmail.cop",
+                    email,
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w300,
                       fontSize: 12,

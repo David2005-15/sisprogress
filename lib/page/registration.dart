@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/dropdown.dart';
 import 'package:sis_progress/data%20class/registration_data_grade10.dart';
 import 'package:sis_progress/data%20class/registration_data_grade9.dart';
@@ -176,8 +177,12 @@ class _Registration extends State<Registration> {
               // InputBox(controller: widget.grade, context: context, isPassword: false, initialValue: "Grade",),
               DropDown(context: context, dropDownDataClass: widget.dropDown),
               const NetworkRow(),
-              Button(text: "Next", height: 38, width: double.infinity, onPressed: () {
+              Button(text: "Next", height: 38, width: double.infinity, onPressed: () async {
                 if(widget.dropDown.value == "9th Grade") {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.setString("email", widget.email.text);
+                  prefs.setString("number", widget.phone.text);
+
                   widget.registration.fullName = widget.fullName.text;
                   widget.registration.email = widget.email.text;
                   widget.registration.password = widget.password.text;

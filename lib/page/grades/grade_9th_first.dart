@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/data%20class/radio_button_handler.dart';
 import 'package:sis_progress/data%20class/registration_data_grade9.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/grades/grade_9th_second.dart';
 import 'package:sis_progress/widgets/radio_button.dart';
 import '../../widgets/drawers/app_bar.dart';
@@ -38,6 +39,33 @@ class _Grade9thFirst extends State<Grade9thFirst> {
   String plan = "Early Desicion";
   String score = "Yes";
   String legacy = "Yes";
+
+  late TextEditingController _controller1;
+  late TextEditingController _controller2;
+  late TextEditingController _controller3;
+
+  Client httpClient = Client();
+
+  late List<String> uni;
+
+  void getUniver() async {
+    var temp = await httpClient.getAllUniversities();
+    // await httpClient.getPoints();
+    setState(() {
+      uni = temp;
+    });
+  }
+
+
+  @override
+  void initState() {
+    _controller1 = TextEditingController();
+    _controller2 = TextEditingController();
+    _controller3 = TextEditingController();
+
+    getUniver();
+    super.initState();
+  }
 
   // void changeTerms(String? item) {
   //   setState(() {
@@ -82,6 +110,8 @@ class _Grade9thFirst extends State<Grade9thFirst> {
             children: <Widget> [
               const ProgressBar(isPassed: [true, false, false]),
               buildTitle(),
+              buildMode(_controller1, uni, "University"),
+              buildMode(_controller2, , lableText),
               // CustomRadio(value: term, groupValue: terms),
               buildQuestion("1. Preferred start term (mandatory)"),
               // buildAnswer(changeTerms, terms, term),
@@ -199,3 +229,70 @@ Container buildQuestion(String question) {
   );
 }
 
+Container buildMode(
+    TextEditingController controller,
+    List<String> items,
+    String lableText) {
+  return Container(
+    margin: const EdgeInsets.fromLTRB(23, 16, 23, 0),
+    child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return TextFormField(
+        style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w400,
+            fontSize: 15,
+            fontStyle: FontStyle.normal,
+            color: Colors.white),
+        controller: controller,
+        decoration: InputDecoration(
+          alignLabelWithHint: true,
+          labelText: lableText,
+          // hintText: widget.hintText,
+          labelStyle: GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: 15,
+              fontStyle: FontStyle.normal,
+              color: const Color(0xffD2DAFF)),
+          hintStyle: GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: 15,
+              fontStyle: FontStyle.normal,
+              color: const Color(0xffD2DAFF)),
+          enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+          border: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+          focusColor: const Color(0xffD2DAFF),
+          focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xff36519D))),
+          suffixIcon: PopupMenuButton<String>(
+            color: const Color(0xffD2DAFF),
+            constraints:
+                BoxConstraints.expand(height: 150, width: constraints.maxWidth),
+            icon: const Icon(
+              Icons.arrow_drop_down,
+              color: Color(0xffD2DAFF),
+            ),
+            onSelected: (String value) {
+              controller.text = value;
+            },
+            itemBuilder: (BuildContext context) {
+              return items.map<PopupMenuItem<String>>((String value) {
+                return PopupMenuItem(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
+                        color: const Color(0xff121623),
+                      ),
+                    ));
+              }).toList();
+            },
+          ),
+        ),
+      );
+    }),
+  );
+}

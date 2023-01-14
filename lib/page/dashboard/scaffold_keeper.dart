@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/data%20class/notification_data.dart';
 import 'package:sis_progress/page/dashboard/dashboard.dart';
 import 'package:sis_progress/page/dashboard/explore_more_goals.dart';
@@ -27,6 +28,12 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
   late CalendarPage page;
   late List<Widget> pages;
+
+
+  Color iconColor = Colors.blue;
+  Color backgroundColor = Colors.white; 
+
+  bool isVisible = false;
 
   _ScaffoldHome() {
     page = CalendarPage();
@@ -65,6 +72,12 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     });
   }
 
+  void onCheckboxChange() {
+    setState(() {
+      isVisible = !isVisible;
+    });
+  }
+
   @override
   void initState() {
     body = pages[0];
@@ -91,6 +104,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
             onPressed: () {
               print(page.getChoosenDate());
               print(todayDate);
+              _dialogBuilder(context, () { }, onCheckboxChange, isVisible ? Colors.white : Colors.blue, isVisible ? Colors.blue: Colors.white);
             },
             backgroundColor: const Color(0xff355CCA),
             child: const Icon(Icons.add_rounded, color: Colors.white, size: 16,),
@@ -147,6 +161,90 @@ Container buildNotification({required VoidCallback onTap}) {
         ),
         child: const Icon(Icons.notifications_outlined, size: 17, color: Color(0xffD2DAFF),)
       ),
+    ),
+  );
+}
+
+Future<void> _dialogBuilder(BuildContext context, VoidCallback onSave, Function() onChange, Color iconColor, Color backgroundColor) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        // contentPadding: const EdgeInsets.fromLTRB(5, 30, 5, 30),
+        backgroundColor: Colors.white,
+        title: Text(
+          'Tasks', 
+          textAlign: TextAlign.left,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 15,
+            color: const Color(0xff2E2323)
+          ),
+        ),
+      actions: <Widget>[
+        Column(
+        // mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget> [
+          Container(
+            margin: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget> [
+                Text(
+                  "Task 1",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    color: const Color(0xff2E2323)
+                  ),
+                ),
+
+                Row(
+                  children: <Widget> [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: Text(
+                        "156 point",
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 11,
+                          color: const Color(0xff151515)
+                        ),
+                      ),
+                    ),
+
+                    buildCheckbox(iconColor: iconColor, onChange: () {
+                      onChange();
+                    }, borderColor: Colors.blue, backgroundColor: backgroundColor)
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      )
+      ]
+      );
+    },
+  );
+}
+
+
+Container buildCheckbox({required Color iconColor, required Function() onChange, required Color borderColor, required Color backgroundColor}) {
+  return Container(
+    margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+    width: 24,
+    height: 24,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(5),
+      border: Border.all(color: borderColor, width: 1),
+      color: Colors.transparent
+    ),
+
+    child: InkWell(
+      onTap: () {onChange();},
+      child: Icon(Icons.check, color: iconColor, size: 11,),
     ),
   );
 }

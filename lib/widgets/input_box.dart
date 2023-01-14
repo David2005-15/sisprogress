@@ -8,9 +8,11 @@ class InputBox extends StatefulWidget {
   final Function(String) onChanged;
   final TextInputType textInputType;
   String? initialValue;
+  bool? enabled;
 
   InputBox({
     this.initialValue,
+    this.enabled,
     required this.textInputType,
     required this.onChanged,
     required this.context,
@@ -52,6 +54,7 @@ class _InputBox extends State<InputBox> {
     return Container(
       margin: EdgeInsets.fromLTRB(23, getTopMargin(widget.context), 23, 0),
       child: TextFormField(
+        readOnly: widget.enabled ?? false,
         maxLines: 1,
         keyboardType: widget.textInputType,
         onChanged: (value) => {widget.onChanged(value), getColor(value)},

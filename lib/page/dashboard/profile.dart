@@ -3,13 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
 import '../../http client/http_client.dart';
 import '../../widgets/dashboard/profile_university_tile.dart';
 
 class Profile extends StatefulWidget {
-
   const Profile({
     super.key
   });
@@ -30,15 +29,19 @@ class _Profile extends State<Profile> {
   final ImagePicker _picker = ImagePicker();
 
   List<String> uni = [""];
+  List<List<dynamic>> points = [];
+
+  String university = "Harvard";
+
+  late String phone;
+  late String mail;
+
 
   Future getImage() async {
     var image = await _picker.pickImage(source: ImageSource.gallery, maxWidth: 120, maxHeight: 120);
-    var status = await Permission.camera.request();
 
     setState(() {
-      if(status.isGranted){
-        _image = image;
-      }
+      _image = image;
     });
   }
 
@@ -48,7 +51,7 @@ class _Profile extends State<Profile> {
     });
   }
 
-  void onSave() {
+  void onSave() async {
     setState(() {
       isEditable = false;
     });
@@ -69,21 +72,48 @@ class _Profile extends State<Profile> {
   @override
   void initState() {
     getUniver();
+    getPoint();
+    setUniversity();
+    setEmail();
+    
     super.initState();
   }
 
   void getUniver() async {
     var temp = await httpClient.getAllUniversities();
+    // await httpClient.getPoints();
     setState(() {
       uni = temp;
     });
   }
 
+  void getPoint() async {
+    var temp = await httpClient.getPoints();
+    setState(() {
+      points = temp;
+    });
+  }
 
+  void setUniversity() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      university = prefs.getString("university").toString();
+    });
+  }
+
+  void setEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      mail = prefs.getString("email").toString();
+      phone = prefs.getString("number").toString();
+    });
+  }
 
 
   @override
   Widget build(BuildContext context) {
+
+    // print(points);
     return Container(
       child: SingleChildScrollView(
         child: Column(
@@ -175,8 +205,8 @@ class _Profile extends State<Profile> {
               ],
             ),
 
-            UniversityTile(onEdit: changeMode, mode: isEditable, onSave: onSave, university: uni,),
-            PersonalDetails(mode: editPersonal, onEdit: onPersonalEdit, onSave: onPersonalSave,)
+            UniversityTile(onEdit: changeMode, mode: isEditable, onSave: onSave, university: uni, points: points, selectedUniversity: university,),
+            PersonalDetails(mode: editPersonal, onEdit: onPersonalEdit, onSave: onPersonalSave, phone: phone, email: mail,),
           ],
         ),
       ),
