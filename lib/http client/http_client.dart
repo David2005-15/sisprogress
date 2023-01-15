@@ -53,6 +53,7 @@ class Client {
     var userId = prefs.getString("user id");
 
     var calendarTasks = await dio.get("http://164.90.224.111/getTasks/inCalendar?id=$userId");
+    print(calendarTasks.data["task"]);
 
     return calendarTasks.data["task"];
   }

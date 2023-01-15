@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:sis_progress/data%20class/event_process.dart';
 import 'package:sis_progress/data%20class/popup_menu_status.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
-import 'package:sis_progress/widgets/custom_button.dart';
+import 'package:sis_progress/page/dashboard/even_tile.dart';
 import 'package:sis_progress/widgets/dashboard/calendar_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
-  final List<dynamic> event;
-
   CalendarPage({
-    required this.event,
     super.key
   });
 
@@ -41,10 +39,53 @@ class _CalendarPage extends State<CalendarPage> {
 
   var eventDate = [];
 
+  var event = [];
+
+  void setEvent() async {
+    var temp = await httpClient.getCalendarEvents();
+    setState(() {
+      event = temp;
+    });
+  }
+
+  void updateEvent() async {
+    var temp = await httpClient.getCalendarEvents();
+
+    setState(() {
+      event.clear();
+
+      temp.forEach((element) {
+        DateTime date;
+
+        if(element["startDate"] != null) {
+          DateTime date = DateTime.parse(element["startDate"]);
+          if(date.year == widget.choosenDate.year && date.month == widget.choosenDate.month && date.day == widget.choosenDate.day) {
+            event.add(element);
+          }
+        } 
+        // DateTime date = DateTime.parse(element["startDate"])
+        // if(date.year == widget.choosenDate.year && date.month == widget.choosenDate.month && date.day == widget.choosenDate.day) {
+        //   event.add(element);
+        // }
+      });
+    });
+  }
+
   @override
   void initState() {
+    setEvent();
+
     year = years[0].toString();
     super.initState();
+  }
+
+  EventProccess getProccess(String name) {
+    switch(name.toLowerCase()) {
+      case "in proccess":
+        return EventProccess.progress;
+      default:
+        return EventProccess.completed;
+    }
   }
 
   var calendarType = "Day";
@@ -53,6 +94,12 @@ class _CalendarPage extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    // event.forEach((element) {
+    //   if(element["startDate"] != null) {
+    //     eventDate.add(Event(element["startDate"])); 
+    //   } 
+    // });
+
     return Container(
       child: SingleChildScrollView(
         child: Column(
@@ -177,8 +224,11 @@ class _CalendarPage extends State<CalendarPage> {
                 rowHeight: 40,
                 selectedDayPredicate: (day) => isSameDay(day, widget.choosenDate),
                 onDaySelected: (selectedDay, focusedDay) {
+
+
                   setState(() {
                     widget.choosenDate = selectedDay;
+                    updateEvent();
                   });
                 },
                 calendarBuilders: CalendarBuilders(
@@ -326,9 +376,9 @@ class _CalendarPage extends State<CalendarPage> {
                ),
              ],
            ), 
-           Button(text: "Click", onPressed: () {
-            print(widget.event);
-           }, height: 100, width: 100)            
+           Column(
+            children: event.map((e) => EventTile(proccess: EventProccess.progress, title: "Task Title")).toList(),
+           )          
           ],
         ),
       ),

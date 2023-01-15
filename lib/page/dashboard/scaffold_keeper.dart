@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/notification_data.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
@@ -46,7 +47,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   Client httpClient = Client();
 
   _ScaffoldHome() {
-    page = CalendarPage(event: event,);
+    page = CalendarPage();
     pages = [const Dashboard(), page, const ExploreMoreGoals(), const Lectures(), const Profile()]; 
   }
 
@@ -76,15 +77,6 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     });
   }
 
-  List<dynamic> event = [];
-
-  void setEvent() async {
-    var temp = await httpClient.getCalendarEvents();
-    setState(() {
-      event = temp;
-    });
-  }
-
   void onAvatar() {
     setState(() {
       body = const Profile();
@@ -93,7 +85,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
   @override
   void initState() {
-    setEvent();
+
     body = pages[0];
      Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
@@ -341,12 +333,18 @@ Future<void> _dialogBuilder(BuildContext context, List<dynamic> tasks, List<List
         height: 34,
         child: ElevatedButton(
           onPressed: () {
+            var outputFormat = "yyyy-mm-dd hh:mm:ss";
+            DateFormat outputFormatter = DateFormat(outputFormat);
+            var output = DateTime.parse(outputFormatter.format(date));
+            print(output);
             httpClient.addTask(
               addedTasks[0]["id"], 
-              date.toString(), 
+              output.toString(),
               "in process", 
               "up to 6 weeks"
             );
+
+            Navigator.pop(context);
           }, 
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xff355CCA),
