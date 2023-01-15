@@ -56,7 +56,9 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
                 buildTitle(),
                 buildSubtitle(widget.email ?? ""),
                 buildDescription(),
-                Button(text: "Verify your email", onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ScaffoldHome()));}, height: 35, width: double.infinity),
+                Button(text: "Verify your email", onPressed: () {
+                  //Navigator.push(context, MaterialPageRoute(builder: (context) => ScaffoldHome()));
+                }, height: 35, width: double.infinity),
     
                 Container(
                   margin: const EdgeInsets.fromLTRB(5, 15, 20, 0),

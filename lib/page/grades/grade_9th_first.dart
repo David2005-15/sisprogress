@@ -96,7 +96,7 @@ class _Grade9thFirst extends State<Grade9thFirst> {
         // alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center, 
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget> [
               const ProgressBar(isPassed: [true, false, false]),

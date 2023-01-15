@@ -1,23 +1,25 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/notification_data.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/dashboard/dashboard.dart';
 import 'package:sis_progress/page/dashboard/explore_more_goals.dart';
 import 'package:sis_progress/page/dashboard/notification_page.dart';
 import 'package:sis_progress/page/dashboard/profile.dart';
 import 'package:sis_progress/widgets/bottom_nav_bar.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
-import 'package:watcher/watcher.dart';
 
 import 'calendar_page.dart';
 import 'lectures.dart';
 
 class ScaffoldHome extends StatefulWidget {
 
-  const ScaffoldHome({super.key});
+  const ScaffoldHome({
+    super.key
+  });
 
   @override
   State<StatefulWidget> createState() => _ScaffoldHome();
@@ -41,9 +43,11 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
   String? fullName;
 
+  Client httpClient = Client();
+
   _ScaffoldHome() {
-    page = CalendarPage();
-    pages = [const Dashboard(fullName: "Montana",), page, const ExploreMoreGoals(), const Lectures(), const Profile()]; 
+    page = CalendarPage(event: event,);
+    pages = [const Dashboard(), page, const ExploreMoreGoals(), const Lectures(), const Profile()]; 
   }
 
   Future<bool> _onBackButtonPressed() {
@@ -72,6 +76,15 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     });
   }
 
+  List<dynamic> event = [];
+
+  void setEvent() async {
+    var temp = await httpClient.getCalendarEvents();
+    setState(() {
+      event = temp;
+    });
+  }
+
   void onAvatar() {
     setState(() {
       body = const Profile();
@@ -80,6 +93,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
   @override
   void initState() {
+    setEvent();
     body = pages[0];
      Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
@@ -90,6 +104,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
         }
       });
     });
+
     super.initState();
 
     
@@ -137,12 +152,36 @@ class _ScaffoldHome extends State<ScaffoldHome> {
             width: 45,
             height: 45,  
             child: _selected == 1 ? FloatingActionButton(
-              onPressed: () {
-                List<String> tasks = [];
+              onPressed: () async {
+                var prefs = await SharedPreferences.getInstance();
+                var id = prefs.getString("user id").toString();
+
+                var value = await httpClient.getAllTaskAndFilter();
+
+                // var freeTasks = value.map((e) => e["compamyName"].toString()).toList();
+
+                List<List<dynamic>> subtasks = [];
+                List<List<String>> points = [];
+
+                for (var task in value) {
+                  List<dynamic> t = [];
+                  List<String> u = [];
+                  for (var subtask in task["SubTasks"]) {
+                    t.add(subtask);
+                    u.add(subtask["points"].toString());
+                  }
+                  subtasks.add(t);
+                  points.add(u);
+                }
+
+                print(subtasks);
+                print(points);
+
+                List<dynamic> tasks = [];
                 print(page.getChoosenDate());
                 print(todayDate);
                 if(page.getChoosenDate().day >= DateTime.now().day) {
-                  _dialogBuilder(context, ["Leadership", "OOP"],  ["156 points", "600 points"], tasks);
+                  _dialogBuilder(context, value, points, tasks, subtasks, httpClient, page.getChoosenDate(), );
                 }
               },
               backgroundColor: const Color(0xff355CCA),
@@ -205,61 +244,123 @@ Container buildNotification({required VoidCallback onTap}) {
   );
 }
 
-Future<void> _dialogBuilder(BuildContext context, List<String> tasks, List<String> points, List<String> addedTasks) {
+Future<void> _dialogBuilder(BuildContext context, List<dynamic> tasks, List<List<String>> points, List<dynamic> addedTasks, List<List<dynamic>> subtaks, Client httpClient, DateTime date) {
   List<Widget> taskContent = [];
-  bool isVisible = false;
+  // bool isVisible = false;
+
+  List<Widget> temp = [];
+  List<bool> boolan = [];
+
+  for(int i = 0; i < tasks.length; i ++) {
+    // bool visibilty = false;
+    boolan.add(false);
+    for(int j = 0; j < subtaks[i].length; j++) {
+      temp.add(
+        Visibility(
+                  visible: boolan[i],
+                  child: Column(
+                    children: <Widget> [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget> [
+                          Text(
+                            subtaks[i][j]["name"],
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: const Color(0xff646464)
+                            ),
+                          ),
+
+                          Text(
+                            points[i][j],
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: const Color(0xff646464)
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )
+      );
+    }
+  }
 
   for(int i = 0; i < tasks.length; i++) {
-    taskContent.add(
+      taskContent.add(
       Container(
-            margin: const EdgeInsets.fromLTRB(16, 5, 0, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget> [
-                Text(
-                  tasks[i],
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: const Color(0xff2E2323)
-                  ),
-                ),
-
+            margin: const EdgeInsets.fromLTRB(16, 5, 0, 5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget> [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      child: Text(
-                        points[i],
-                        style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 11,
-                          color: const Color(0xff151515)
-                        ),
+                    Text(
+                      tasks[i]["compamyName"].length > 20 ? "${tasks[i]["compamyName"].substring(0, 15)}..." : tasks[i]["compamyName"],
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: const Color(0xff2E2323)
                       ),
                     ),
-                  ],
-                ),
 
-                StatefulBuilder(builder: ((context, setState) {
-                  return Checkbox(
-                    fillColor: MaterialStateProperty.resolveWith(getColor),
-                     value: isVisible,
-                     onChanged: ((value) {
-                       setState(() {
-                        isVisible = value!;
-                        addedTasks.add(tasks[i]);
-                        print(addedTasks);
-                       });
-                     })
-                    );
-                }))
-              ],
+                    StatefulBuilder(builder: ((context, setState) {
+                      return Checkbox(
+                        fillColor: MaterialStateProperty.resolveWith(getColor),
+                         value: boolan[i],
+                         onChanged: ((value) {
+                           setState(() {
+                            boolan[i] = value!;
+                            value ? addedTasks.add(tasks[i]): addedTasks.remove(tasks[i]);
+                            print(addedTasks);
+                           });
+                         })
+                        );
+                    }))
+                  ],
+                ),   
+                temp[i]             
+              ],             
             ),
           ),
-    );
+      );
   }
+
+  taskContent.add(Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: <Widget> [
+      Container(),
+      Container(
+        margin: const EdgeInsets.fromLTRB(0, 0, 15, 10),
+        width: 86,
+        height: 34,
+        child: ElevatedButton(
+          onPressed: () {
+            httpClient.addTask(
+              addedTasks[0]["id"], 
+              date.toString(), 
+              "in process", 
+              "up to 6 weeks"
+            );
+          }, 
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xff355CCA),
+            textStyle: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
+              color: Colors.white
+            )
+          ),
+          child: const Text("Add")
+        ),
+      )
+    ],
+  ));
 
   return showDialog<void>(
     context: context,
@@ -276,84 +377,90 @@ Future<void> _dialogBuilder(BuildContext context, List<String> tasks, List<Strin
             color: const Color(0xff2E2323)
           ),
         ),
+      
       actions: <Widget>[
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: taskContent
-        // mainAxisAlignment: MainAxisAlignment.start,
-        // children: <Widget> [
-        //     tasks
-
-          // Container(
-          //   margin: const EdgeInsets.fromLTRB(16, 5, 0, 0),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: <Widget> [
-          //       Text(
-          //         "Task 1",
-          //         style: GoogleFonts.poppins(
-          //           fontWeight: FontWeight.w400,
-          //           fontSize: 14,
-          //           color: const Color(0xff2E2323)
-          //         ),
-          //       ),
-
-          //       Row(
-          //         children: <Widget> [
-          //           Container(
-          //             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-          //             child: Text(
-          //               "156 point",
-          //               style: GoogleFonts.montserrat(
-          //                 fontWeight: FontWeight.w400,
-          //                 fontSize: 11,
-          //                 color: const Color(0xff151515)
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       )
-          //     ],
-          //   ),
-          // ),
-
-          // Container(
-          //   margin: const EdgeInsets.fromLTRB(16, 5, 0, 0),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: <Widget> [
-          //       Text(
-          //         "Task 1",
-          //         style: GoogleFonts.poppins(
-          //           fontWeight: FontWeight.w400,
-          //           fontSize: 14,
-          //           color: const Color(0xff2E2323)
-          //         ),
-          //       ),
-
-          //       Row(
-          //         children: <Widget> [
-          //           Container(
-          //             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-          //             child: Text(
-          //               "156 point",
-          //               style: GoogleFonts.montserrat(
-          //                 fontWeight: FontWeight.w400,
-          //                 fontSize: 11,
-          //                 color: const Color(0xff151515)
-          //               ),
-          //             ),
-          //           ),
-
-          //         ],
-          //       )
-          //     ],
-          //   ),
-          // )
-        // ],
-      )
+        Container(
+          height: 400,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: taskContent
+            // mainAxisAlignment: MainAxisAlignment.start,
+            // children: <Widget> [
+            //     tasks
+          
+              // Container(
+              //   margin: const EdgeInsets.fromLTRB(16, 5, 0, 0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: <Widget> [
+              //       Text(
+              //         "Task 1",
+              //         style: GoogleFonts.poppins(
+              //           fontWeight: FontWeight.w400,
+              //           fontSize: 14,
+              //           color: const Color(0xff2E2323)
+              //         ),
+              //       ),
+          
+              //       Row(
+              //         children: <Widget> [
+              //           Container(
+              //             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+              //             child: Text(
+              //               "156 point",
+              //               style: GoogleFonts.montserrat(
+              //                 fontWeight: FontWeight.w400,
+              //                 fontSize: 11,
+              //                 color: const Color(0xff151515)
+              //               ),
+              //             ),
+              //           ),
+              //         ],
+              //       )
+              //     ],
+              //   ),
+              // ),
+          
+              // Container(
+              //   margin: const EdgeInsets.fromLTRB(16, 5, 0, 0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: <Widget> [
+              //       Text(
+              //         "Task 1",
+              //         style: GoogleFonts.poppins(
+              //           fontWeight: FontWeight.w400,
+              //           fontSize: 14,
+              //           color: const Color(0xff2E2323)
+              //         ),
+              //       ),
+          
+              //       Row(
+              //         children: <Widget> [
+              //           Container(
+              //             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+              //             child: Text(
+              //               "156 point",
+              //               style: GoogleFonts.montserrat(
+              //                 fontWeight: FontWeight.w400,
+              //                 fontSize: 11,
+              //                 color: const Color(0xff151515)
+              //               ),
+              //             ),
+              //           ),
+          
+              //         ],
+              //       )
+              //     ],
+              //   ),
+              // )
+            // ],
+                ),
+          ),
+        )
       ]
       );
     },

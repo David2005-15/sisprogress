@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/forgot_password.dart';
 import 'package:sis_progress/page/registration.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
@@ -26,6 +29,21 @@ class _LoginPage extends State<LoginPage> {
   Color iconColor = Colors.transparent;
   Color borderColor = Colors.white;
 
+  Client httpClient = Client();
+
+
+  String fullNameErrorText = "";
+  String emailErrorText = "";
+  bool showValidationOrNo = false;
+  bool showEmailValidation = false;
+
+  final RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+
+  bool emailMatch(String email) {
+    print(emailRegex.hasMatch(email));
+    return emailRegex.hasMatch(email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,8 +64,8 @@ class _LoginPage extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget> [
               buildTitle(),
-              InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.fullName, isPassword: false, initialValue: "Full Name"),
-              InputBox(textInputType: TextInputType.emailAddress, onChanged: (String val) {print(val);}, context: context, controller: widget.email, isPassword: false, initialValue: "Email"),
+              InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.fullName, isPassword: false, initialValue: "Full Name", errorText: fullNameErrorText, showValidationOrNot: showValidationOrNo,),
+              InputBox(textInputType: TextInputType.emailAddress, onChanged: (String val) {print(val);}, context: context, controller: widget.email, isPassword: false, initialValue: "Email", errorText: emailErrorText, showValidationOrNot: showEmailValidation,),
               InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.password, isPassword: true, initialValue: "Password"),
               buildLowerRow(isVisible, () {
                 setState(() {
@@ -64,8 +82,41 @@ class _LoginPage extends State<LoginPage> {
               const NetworkRow(),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                child: Button(text: "Log In", onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
+                child: Button(text: "Log In", onPressed: () async {
+                  if(widget.fullName.text.isEmpty || widget.fullName.text.length < 3) {
+                    setState(() {
+                      showValidationOrNo = true;
+                      fullNameErrorText = "Full name must be filled";
+                    });
+                  } else {
+                    setState(() {
+                      showValidationOrNo = false;
+                    });
+                  }
+
+                  if(!emailMatch(widget.email.text)) {
+                    setState(() {
+                      showEmailValidation = true;
+                      emailErrorText = "Email must be in the correct format";
+                    });
+                  } else {
+                    setState(() {
+                      showEmailValidation = false;
+                    });
+                  }
+
+                  try {
+                    var value = await httpClient.loginUser(widget.email.text, widget.password.text);
+                    print(value["success"]);
+                    if(value["success"]) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
+                    }
+                  } catch(e) {
+                    print(e);
+                  }
+                  // print(value["fullName"]);
+                  // print(value["fullName"]);
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
                 }, height: 38, width: 280)
               ),
 

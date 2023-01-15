@@ -8,11 +8,15 @@ class InputBox extends StatefulWidget {
   final Function(String) onChanged;
   final TextInputType textInputType;
   String? initialValue;
+  String? errorText;
   bool? enabled;
+  bool? showValidationOrNot;
 
   InputBox({
     this.initialValue,
     this.enabled,
+    this.errorText,
+    this.showValidationOrNot,
     required this.textInputType,
     required this.onChanged,
     required this.context,
@@ -63,8 +67,14 @@ class _InputBox extends State<InputBox> {
         // initialValue: widget.initialValue,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
+          errorText: widget.showValidationOrNot ?? false ? widget.errorText: null,
           alignLabelWithHint: true,
           labelText: widget.initialValue,
+          errorStyle: GoogleFonts.poppins(
+            fontWeight: FontWeight.w400,
+            fontSize: 10,
+            color: const Color(0xffE31F1F)
+          ),
           // hintText: widget.hintText,
           labelStyle: GoogleFonts.poppins(
             fontWeight: FontWeight.w400,

@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:sis_progress/data%20class/popup_menu_status.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
+import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/dashboard/calendar_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
-  CalendarPage({super.key});
+  final List<dynamic> event;
+
+  CalendarPage({
+    required this.event,
+    super.key
+  });
 
   @override
   State<StatefulWidget> createState() => _CalendarPage();
@@ -29,6 +36,10 @@ class _CalendarPage extends State<CalendarPage> {
   String month = "Dectember";
 
   List<Color> colors = [const Color(0xffB1B2FF), Colors.white, Colors.white];
+
+  Client httpClient = Client();
+
+  var eventDate = [];
 
   @override
   void initState() {
@@ -314,7 +325,10 @@ class _CalendarPage extends State<CalendarPage> {
                 ),
                ),
              ],
-           ),             
+           ), 
+           Button(text: "Click", onPressed: () {
+            print(widget.event);
+           }, height: 100, width: 100)            
           ],
         ),
       ),
