@@ -114,12 +114,14 @@ class _CalendarWidget extends State<CalendarWidget> {
                 
                 onCanceled: widget.onCanceled,
                 offset: const Offset(20, 50),
-                icon: widget.status == PopupMenuStatus.closed ? const Icon(
-                  Icons.arrow_back_outlined, 
-                  color: Color(0xffB1B2FF)
-                ) : const Icon(
-                  Icons.arrow_forward_outlined,
-                  color: Color(0xffB1B2FF)
+                icon: widget.status == PopupMenuStatus.closed ? const ImageIcon(
+                  AssetImage("assets/previous.png"),
+                    size: 14,
+                    color:Color(0xffBFBFBF),
+                  ) : const ImageIcon(
+                      AssetImage("assets/previous.png"),
+                        size: 14,
+                        color:Color(0xffBFBFBF),
                 ),
                 color: const Color(0xff3A3D4C),
                 itemBuilder: (BuildContext context) {  
