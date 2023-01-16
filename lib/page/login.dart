@@ -64,7 +64,7 @@ class _LoginPage extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget> [
               buildTitle(),
-              InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.fullName, isPassword: false, initialValue: "Full Name", errorText: fullNameErrorText, showValidationOrNot: showValidationOrNo,),
+              // InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.fullName, isPassword: false, initialValue: "Full Name", errorText: fullNameErrorText, showValidationOrNot: showValidationOrNo,),
               InputBox(textInputType: TextInputType.emailAddress, onChanged: (String val) {print(val);}, context: context, controller: widget.email, isPassword: false, initialValue: "Email", errorText: emailErrorText, showValidationOrNot: showEmailValidation,),
               InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.password, isPassword: true, initialValue: "Password"),
               buildLowerRow(isVisible, () {
@@ -83,16 +83,6 @@ class _LoginPage extends State<LoginPage> {
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                 child: Button(text: "Log In", onPressed: () async {
-                  if(widget.fullName.text.isEmpty || widget.fullName.text.length < 3) {
-                    setState(() {
-                      showValidationOrNo = true;
-                      fullNameErrorText = "Full name must be filled";
-                    });
-                  } else {
-                    setState(() {
-                      showValidationOrNo = false;
-                    });
-                  }
 
                   if(!emailMatch(widget.email.text)) {
                     setState(() {

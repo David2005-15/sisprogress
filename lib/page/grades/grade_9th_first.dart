@@ -167,7 +167,9 @@ class _Grade9thFirst extends State<Grade9thFirst> {
                           
                           prefs.setString("university", _controller1.text);
                 
-
+                          widget.registration.university = _controller1.text;
+                          widget.registration.school = _controller2.text;
+                          widget.registration.proffession = _controller3.text;
                           widget.registration.term = widget.term.value;
                           widget.registration.addmision = widget.plan.value;
                           widget.registration.aid = widget.score.value;

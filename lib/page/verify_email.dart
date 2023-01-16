@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sis_progress/page/login.dart';
 import 'package:sis_progress/widgets/countdown.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
@@ -57,7 +58,7 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
                 buildSubtitle(widget.email ?? ""),
                 buildDescription(),
                 Button(text: "Verify your email", onPressed: () {
-                  //Navigator.push(context, MaterialPageRoute(builder: (context) => ScaffoldHome()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                 }, height: 35, width: double.infinity),
     
                 Container(

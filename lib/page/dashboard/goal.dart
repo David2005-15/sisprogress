@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/widgets/dashboard/explore_more_goals_tile.dart';
 
 class GoalPage extends StatefulWidget {
@@ -15,8 +16,42 @@ class GoalPage extends StatefulWidget {
 }
 
 class _GoalPage extends State<GoalPage> {
+  Client client = Client();
+
+  List<Widget> goals = [];
+
+  @override
+  void initState() {
+    getAllTasks();
+
+    super.initState();
+  }
+
+  List<dynamic> tasks = [
+
+  ];
+
+  void getAllTasks() async {
+    var temp = await client.getAllTaskAndFilter();
+    setState(() {
+      tasks = temp;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    for(int i = 1; i < tasks.length; i+=2) {
+      setState(() {
+        goals.add(Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children:  [
+              ExploreTile(title: tasks[i - 1]["positionName"], disabled: tasks[i - 1]["isFree"], taskId: tasks[i - 1]["id"],),
+              ExploreTile(title: tasks[i]["positionName"], disabled: tasks[i]["isFree"], taskId: tasks[i]["id"],)
+            ],
+        ));
+      });
+    }
+
     return Container(
       child: SingleChildScrollView(
         child: Column(
@@ -24,12 +59,8 @@ class _GoalPage extends State<GoalPage> {
           children: <Widget> [
             buildTitle(),
             buildButton(widget.title, (p0) {}),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ExploreTile(),
-                ExploreTile()
-              ],
+            Column(
+              children: goals,
             )
           ],
         ),

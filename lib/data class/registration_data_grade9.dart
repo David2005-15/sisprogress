@@ -11,6 +11,9 @@ class  RegistrationGrade9 {
   String? aid;
   String? legacy;
   String? workExp;
+  String? university;
+  String? school;
+  String? proffession;
 
   RegistrationGrade9({
     this.fullName,

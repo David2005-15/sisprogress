@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/graph_data.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/widgets/dashboard/graph.dart';
@@ -38,10 +39,12 @@ class _Dashboard extends State<Dashboard> {
   }
 
   void setUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     var value = await httpClient.getUserData();
     setState(() {
 
       fullName = value["fullName"];
+      prefs.setString("country", value["country"]);    
     });
   }
 

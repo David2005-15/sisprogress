@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/data%20class/registration_data_grade10.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/verify_email.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/input_box.dart';
@@ -39,6 +40,8 @@ class _Grade10thSecond extends State<Grade10thSecond> {
   List<String> thirdQuestion = ["SAT", "ACT"];
   List<String> yesOrNo = ["Yes", "No"];
   List<String> noOrYes = ["No", "Yes"];
+
+  Client httpClient = Client();
 
   final GlobalKey<CustomRadioState> _key = GlobalKey();
 
@@ -206,7 +209,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   ],
                 ),
               ),
-              buildNavigation(context, widget.activites, () {
+              buildNavigation(context, widget.activites, () async {
                 widget.reg.uniActvity = widget.activites;
                 widget.reg.place = widget.secondQuest.value;
                 widget.reg.testScore = widget.thirdQuest.value;
@@ -221,7 +224,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 } else {
                   widget.reg.details = "No";
                 }
-
+                await httpClient.registerForGrade10(widget.reg);
                 Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.reg.email,)));
               }),
 

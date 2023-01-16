@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
 
 class ExploreTile extends StatelessWidget {
-  const ExploreTile({super.key});
+  final String title;
+  final bool disabled;
+  final int taskId;
+
+  ExploreTile({
+    required this.taskId,
+    required this.title,
+    required this.disabled,
+    super.key
+  });
+
+  Client httpClient = Client();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 154,
       height: 190,
-      margin: const EdgeInsets.fromLTRB(12, 14, 12, 0),
+      margin: const EdgeInsets.fromLTRB(15, 14, 15, 0),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
         color: Color(0xFFD2DAFF),
@@ -34,13 +47,13 @@ class ExploreTile extends StatelessWidget {
               child: Stack(
                 children: <Widget> [
                   Align(
-                    alignment: Alignment.topCenter,
+                    alignment: Alignment.topLeft,
                     child: Container(
                       margin: const EdgeInsets.all(5),
                       child: FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
-                          "Title of the task",
+                          title,
                           style: GoogleFonts.montserrat(
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
@@ -78,7 +91,13 @@ class ExploreTile extends StatelessWidget {
                       height: 23,
                       width: 73,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: disabled ? () {
+                          var outputFormat = "yyyy-mm-dd hh:mm:ss";
+                          DateFormat outputFormatter = DateFormat(outputFormat);
+                          var output = DateTime.parse(outputFormatter.format(DateTime.now()));
+                          print(output);
+                          httpClient.addTask(taskId, output.toString());
+                        } : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xff355CCA)
                         ),

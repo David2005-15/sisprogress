@@ -108,6 +108,8 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     });
   }
 
+
+
   bool isVisible = false;
   bool isFloatingButtonVisisble = true;
 
@@ -166,15 +168,13 @@ class _ScaffoldHome extends State<ScaffoldHome> {
                   points.add(u);
                 }
 
-                print(subtasks);
-                print(points);
-
                 List<dynamic> tasks = [];
-                print(page.getChoosenDate());
-                print(todayDate);
-                if(page.getChoosenDate().day >= DateTime.now().day) {
-                  _dialogBuilder(context, value, points, tasks, subtasks, httpClient, page.getChoosenDate(), );
-                }
+
+                _dialogBuilder(context, value, points, tasks, subtasks, httpClient, page.getChoosenDate(), () {
+                    setState(() {
+                      var temp = tasks;
+                    });
+                  });
               },
               backgroundColor: const Color(0xff355CCA),
               child: const Icon(Icons.add_rounded, color: Colors.white, size: 16,),
@@ -236,7 +236,7 @@ Container buildNotification({required VoidCallback onTap}) {
   );
 }
 
-Future<void> _dialogBuilder(BuildContext context, List<dynamic> tasks, List<List<String>> points, List<dynamic> addedTasks, List<List<dynamic>> subtaks, Client httpClient, DateTime date) {
+Future<void> _dialogBuilder(BuildContext context, List<dynamic> tasks, List<List<String>> points, List<dynamic> addedTasks, List<List<dynamic>> subtaks, Client httpClient, DateTime date, VoidCallback reload) {
   List<Widget> taskContent = [];
   // bool isVisible = false;
 
@@ -339,12 +339,11 @@ Future<void> _dialogBuilder(BuildContext context, List<dynamic> tasks, List<List
             print(output);
             httpClient.addTask(
               addedTasks[0]["id"], 
-              output.toString(),
-              "in process", 
-              "up to 6 weeks"
+              output.toString()
             );
 
             Navigator.pop(context);
+            reload();
           }, 
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xff355CCA),

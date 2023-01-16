@@ -33,9 +33,10 @@ class _Profile extends State<Profile> {
 
   String university = "Harvard";
 
-  late String phone;
-  late String mail;
-  late String fullName;
+  late String phone = "";
+  late String mail = "";
+  late String fullName = "";
+  late String country = "";
 
 
   Future getImage() async {
@@ -109,6 +110,7 @@ class _Profile extends State<Profile> {
       mail = prefs.getString("email").toString();
       phone = prefs.getString("number").toString();
       fullName = prefs.getString("full name").toString();
+      country = prefs.getString("country").toString();
     });
   }
 
@@ -190,7 +192,7 @@ class _Profile extends State<Profile> {
                         ),
                       ),
                       Text(
-                        "Yerevan, Armenia",
+                        country,
                         style: GoogleFonts.montserrat(
                           fontWeight: FontWeight.w500,
                           fontSize: 17,

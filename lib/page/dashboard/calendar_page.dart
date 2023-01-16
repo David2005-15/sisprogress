@@ -5,6 +5,7 @@ import 'package:sis_progress/data%20class/event_process.dart';
 import 'package:sis_progress/data%20class/popup_menu_status.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/dashboard/even_tile.dart';
+import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/dashboard/calendar_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -37,16 +38,8 @@ class _CalendarPage extends State<CalendarPage> {
 
   Client httpClient = Client();
 
-  var eventDate = [];
-
   var event = [];
 
-  void setEvent() async {
-    var temp = await httpClient.getCalendarEvents();
-    setState(() {
-      event = temp;
-    });
-  }
 
   void updateEvent() async {
     var temp = await httpClient.getCalendarEvents();
@@ -59,7 +52,7 @@ class _CalendarPage extends State<CalendarPage> {
 
         if(element["startDate"] != null) {
           DateTime date = DateTime.parse(element["startDate"]);
-          if(date.year == widget.choosenDate.year && date.month == widget.choosenDate.month && date.day == widget.choosenDate.day) {
+          if(date.day == widget.choosenDate.day) {
             event.add(element);
           }
         } 
@@ -73,16 +66,18 @@ class _CalendarPage extends State<CalendarPage> {
 
   @override
   void initState() {
-    setEvent();
+    updateEvent();
 
     year = years[0].toString();
     super.initState();
   }
 
   EventProccess getProccess(String name) {
-    switch(name.toLowerCase()) {
+    switch(name) {
       case "in proccess":
         return EventProccess.progress;
+      case "planed":
+        return EventProccess.planned;
       default:
         return EventProccess.completed;
     }
@@ -224,8 +219,6 @@ class _CalendarPage extends State<CalendarPage> {
                 rowHeight: 40,
                 selectedDayPredicate: (day) => isSameDay(day, widget.choosenDate),
                 onDaySelected: (selectedDay, focusedDay) {
-
-
                   setState(() {
                     widget.choosenDate = selectedDay;
                     updateEvent();
@@ -377,8 +370,8 @@ class _CalendarPage extends State<CalendarPage> {
              ],
            ), 
            Column(
-            children: event.map((e) => EventTile(proccess: EventProccess.progress, title: "Task Title")).toList(),
-           )          
+            children: event.map((e) => EventTile(proccess: getProccess(e["status"]), title: e["Tasks"][0]["positionName"])).toList(),
+           ),        
           ],
         ),
       ),

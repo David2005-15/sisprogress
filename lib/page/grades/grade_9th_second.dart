@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/data%20class/registration_data_grade9.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/verify_email.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/progress/progress_bar.dart';
@@ -21,6 +22,8 @@ class Grade9thSecond extends StatefulWidget {
 
 
 class _Grade9thSecond extends State<Grade9thSecond> {
+  Client httpClient = Client();
+
   String text = "0/160";
 
   void getInputLength(TextEditingController controller) {
@@ -153,9 +156,9 @@ class _Grade9thSecond extends State<Grade9thSecond> {
                                 fontSize: 18
                               ),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               widget.registration.workExp = widget.work.text;
-                              print(widget.registration.fullName);
+                              await httpClient.registerForGrade9(widget.registration);
                               Navigator.push(context,  MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.registration.email,)));
                             },
                           ),

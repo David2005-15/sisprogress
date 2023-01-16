@@ -71,6 +71,18 @@ class _Registration extends State<Registration> {
     });
   }
 
+  String fullNameErrorText = "";
+  String emailErrorText = "";
+  bool showValidationOrNo = false;
+  bool showEmailValidation = false;
+
+  final RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+
+  bool emailMatch(String email) {
+    print(emailRegex.hasMatch(email));
+    return emailRegex.hasMatch(email);
+  }
+
   // void changeValidation() {
   //   setState(() {
   //     length8 = false;
@@ -130,8 +142,8 @@ class _Registration extends State<Registration> {
             children: <Widget> [
               const ProgressBar(isPassed: [false, false, false]),
               buildTitle(),
-              InputBox(controller: widget.fullName, context: context, isPassword: false, initialValue: "Full Name", onChanged: (String val) {print(val);}, textInputType: TextInputType.text),
-              InputBox(controller: widget.email, context: context, isPassword: false, initialValue: "Email", onChanged: (String val) {print(val);}, textInputType: TextInputType.emailAddress),
+              InputBox(controller: widget.fullName, context: context, isPassword: false, initialValue: "Full Name", onChanged: (String val) {print(val);}, textInputType: TextInputType.text, errorText: fullNameErrorText, showValidationOrNot: showValidationOrNo,),
+              InputBox(controller: widget.email, context: context, isPassword: false, initialValue: "Email", onChanged: (String val) {print(val);}, textInputType: TextInputType.emailAddress, errorText: emailErrorText, showValidationOrNot: showEmailValidation,),
               Focus(onFocusChange: ((value) {
                 setState(() {
                   isVisible = value;
@@ -180,6 +192,7 @@ class _Registration extends State<Registration> {
               Button(text: "Next", height: 38, width: double.infinity, onPressed: () async {
                 if(widget.dropDown.value == "9th Grade") {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
+
                   prefs.setString("email", widget.email.text);
                   prefs.setString("number", widget.phone.text);
                   prefs.setString("full name", widget.fullName.text);
@@ -192,7 +205,11 @@ class _Registration extends State<Registration> {
                   widget.registration.age = widget.age.text;
                   widget.registration.grade = widget.dropDown.value;
                   print(widget.registration.grade);
+                  
+
+                  // if(showValidationOrNo && showEmailValidation) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => Grade9thFirst(registration: widget.registration,)));
+                  // }
                 } else if(widget.dropDown.value == "10th Grade") {
                   widget.reg10.fullName = widget.fullName.text;
                   widget.reg10.email = widget.email.text;
@@ -201,7 +218,9 @@ class _Registration extends State<Registration> {
                   widget.reg10.country = widget.country.text;
                   widget.reg10.age = widget.age.text;
                   widget.reg10.grade = widget.dropDown.value;
+                  // if(showValidationOrNo && showEmailValidation) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => Grade10thFirst(registration: widget.reg10,)));
+                  // }
                 }
               },)
             ],

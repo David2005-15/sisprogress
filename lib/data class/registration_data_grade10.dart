@@ -14,8 +14,11 @@ class RegistrationGrade10 {
   List<String>? uniActvity;
   String? place;
   String? testScore;
-  String? school;
+  String? highSchool;
   String? honors;
+  String? university;
+  String? school;
+  String? profession;
   // String? test;
   String? addmisionTest;
   List<String>? outActivity;
@@ -38,8 +41,11 @@ class RegistrationGrade10 {
     this.uniActvity,
     this.place,
     this.testScore,
-    this.school,
+    this.highSchool,
     this.honors,
+    this.university,
+    this.school,
+    this.profession,
     // this.test,
     this.addmisionTest,
     this.outActivity,
