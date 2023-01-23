@@ -7,8 +7,10 @@ class ExploreTile extends StatelessWidget {
   final String title;
   final bool disabled;
   final int taskId;
+  final String taskCount;
 
   ExploreTile({
+    required this.taskCount,
     required this.taskId,
     required this.title,
     required this.disabled,
@@ -73,7 +75,7 @@ class ExploreTile extends StatelessWidget {
                           child: const Icon(Icons.calendar_month, size: 11, color: Color(0xff2E2323),)
                         ),
                         Text(
-                          "0/10",
+                          taskCount,
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w400,
                             fontSize: 11,

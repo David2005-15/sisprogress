@@ -53,10 +53,6 @@ class NavBar extends StatelessWidget {
               label: "Dashboard"
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.book_outlined, size: 24),
-              label: "Lectures"
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.people_outlined, size: 24,),
                 label: "Profile"
               ),

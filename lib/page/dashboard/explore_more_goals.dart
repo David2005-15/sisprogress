@@ -11,7 +11,7 @@ class ExploreMoreGoals extends StatefulWidget {
 }
 
 class _ExploreMoreGoals extends State<ExploreMoreGoals> {
-  List<String> titles = ["Extracurricular", "Personal development", "Academics", "Standardized tests", "Category 5"];
+  List<String> titles = ["Extracurricular"];
   late Widget body;
 
   @override
@@ -23,10 +23,6 @@ class _ExploreMoreGoals extends State<ExploreMoreGoals> {
           children: <Widget> [
             buildTitle(),
             buildButton("Extracurricular", getState),
-            buildButton("Personal development", getState),
-            buildButton("Academics", getState),
-            buildButton("Standardized tests", getState),
-            buildButton("Category 5", getState)
           ],
         ),
       ),

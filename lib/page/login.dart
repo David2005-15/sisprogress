@@ -37,6 +37,9 @@ class _LoginPage extends State<LoginPage> {
   bool showValidationOrNo = false;
   bool showEmailValidation = false;
 
+
+  bool showErrorVisibility = false; 
+
   final RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
   bool emailMatch(String email) {
@@ -67,6 +70,20 @@ class _LoginPage extends State<LoginPage> {
               // InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.fullName, isPassword: false, initialValue: "Full Name", errorText: fullNameErrorText, showValidationOrNot: showValidationOrNo,),
               InputBox(textInputType: TextInputType.emailAddress, onChanged: (String val) {print(val);}, context: context, controller: widget.email, isPassword: false, initialValue: "Email", errorText: emailErrorText, showValidationOrNot: showEmailValidation,),
               InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.password, isPassword: true, initialValue: "Password"),
+              Visibility(
+                visible: showErrorVisibility,
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
+                  child: Text(
+                    "Email or password is invalid",
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                      color: Colors.red
+                    ),
+                  ),
+                )
+              ),
               buildLowerRow(isVisible, () {
                 setState(() {
                   isVisible = !isVisible;
@@ -79,11 +96,11 @@ class _LoginPage extends State<LoginPage> {
                   }
                 });
               }, context, iconColor, borderColor),
-              const NetworkRow(),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                 child: Button(text: "Log In", onPressed: () async {
 
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
                   if(!emailMatch(widget.email.text)) {
                     setState(() {
                       showEmailValidation = true;
@@ -102,7 +119,9 @@ class _LoginPage extends State<LoginPage> {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
                     }
                   } catch(e) {
-                    print(e);
+                    setState(() {
+                      showErrorVisibility = true;
+                    });
                   }
                   // print(value["fullName"]);
                   // print(value["fullName"]);

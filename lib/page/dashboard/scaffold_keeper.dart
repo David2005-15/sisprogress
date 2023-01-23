@@ -11,24 +11,20 @@ import 'package:sis_progress/page/dashboard/explore_more_goals.dart';
 import 'package:sis_progress/page/dashboard/notification_page.dart';
 import 'package:sis_progress/page/dashboard/profile.dart';
 import 'package:sis_progress/widgets/bottom_nav_bar.dart';
+import 'package:sis_progress/widgets/dashboard/show_subtask.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 
 import 'calendar_page.dart';
 import 'lectures.dart';
 
 class ScaffoldHome extends StatefulWidget {
-
-  const ScaffoldHome({
-    super.key
-  });
+  const ScaffoldHome({super.key});
 
   @override
   State<StatefulWidget> createState() => _ScaffoldHome();
-
 }
 
 class _ScaffoldHome extends State<ScaffoldHome> {
-
   int _selected = 0;
   late Widget body;
 
@@ -38,9 +34,8 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   late CalendarPage page;
   late List<Widget> pages;
 
-
   Color iconColor = Colors.blue;
-  Color backgroundColor = Colors.white; 
+  Color backgroundColor = Colors.white;
 
   String? fullName;
 
@@ -48,15 +43,20 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
   _ScaffoldHome() {
     page = CalendarPage();
-    pages = [const Dashboard(), page, const ExploreMoreGoals(), const Lectures(), const Profile()]; 
+    pages = [
+      const Dashboard(),
+      page,
+      const ExploreMoreGoals(),
+      const Profile()
+    ];
   }
 
   Future<bool> _onBackButtonPressed() {
     setState(() {
-      if(_selected != 0) {
+      if (_selected != 0) {
         _selected = 0;
-        body = pages[_selected];  
-      } 
+        body = pages[_selected];
+      }
     });
 
     return Future.value(false);
@@ -70,10 +70,13 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   }
 
   void onNotification() {
-    var data = NotificationData(title: "Notification Data", description: "It is notification");
+    var data = NotificationData(
+        title: "Notification Data", description: "It is notification");
 
     setState(() {
-      body = NotificationPage(notifications: <NotificationData> [data],);
+      body = NotificationPage(
+        notifications: <NotificationData>[data],
+      );
     });
   }
 
@@ -85,11 +88,10 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
   @override
   void initState() {
-
     body = pages[0];
-     Timer.periodic(const Duration(milliseconds: 200), (timer) {
+    Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
-        if(page.getChoosenDate().day < DateTime.now().day) {
+        if (page.getChoosenDate().day < DateTime.now().day) {
           isFloatingButtonVisisble = false;
         } else {
           isFloatingButtonVisisble = true;
@@ -98,8 +100,6 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     });
 
     super.initState();
-
-    
   }
 
   void onCheckboxChange() {
@@ -108,20 +108,16 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     });
   }
 
-
-
   bool isVisible = false;
   bool isFloatingButtonVisisble = true;
 
-
   void changeFloatingButtonState() {
     setState(() {
-      if(page.getChoosenDate().day < DateTime.now().day) {
+      if (page.getChoosenDate().day < DateTime.now().day) {
         isFloatingButtonVisisble = false;
       } else {
         isFloatingButtonVisisble = true;
       }
-
     });
   }
 
@@ -132,59 +128,60 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     return WillPopScope(
       onWillPop: _onBackButtonPressed,
       child: Scaffold(
-        bottomNavigationBar: NavBar(selected: _selected, onChange: (int count) {
-          setState(() {
-            _selected = count;
-            body = pages[_selected];
-          });
-        }),
-        appBar: CustomAppBar(buildLogoIcon(onIcon), <Widget> [buildNotification(onTap: onNotification), buildAvatar(onTap: onAvatar)]),
+        bottomNavigationBar: NavBar(
+            selected: _selected,
+            onChange: (int count) {
+              setState(() {
+                _selected = count;
+                body = pages[_selected];
+              });
+            }),
+        appBar: CustomAppBar(buildLogoIcon(onIcon), <Widget>[
+          buildNotification(onTap: onNotification),
+          buildAvatar(onTap: onAvatar)
+        ]),
         body: body,
         floatingActionButton: Visibility(
           visible: isFloatingButtonVisisble,
           child: SizedBox(
             width: 45,
-            height: 45,  
-            child: _selected == 1 ? FloatingActionButton(
-              onPressed: () async {
-                var prefs = await SharedPreferences.getInstance();
-                var id = prefs.getString("user id").toString();
+            height: 45,
+            child: _selected == 1
+                ? FloatingActionButton(
+                    onPressed: () async {
+                      var prefs = await SharedPreferences.getInstance();
+                      var id = prefs.getString("user id").toString();
 
-                var value = await httpClient.getAllTaskAndFilter();
+                      var value = await httpClient.getAllTaskAndFilter();
+                      print(value.length);
 
-                // var freeTasks = value.map((e) => e["compamyName"].toString()).toList();
+                      // var freeTasks = value.map((e) => e["compamyName"].toString()).toList();
 
-                List<List<dynamic>> subtasks = [];
-                List<List<String>> points = [];
+                      List<List<dynamic>> subtasks = [];
+                      List<List<String>> points = [];
 
-                for (var task in value) {
-                  List<dynamic> t = [];
-                  List<String> u = [];
-                  for (var subtask in task["SubTasks"]) {
-                    t.add(subtask);
-                    u.add(subtask["points"].toString());
-                  }
-                  subtasks.add(t);
-                  points.add(u);
-                }
+                      List<dynamic> tasks = [];
 
-                List<dynamic> tasks = [];
-
-                _dialogBuilder(context, value, points, tasks, subtasks, httpClient, page.getChoosenDate(), () {
-                    setState(() {
-                      var temp = tasks;
-                    });
-                  });
-              },
-              backgroundColor: const Color(0xff355CCA),
-              child: const Icon(Icons.add_rounded, color: Colors.white, size: 16,),
-            ): null,
+                      _dialogBuilder(context, value, points, tasks, httpClient,
+                          page.getChoosenDate(), () {
+                        setState(() {
+                          var temp = tasks;
+                        });
+                      });
+                    },
+                    backgroundColor: const Color(0xff355CCA),
+                    child: const Icon(
+                      Icons.add_rounded,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                  )
+                : null,
           ),
         ),
       ),
     );
   }
-  
 }
 
 Container buildLogoIcon(VoidCallback onTap) {
@@ -192,16 +189,14 @@ Container buildLogoIcon(VoidCallback onTap) {
     width: 62,
     height: 39,
     child: IconButton(
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onPressed: onTap, 
-      icon: Image.asset(
-        "assets/logo.png",
-      )
-    ),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onPressed: onTap,
+        icon: Image.asset(
+          "assets/logo.png",
+        )),
   );
 }
-
 
 Container buildAvatar({required VoidCallback onTap}) {
   return Container(
@@ -223,138 +218,165 @@ Container buildNotification({required VoidCallback onTap}) {
       highlightColor: Colors.transparent, // Splash color
       onTap: onTap,
       child: Container(
-        width: 36, 
-        height: 36, 
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Color(0xff3A3D4C)
-        ),
-        child: const Icon(Icons.notifications_outlined, size: 17, color: Color(0xffD2DAFF),)
-      ),
+          width: 36,
+          height: 36,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle, color: Color(0xff3A3D4C)),
+          child: const Icon(
+            Icons.notifications_outlined,
+            size: 17,
+            color: Color(0xffD2DAFF),
+          )),
     ),
   );
 }
 
-Future<void> _dialogBuilder(BuildContext context, List<dynamic> tasks, List<List<String>> points, List<dynamic> addedTasks, List<List<dynamic>> subtaks, Client httpClient, DateTime date, VoidCallback reload) {
+Future<void> _dialogBuilder(
+    BuildContext context,
+    List<dynamic> tasks,
+    List<List<String>> points,
+    List<dynamic> addedTasks,
+    Client httpClient,
+    DateTime date,
+    VoidCallback reload) {
   List<Widget> taskContent = [];
   // bool isVisible = false;
 
-  List<Widget> temp = [];
   List<bool> boolan = [];
+  List<List<Widget>> subtaskNames = [];
 
-  for(int i = 0; i < tasks.length; i ++) {
-    // bool visibilty = false;
+
+  for (int i = 0; i < tasks.length; i++) {
     boolan.add(false);
-    for(int j = 0; j < subtaks[i].length; j++) {
-      temp.add(
-        Visibility(
-                  visible: boolan[i],
-                  child: Column(
-                    children: <Widget> [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget> [
-                          Text(
-                            subtaks[i][j]["name"],
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: const Color(0xff646464)
-                            ),
-                          ),
-
-                          Text(
-                            points[i][j],
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: const Color(0xff646464)
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                )
-      );
-    }
-  }
-
-  for(int i = 0; i < tasks.length; i++) {
-      taskContent.add(
+    
+    // print(tasks[i]);
+    taskContent.add(
       Container(
-            margin: const EdgeInsets.fromLTRB(16, 5, 0, 5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
+        margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Theme(
+              data:
+                  Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget> [
+                  children: <Widget>[
                     Text(
-                      tasks[i]["compamyName"].length > 20 ? "${tasks[i]["compamyName"].substring(0, 15)}..." : tasks[i]["compamyName"],
+                      tasks[i]["positionName"].length > 15
+                          ? "${tasks[i]["positionName"].substring(0, 14)}..."
+                          : tasks[i]["positionName"],
+                      // "Hello",
                       style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: const Color(0xff2E2323)
-                      ),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: const Color(0xff2E2323)),
                     ),
-
                     StatefulBuilder(builder: ((context, setState) {
-                      return Checkbox(
-                        fillColor: MaterialStateProperty.resolveWith(getColor),
-                         value: boolan[i],
-                         onChanged: ((value) {
-                           setState(() {
-                            boolan[i] = value!;
-                            value ? addedTasks.add(tasks[i]): addedTasks.remove(tasks[i]);
-                            print(addedTasks);
-                           });
-                         })
-                        );
+                      return Container(
+                        width: 24,
+                        height: 24,
+                        margin: const EdgeInsets.all(0),
+                        padding: const EdgeInsets.all(0),
+                        child: Checkbox(
+                            fillColor:
+                                MaterialStateProperty.resolveWith(getColor),
+                            value: (tasks[i]["isFree"] == false)
+                                ? true
+                                : boolan[i],
+                            onChanged: (tasks[i]["isFree"] == false)
+                                ? null
+                                : ((value) {
+                                    setState(() {
+                                      boolan[i] = value!;
+                                      value
+                                          ? addedTasks.add(tasks[i])
+                                          : addedTasks.remove(tasks[i]);
+                                      print(addedTasks);
+                                    });
+                                  })),
+                      );
                     }))
                   ],
-                ),   
-                temp[i]             
-              ],             
+                ),
+                children: List<Widget>.from(tasks[i]["SubTasks"]
+                        .map((e) =>
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(15, 0, 0, 5),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      e["name"].length > 15
+                                          ? e["name"].substring(0, 15)
+                                          : e["name"],
+                                      style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14,
+                                          color: const Color(0xff646464)),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.fromLTRB(
+                                          0, 0, 15, 0),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.fromLTRB(
+                                                8, 0, 5, 0),
+                                            child: Text(
+                                              "${e["points"]} Points",
+                                              style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 14,
+                                                  color:
+                                                      const Color(0xff646464)),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            )
+                        .toList()),
+              ),
             ),
-          ),
-      );
+          ],
+        ),
+      ),
+    );
   }
 
   taskContent.add(Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: <Widget> [
+    children: <Widget>[
       Container(),
       Container(
         margin: const EdgeInsets.fromLTRB(0, 0, 15, 10),
         width: 86,
         height: 34,
         child: ElevatedButton(
-          onPressed: () {
-            var outputFormat = "yyyy-mm-dd hh:mm:ss";
-            DateFormat outputFormatter = DateFormat(outputFormat);
-            var output = DateTime.parse(outputFormatter.format(date));
-            print(output);
-            httpClient.addTask(
-              addedTasks[0]["id"], 
-              output.toString()
-            );
+            onPressed: () {
+              var outputFormat = "yyyy-mm-dd hh:mm:ss";
+              DateFormat outputFormatter = DateFormat(outputFormat);
+              var output = DateTime.parse(outputFormatter.format(date));
+              print(output);
+              httpClient.addTask(addedTasks[0]["id"], output.toString());
 
-            Navigator.pop(context);
-            reload();
-          }, 
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xff355CCA),
-            textStyle: GoogleFonts.montserrat(
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-              color: Colors.white
-            )
-          ),
-          child: const Text("Add")
-        ),
+              Navigator.pop(context);
+              reload();
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff355CCA),
+                textStyle: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    color: Colors.white)),
+            child: const Text("Add")),
       )
     ],
   ));
@@ -363,134 +385,66 @@ Future<void> _dialogBuilder(BuildContext context, List<dynamic> tasks, List<List
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        // contentPadding: const EdgeInsets.fromLTRB(5, 30, 5, 30),
-        backgroundColor: Colors.white,
-        title: Text(
-          'Tasks', 
-          textAlign: TextAlign.left,
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-            fontSize: 15,
-            color: const Color(0xff2E2323)
+          // contentPadding: const EdgeInsets.fromLTRB(5, 30, 5, 30),
+          backgroundColor: Colors.white,
+          title: Text(
+            'Tasks',
+            textAlign: TextAlign.left,
+            style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: const Color(0xff2E2323)),
           ),
-        ),
-      
-      actions: <Widget>[
-        Container(
-          height: 400,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: taskContent
-            // mainAxisAlignment: MainAxisAlignment.start,
-            // children: <Widget> [
-            //     tasks
-          
-              // Container(
-              //   margin: const EdgeInsets.fromLTRB(16, 5, 0, 0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: <Widget> [
-              //       Text(
-              //         "Task 1",
-              //         style: GoogleFonts.poppins(
-              //           fontWeight: FontWeight.w400,
-              //           fontSize: 14,
-              //           color: const Color(0xff2E2323)
-              //         ),
-              //       ),
-          
-              //       Row(
-              //         children: <Widget> [
-              //           Container(
-              //             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-              //             child: Text(
-              //               "156 point",
-              //               style: GoogleFonts.montserrat(
-              //                 fontWeight: FontWeight.w400,
-              //                 fontSize: 11,
-              //                 color: const Color(0xff151515)
-              //               ),
-              //             ),
-              //           ),
-              //         ],
-              //       )
-              //     ],
-              //   ),
-              // ),
-          
-              // Container(
-              //   margin: const EdgeInsets.fromLTRB(16, 5, 0, 0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: <Widget> [
-              //       Text(
-              //         "Task 1",
-              //         style: GoogleFonts.poppins(
-              //           fontWeight: FontWeight.w400,
-              //           fontSize: 14,
-              //           color: const Color(0xff2E2323)
-              //         ),
-              //       ),
-          
-              //       Row(
-              //         children: <Widget> [
-              //           Container(
-              //             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-              //             child: Text(
-              //               "156 point",
-              //               style: GoogleFonts.montserrat(
-              //                 fontWeight: FontWeight.w400,
-              //                 fontSize: 11,
-              //                 color: const Color(0xff151515)
-              //               ),
-              //             ),
-              //           ),
-          
-              //         ],
-              //       )
-              //     ],
-              //   ),
-              // )
-            // ],
-                ),
-          ),
-        )
-      ]
-      );
+          actions: <Widget>[
+            Container(
+              height: 300,
+              child: SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: taskContent),
+              ),
+            )
+          ]);
     },
   );
 }
 
 Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return Colors.blue;
-      }
-      return Colors.blue;
-    }
+  const Set<MaterialState> interactiveStates = <MaterialState>{
+    MaterialState.pressed,
+    MaterialState.hovered,
+    MaterialState.focused,
+    MaterialState.disabled
+  };
 
+  if (states.any(interactiveStates.contains)) {
+    return Colors.grey;
+  }
+  return Colors.blue;
+}
 
-Container buildCheckbox({required Color iconColor, required Function() onChange, required Color borderColor, required Color backgroundColor}) {
+Container buildCheckbox(
+    {required Color iconColor,
+    required Function() onChange,
+    required Color borderColor,
+    required Color backgroundColor}) {
   return Container(
     margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
     width: 24,
     height: 24,
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(5),
-      border: Border.all(color: borderColor, width: 1),
-      color: Colors.transparent
-    ),
-
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: borderColor, width: 1),
+        color: Colors.transparent),
     child: InkWell(
-      onTap: () {onChange;},
-      child: Icon(Icons.check, color: iconColor, size: 11,),
+      onTap: () {
+        onChange;
+      },
+      child: Icon(
+        Icons.check,
+        color: iconColor,
+        size: 11,
+      ),
     ),
   );
 }

@@ -50,10 +50,27 @@ class _CalendarPage extends State<CalendarPage> {
       temp.forEach((element) {
         DateTime date;
 
+        // if(element["startDate"] != null) {
+        //   DateTime date = DateTime.parse(element["startDate"]);
+        //   if(date.year == widget.choosenDate.year && date.month == widget.choosenDate.month && date.day == widget.choosenDate.day) {
+        //     event.add(element);
+        //   } else {
+        //     print(date.year);
+        //     print(widget.choosenDate.year);
+        //     print(date.month);
+        //     print(widget.choosenDate.month);
+        //   }
+        // } 
+        
         if(element["startDate"] != null) {
           DateTime date = DateTime.parse(element["startDate"]);
           if(date.day == widget.choosenDate.day) {
             event.add(element);
+          } else {
+            print(date.year);
+            print(widget.choosenDate.year);
+            print(date.month);
+            print(widget.choosenDate.month);
           }
         } 
         // DateTime date = DateTime.parse(element["startDate"])
@@ -86,6 +103,8 @@ class _CalendarPage extends State<CalendarPage> {
   var calendarType = "Day";
 
   PopupMenuStatus status = PopupMenuStatus.closed;
+
+  bool isDescriptionVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -370,7 +389,19 @@ class _CalendarPage extends State<CalendarPage> {
              ],
            ), 
            Column(
-            children: event.map((e) => EventTile(proccess: getProccess(e["status"]), title: e["Tasks"][0]["positionName"])).toList(),
+            children: event.map((e) {
+              print(e["SubTasks"][0]["name"]);
+
+              List<List<dynamic>> swap = []; 
+              List<String> temp = [];
+              e["SubTasks"].forEach((p0) {
+                // swap.add(p0["name"]);
+                swap.add([p0["name"], p0["id"], p0["description"]]);
+                temp.add("${p0["points"]} Points");
+              });              
+
+              return EventTile(proccess: getProccess(e["status"]), title: e["Tasks"][0]["positionName"], description: "Lorem ipsum is placeholder text that is often used in the design and typesetting industry to demonstrate the visual effects of different typefaces and layouts. The text is in Latin and appears to be random, but is actually derived from a section of a work by Cicero", subtasks: swap, points: temp,);
+            }).toList(),
            ),        
           ],
         ),

@@ -95,7 +95,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
               buildActivity([2, 1, 1], widget.activites2, ["Reading", "Sport", "Run"]),
               buildActivity([1, 2, 1], widget.activites2, ["Games", "Writing", "Walk"]),
               buildActivity([2, 1, 1], widget.activites2, ["Dancing", "TV", "Coding"]),
-              buildQuestion("8. Please briefly elaborate on one of your extracurricular activitiesor work experiences."),
+              buildQuestion("8. Please briefly elaborate on one of your extracurricular activities or work experiences."),
               Container(
                 margin: const EdgeInsets.fromLTRB(23, 10, 23, 0),
                 height: 160,

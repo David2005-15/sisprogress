@@ -33,6 +33,7 @@ class _GoalPage extends State<GoalPage> {
 
   void getAllTasks() async {
     var temp = await client.getAllTaskAndFilter();
+    print(temp);
     setState(() {
       tasks = temp;
     });
@@ -45,8 +46,8 @@ class _GoalPage extends State<GoalPage> {
         goals.add(Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children:  [
-              ExploreTile(title: tasks[i - 1]["positionName"], disabled: tasks[i - 1]["isFree"], taskId: tasks[i - 1]["id"],),
-              ExploreTile(title: tasks[i]["positionName"], disabled: tasks[i]["isFree"], taskId: tasks[i]["id"],)
+              ExploreTile(title: tasks[i - 1]["positionName"], disabled: !(tasks[i - 1]["isFree"] == "false2"), taskId: tasks[i - 1]["id"], taskCount: "${tasks[i - 1]["SubTasks"].where((p0) => p0['done'] == true).length}/${tasks[i - 1]["SubTasks"].length}",),
+              ExploreTile(title: tasks[i]["positionName"], disabled:!(tasks[i]["isFree"] == "false2"), taskId: tasks[i]["id"], taskCount: "${tasks[i]["SubTasks"].where((p0) => p0['done'] == true).length}/${tasks[i]["SubTasks"].length}",)
             ],
         ));
       });
@@ -75,7 +76,7 @@ Container buildTitle() {
     child: FittedBox(
       fit: BoxFit.contain,
       child: Text(
-        "Explore More Goals",
+        "Extracurricular",
         style: GoogleFonts.montserrat(
           fontWeight: FontWeight.w700,
           fontSize: 24,
