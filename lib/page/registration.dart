@@ -245,7 +245,7 @@ Container buildTitle() {
     child: FittedBox(
       fit: BoxFit.contain,
       child: Text(
-        "Registration for admission",
+        "Start Your Journey Today",
         style: GoogleFonts.montserrat(
           fontWeight: FontWeight.w700,
           fontSize: 24,

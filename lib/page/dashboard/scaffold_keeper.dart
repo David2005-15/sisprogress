@@ -11,11 +11,9 @@ import 'package:sis_progress/page/dashboard/explore_more_goals.dart';
 import 'package:sis_progress/page/dashboard/notification_page.dart';
 import 'package:sis_progress/page/dashboard/profile.dart';
 import 'package:sis_progress/widgets/bottom_nav_bar.dart';
-import 'package:sis_progress/widgets/dashboard/show_subtask.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
-
 import 'calendar_page.dart';
-import 'lectures.dart';
+import 'my_task.dart';
 
 class ScaffoldHome extends StatefulWidget {
   const ScaffoldHome({super.key});
@@ -47,6 +45,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
       const Dashboard(),
       page,
       const ExploreMoreGoals(),
+      MyTask(),
       const Profile()
     ];
   }

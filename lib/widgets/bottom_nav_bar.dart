@@ -53,6 +53,10 @@ class NavBar extends StatelessWidget {
               label: "Dashboard"
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.note_add_outlined, size: 24,),
+              label: "My Task"
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.people_outlined, size: 24,),
                 label: "Profile"
               ),

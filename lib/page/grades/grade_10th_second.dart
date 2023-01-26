@@ -54,7 +54,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
     });
   }
 
-  String text = "0/160";
+  String text = "0/60";
   Timer? timer;
 
   @override
@@ -75,27 +75,24 @@ class _Grade10thSecond extends State<Grade10thSecond> {
             children: <Widget> [
               const ProgressBar(isPassed: [true, true, false]),
               buildTitle(),
-              buildQuestion("1. Please indicate which fields of study you would be interested in exploring further at the University"),
-              buildActivity([1, 1, 2], widget.activites, ["Football", "Science", "Music"]),
-              buildActivity([1, 2, 1], widget.activites, ["Write", "Chemestry", "Math"]),
-              buildQuestion("2. Are you applying from a school outside the US and Canada?"),
+              buildQuestion("1. Are you applying from a school outside the US and Canada?"),
               // buildAnswer(getSeconeQuest, secondQuestion, secondQuest),
               CustomRadio(handler: widget.secondQuest, groupValue: secondQuestion, methodParent: () => print("Hello")),
-              buildQuestion("3. Do you wish to submit SAT or ACT test scores?"),
+              buildQuestion("2. Do you wish to submit SAT or ACT test scores?"),
               CustomRadio(handler: widget.thirdQuest, groupValue: thirdQuestion, methodParent: () => print("Hello")),
-              buildQuestion("4. What is your current or most recent secondary/high school?"),
+              buildQuestion("3. What is your current or most recent secondary/high school?"),
               InputBox(textInputType: TextInputType.text, onChanged: (String val) {print("Hello World");}, context: context, controller: widget.controller, isPassword: false, initialValue: "School"),
-              buildQuestion("5. Do you wish to report any honors related to your aademic achievements?"),
+              buildQuestion("4. Do you wish to report any honors related to your aademic achievements?"),
               // buildAnswer(getFifthQuest, yesOrNo, fifthQuest),
               CustomRadio(handler: widget.fifthQuest, groupValue: yesOrNo, methodParent: () => print("Hello")),
-              buildQuestion("6. Did you take any admission tests?"),
+              buildQuestion("5. Did you take any admission tests?"),
               // buildAnswer(getSixthQuest, yesOrNo, sixthQuest),
               CustomRadio(handler: widget.sixthQuest, groupValue: yesOrNo, methodParent: () => print("Hello")),
-              buildQuestion("7. Please report up to 10 activities that can help colleges better understand your life outside of the classroom"),
+              buildQuestion("6. Please report up to 10 activities that can help colleges better understand your life outside of the classroom"),
               buildActivity([2, 1, 1], widget.activites2, ["Reading", "Sport", "Run"]),
               buildActivity([1, 2, 1], widget.activites2, ["Games", "Writing", "Walk"]),
               buildActivity([2, 1, 1], widget.activites2, ["Dancing", "TV", "Coding"]),
-              buildQuestion("8. Please briefly elaborate on one of your extracurricular activities or work experiences."),
+              buildQuestion("7. Please briefly elaborate on one of your extracurricular activities or work experiences."),
               Container(
                 margin: const EdgeInsets.fromLTRB(23, 10, 23, 0),
                 height: 160,
@@ -103,7 +100,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
                   onChanged: (value) {
                     setState(() {
-                      text = "${value.length}/160";
+                      text = "${value.length}/60";
                     });
                   },
                   controller: widget.work,
@@ -148,7 +145,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   )
                 ),
               ),
-              buildQuestion("9. Do you wish to provide details of circumstances or qualifications not reflected in the registration form"),
+              buildQuestion("8. Do you wish to provide details of circumstances or qualifications not reflected in the registration form"),
               CustomRadio(handler: widget.ninthQuest, groupValue: noOrYes, key: _key, methodParent: changeIsVisible,),
               Visibility(
                 visible: isVisible,
@@ -224,7 +221,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 } else {
                   widget.reg.details = "No";
                 }
-                await httpClient.registerForGrade10(widget.reg);
+                // await httpClient.registerForGrade10(widget.reg);
                 Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.reg.email,)));
               }),
 
@@ -249,7 +246,7 @@ Container buildTitle() {
     child: FittedBox(
       fit: BoxFit.contain,
       child: Text(
-        "Registration for admission",
+        "Start Your Journey Today",
         style: GoogleFonts.montserrat(
           fontWeight: FontWeight.w700,
           fontSize: 24,

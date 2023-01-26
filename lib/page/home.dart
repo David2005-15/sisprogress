@@ -83,7 +83,7 @@ class _HomePage extends State<HomePage> {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            "Let’s explore more togther.",
+                            "Prepare Different",
                             style:  GoogleFonts.montserrat(
                               fontWeight: FontWeight.w400,
                               fontSize: 14,
@@ -135,7 +135,7 @@ class _HomePage extends State<HomePage> {
                             side: const BorderSide(width: 1, color: Color(0xff36519D))
                           ),
                           child: Text(
-                            "Registration",
+                            "Sign Up",
                             style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w500,
                               fontSize: 18,

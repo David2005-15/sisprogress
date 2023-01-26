@@ -100,29 +100,29 @@ class _LoginPage extends State<LoginPage> {
                 margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                 child: Button(text: "Log In", onPressed: () async {
 
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
-                  if(!emailMatch(widget.email.text)) {
-                    setState(() {
-                      showEmailValidation = true;
-                      emailErrorText = "Email must be in the correct format";
-                    });
-                  } else {
-                    setState(() {
-                      showEmailValidation = false;
-                    });
-                  }
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
+                  // if(!emailMatch(widget.email.text)) {
+                  //   setState(() {
+                  //     showEmailValidation = true;
+                  //     emailErrorText = "Email must be in the correct format";
+                  //   });
+                  // } else {
+                  //   setState(() {
+                  //     showEmailValidation = false;
+                  //   });
+                  // }
 
-                  try {
-                    var value = await httpClient.loginUser(widget.email.text, widget.password.text);
-                    print(value["success"]);
-                    if(value["success"]) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
-                    }
-                  } catch(e) {
-                    setState(() {
-                      showErrorVisibility = true;
-                    });
-                  }
+                  // try {
+                  //   var value = await httpClient.loginUser(widget.email.text, widget.password.text);
+                  //   print(value["success"]);
+                  //   if(value["success"]) {
+                  //     Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
+                  //   }
+                  // } catch(e) {
+                  //   setState(() {
+                  //     showErrorVisibility = true;
+                  //   });
+                  // }
                   // print(value["fullName"]);
                   // print(value["fullName"]);
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));

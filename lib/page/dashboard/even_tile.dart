@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/data%20class/event_process.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
@@ -34,6 +35,8 @@ class EventTile extends StatelessWidget {
       onTap: () {
         _dialogBuiler(context, title, isVisible);
       },
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
       child: Container(
         width: double.infinity,
         height: 75,
@@ -204,14 +207,27 @@ class EventTile extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: Text(
-            title, 
-            textAlign: TextAlign.left,
-            style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-              fontSize: 22,
-              color: const Color(0xff2E2323)
-            ),
+          title: Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                child: SvgPicture.asset(
+                  "assets/Vector.svg",
+                  height: 25,
+                  width: 25,
+                  // color: Colors.black,
+                ),
+              ),
+              Text(
+                title, 
+                textAlign: TextAlign.left,
+                style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                  fontSize: 22,
+                  color: const Color(0xff2E2323)
+                ),
+              ),
+            ],
           ),
 
           actions: <Widget> [

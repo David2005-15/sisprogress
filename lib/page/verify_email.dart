@@ -6,7 +6,6 @@ import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/progress/progress_bar.dart';
 
-import 'dashboard/scaffold_keeper.dart';
 
 class VerifyEmail extends StatefulWidget {
   final String? email;
@@ -31,6 +30,10 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
         AnimationController(vsync: this, duration: const Duration(minutes: 5));
     _controller.forward();
   }
+
+  bool sendAgain = false;
+  String resetOrSendAgain = "Send verification link";
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,30 +60,37 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
                 buildTitle(),
                 buildSubtitle(widget.email ?? ""),
                 buildDescription(),
-                Button(text: "Verify your email", onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                Button(text: resetOrSendAgain, onPressed: () {
+                  if(resetOrSendAgain == "Resend verification link") {
+                    _dialogBuilder(context, widget.email ?? "");
+                  }
+                  setState(() {
+                    sendAgain = true;
+                    resetOrSendAgain = "Resend verification link";
+                  });
+
+
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                 }, height: 35, width: double.infinity),
     
-                Container(
-                  margin: const EdgeInsets.fromLTRB(5, 15, 20, 0),
-                  child: IntrinsicHeight(
-                    child: Stack(
-                      children: <Widget> [
-                        Align(
-                          alignment: Alignment.center,
-                          child: buildSendAgainButton(),
-                        ),
-                        
-                        Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: Countdown(
-                            animation: StepTween(
-                              begin: 2 * 60,
-                              end: 0
-                            ).animate(_controller),
-                          ),
-                        )
-                      ],
+                Visibility(
+                  visible: sendAgain,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(5, 15, 20, 0),
+                    child: IntrinsicHeight(
+                      child: Stack(
+                        children: <Widget> [     
+                          Align(
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: Countdown(
+                              animation: StepTween(
+                                begin: 2 * 60,
+                                end: 0
+                              ).animate(_controller),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 )
@@ -89,6 +99,107 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _dialogBuilder(BuildContext context, String email) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xff121623),
+          content: Text(
+            'A letter has been sent to your email address $email, you can confirm it within 24 hours, otherwise it will be expired. If you havent received the email yet, you can check the spam section or resend the email.',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.w400, fontSize: 12, color: Colors.white),
+          ),
+          actions: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: ButtonBar(
+                alignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: 104,
+                    height: 36,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff355CCA),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          )),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Ok",
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            color: const Color(0xffD2DAFF)),
+                      ),
+                    ),
+                  ),
+
+                  
+
+                  //
+                  // InkWell(
+                  //   onTap: () {
+                  //     Navigator.pop(context);
+                  //   },
+                  //   child: Container(
+                  //     alignment: Alignment.center,
+                  //     width: 104,
+                  //     height: 36,
+                  //     decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(5),
+                  //       border: Border.all(
+                  //         width: 2.0,
+                  //         color: const Color(0xffD2DAFF),
+                  //       ),
+                  //     ),
+                  //     child: Text(
+                  //       "Cancel",
+                  //       style: GoogleFonts.poppins(
+                  //         fontWeight: FontWeight.w400,
+                  //         fontSize: 15,
+                  //         color: const Color(0xffD2DAFF)
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
+                ],
+              ),
+              // alignment: Alignment.center,
+              // child: ButtonBar(
+              //   alignment: MainAxisAlignment.center,
+              //   children: <Widget>[
+              //      TextButton(
+              // style: TextButton.styleFrom(
+              //   textStyle: Theme.of(context).textTheme.labelLarge,
+              // ),
+              // child: const Text('Disable'),
+              // onPressed: () {
+              //   Navigator.of(context).pop();
+              // },
+            ),
+            // ElevatedButton(
+            //   style: ButtonStyle(
+            //     b
+            //   ),
+            //    child: const Text('Enable'),
+            //   onPressed: () {
+
+            //     onSave();
+            //     Navigator.pop(context);
+            //   },
+            // ),
+          ],
+        );
+      },
     );
   }
 
