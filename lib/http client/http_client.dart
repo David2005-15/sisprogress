@@ -18,23 +18,35 @@ class Client {
     return unis;
   }
 
+  Future<Map<String, dynamic>> getDashboardData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    Response response = await dio.get("http://164.90.224.111/dashboard");
+
+    return response.data;
+  }
+
   Future sendEssay(String description, int taskId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
 
     var body = {
-      "description": description,
-      "taskId": taskId
+      "subTaskId": taskId,
+      "description": description
     };
 
-    Response response = await dio.patch("http://164.90.224.111/add/description", data: body);
+    print(body);
+
+    Response response = await dio.patch('http://164.90.224.111/change/subTaskStatus', data: body);
     print(response.data);
   }
 
   Future doneSubtask(int userId, bool status) async {
     var body = {
-      "id": userId,
+      "subTaskId": userId,
       "status": status
     };
 
@@ -75,9 +87,9 @@ class Client {
 
     var allTasks = await dio.get("http://164.90.224.111/getTasks/my");
 
-    print(allTasks.data["tasks"]);
+    print(allTasks.data["newTasks"]);
 
-    return allTasks.data["tasks"];
+    return allTasks.data["newTasks"];
   }
 
   Future<List<dynamic>> getCalendarEvents() async {
@@ -87,9 +99,8 @@ class Client {
     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
 
     var calendarTasks = await dio.get("http://164.90.224.111/getTasks/inCalendar");
-    print(calendarTasks.data["task"]);
 
-    return calendarTasks.data["task"];
+    return calendarTasks.data["myTasks"];
   }
 
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
@@ -133,6 +144,7 @@ class Client {
       "taskId": taskId,
       "startDate": date,
     };
+    
 
     print(body);
 

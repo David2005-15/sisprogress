@@ -40,7 +40,7 @@ class _DropDown extends State<DropDown> {
       }).toList();
 
     return Container(
-      margin: EdgeInsets.fromLTRB(23, getTopMargin(widget.context), 23, 0),
+      margin: const EdgeInsets.fromLTRB(23, 32, 23, 0),
       child: Center(
         child: DropdownButtonFormField(
           // isExpanded: true,

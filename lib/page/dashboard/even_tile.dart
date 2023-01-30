@@ -8,17 +8,21 @@ import 'package:sis_progress/widgets/custom_button.dart';
 class EventTile extends StatelessWidget {
   final String title;
   final EventProccess proccess;
+  final String eventDate;
   final String description;
   final List<List<dynamic>> subtasks;
   final List<String> points;
+  // final List<bool> passed;
 
 
   EventTile({
+    required this.eventDate,
     required this.points,
     required this.subtasks,
     required this.description,
     required this.proccess,
     required this.title,
+    // required this.passed,
     super.key
   });
 
@@ -28,12 +32,12 @@ class EventTile extends StatelessWidget {
   Widget build(BuildContext context) {
 
 
-    bool isVisible = false;
+    // bool isVisible = false;
 
 
     return InkWell(
       onTap: () {
-        _dialogBuiler(context, title, isVisible);
+        _dialogBuiler(context, title);
       },
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
@@ -77,22 +81,39 @@ class EventTile extends StatelessWidget {
                     ),
     
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(17, 0, 5, 8),
-                          child: proccess.icon
+                        Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(17, 0, 5, 8),
+                              child: proccess.icon
+                            ),
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                              child: Text(
+                                proccess.eventName,
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13,
+                                  color: const Color(0xff2E2323)
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+
                         Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                          margin: const EdgeInsets.fromLTRB(140, 0, 0, 10),
                           child: Text(
-                            proccess.eventName,
-                            style: GoogleFonts.poppins(
+                            eventDate,
+                            style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w400,
-                              fontSize: 13,
-                              color: const Color(0xff2E2323)
+                              fontSize: 11,
+                              color: Colors.black
                             ),
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ],
@@ -107,10 +128,13 @@ class EventTile extends StatelessWidget {
 
   Future<void> _showEssay(BuildContext context, String subtaskTitle, String taskName, int taskId, String? description) {
     var essayController = TextEditingController();
+
+    print(description);
     
     if(description != null) {
       essayController.text = description;
     }
+
 
     return showDialog<void>(
       context: context,
@@ -147,6 +171,11 @@ class EventTile extends StatelessWidget {
                   margin: const EdgeInsets.fromLTRB(18, 0, 18, 0),
                   height: 160,
                   child: TextFormField(
+                    onChanged: ((value) {
+                      setState(() {
+                        description = essayController.text;
+                      });
+                    }),
                     controller: essayController,
                     expands: false,
                     maxLines: 8,
@@ -155,7 +184,9 @@ class EventTile extends StatelessWidget {
                       fontSize: 12,
                       color: const Color(0xff646464)
                     ),
+                    // initialValue: "Type about your activites or work experiance",
                     decoration: InputDecoration(
+                      
                       hintText: "Type about your activites or work experiance",
                       hintStyle: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
@@ -201,7 +232,7 @@ class EventTile extends StatelessWidget {
     );
   }
 
-  Future<void> _dialogBuiler(BuildContext context, String title, bool isVisible) {
+  Future<void> _dialogBuiler(BuildContext context, String title) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -219,7 +250,7 @@ class EventTile extends StatelessWidget {
                 ),
               ),
               Text(
-                title, 
+                title.length > 15 ? "${title.substring(0, 15)}..." : title, 
                 textAlign: TextAlign.left,
                 style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w600,
@@ -309,6 +340,7 @@ class EventTile extends StatelessWidget {
                                   children: subtasks.map((p0) {
                                     var value = 0;
                                     value += 1;
+                       
                         
                                     return Container(
                                       alignment: Alignment.centerLeft,
@@ -352,13 +384,13 @@ class EventTile extends StatelessWidget {
                                                     width: 24,
                                                     child: Checkbox(
                                                       fillColor: MaterialStateProperty.resolveWith(getColor),
-                                                      value: isVisible,
-                                                      onChanged: ((value) async {
+                                                      value: p0[3],
+                                                      onChanged: ((val) async {
                                                         setState(() {
-                                                          isVisible = value!;
+                                                          p0[3] = val!;
                                                           
                                                         },);
-                                                        await httpClient.doneSubtask(p0[1], isVisible);
+                                                        await httpClient.doneSubtask(p0[1], p0[3]);
                                                       })
                                                     ),
                                                   );
@@ -370,7 +402,9 @@ class EventTile extends StatelessWidget {
                                                   ),
                                                   onPressed: () {
                                                     print(p0[2]);
+                                                    Navigator.pop(context);
                                                     _showEssay(context, p0[0], title, p0[1], p0[2]);
+                                                    
                                                   }, 
                                                   child: Text(
                                                     "Edit",

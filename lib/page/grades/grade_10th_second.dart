@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/data%20class/registration_data_grade10.dart';
+import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/verify_email.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
@@ -36,8 +37,8 @@ class Grade10thSecond extends StatefulWidget {
 }
 
 class _Grade10thSecond extends State<Grade10thSecond> {
-  List<String> secondQuestion = ["Outside the US and Canada", "From the US and Canada"];
-  List<String> thirdQuestion = ["SAT", "ACT"];
+  List<String> secondQuestion = ["Yes", "No"];
+  List<String> thirdQuestion = ["Yes", "No"];
   List<String> yesOrNo = ["Yes", "No"];
   List<String> noOrYes = ["No", "Yes"];
 
@@ -46,6 +47,10 @@ class _Grade10thSecond extends State<Grade10thSecond> {
   final GlobalKey<CustomRadioState> _key = GlobalKey();
 
   bool isVisible = false;
+  bool testScore = false;
+
+  bool isAct = false;
+  bool isSat = false;
 
   void changeIsVisible() {
     setState(() {
@@ -54,12 +59,32 @@ class _Grade10thSecond extends State<Grade10thSecond> {
     });
   }
 
+  void satOrAct() {
+    setState(() {
+      testScore = !testScore;
+    });
+  }
+
   String text = "0/60";
   Timer? timer;
 
+  TextEditingController cont = TextEditingController();
+
+  List<String> actions = [];
+
+
+  double getContainerWidth (String value) {
+
+
+    if(value.length < 7) {
+      return 60;
+    }
+
+    return value.length * 10;
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: CustomAppBar(buildLogoIcon(), List.empty()),
       body: Container(
@@ -79,20 +104,172 @@ class _Grade10thSecond extends State<Grade10thSecond> {
               // buildAnswer(getSeconeQuest, secondQuestion, secondQuest),
               CustomRadio(handler: widget.secondQuest, groupValue: secondQuestion, methodParent: () => print("Hello")),
               buildQuestion("2. Do you wish to submit SAT or ACT test scores?"),
-              CustomRadio(handler: widget.thirdQuest, groupValue: thirdQuestion, methodParent: () => print("Hello")),
-              buildQuestion("3. What is your current or most recent secondary/high school?"),
+              CustomRadio(handler: widget.thirdQuest, groupValue: noOrYes, methodParent: satOrAct),
+
+              Visibility(
+                visible: testScore,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.fromLTRB(38, 24, 0, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget> [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(width: 1, color: const Color(0xff355CCA))
+                            ),
+                
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isSat = !isSat;
+                                });
+                              },
+                              child: Icon(
+                                Icons.check,
+                                size: 15,
+                                color: isSat ? const Color(0xff355CCA): Colors.transparent,
+                              ),
+                            ),
+                          ),
+
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: Text(
+                              "SAT",
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18,
+                                color: Colors.white
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(width: 1, color: const Color(0xff355CCA))
+                            ),
+                
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isAct = !isAct;
+                                });
+                              },
+                              child: Icon(
+                                Icons.check,
+                                size: 15,
+                                color: isAct ? const Color(0xff355CCA) : Colors.transparent
+                              ),
+                            ),
+                          ),
+
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: Text(
+                              "ACT",
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18,
+                                color: Colors.white
+                              )
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+
+              ),
+              buildQuestion("3. What is your current high school?"),
               InputBox(textInputType: TextInputType.text, onChanged: (String val) {print("Hello World");}, context: context, controller: widget.controller, isPassword: false, initialValue: "School"),
-              buildQuestion("4. Do you wish to report any honors related to your aademic achievements?"),
+              buildQuestion("4. Do you wish to report any honors related to your academic achievements?"),
               // buildAnswer(getFifthQuest, yesOrNo, fifthQuest),
               CustomRadio(handler: widget.fifthQuest, groupValue: yesOrNo, methodParent: () => print("Hello")),
               buildQuestion("5. Did you take any admission tests?"),
               // buildAnswer(getSixthQuest, yesOrNo, sixthQuest),
               CustomRadio(handler: widget.sixthQuest, groupValue: yesOrNo, methodParent: () => print("Hello")),
-              buildQuestion("6. Please report up to 10 activities that can help colleges better understand your life outside of the classroom"),
-              buildActivity([2, 1, 1], widget.activites2, ["Reading", "Sport", "Run"]),
-              buildActivity([1, 2, 1], widget.activites2, ["Games", "Writing", "Walk"]),
-              buildActivity([2, 1, 1], widget.activites2, ["Dancing", "TV", "Coding"]),
-              buildQuestion("7. Please briefly elaborate on one of your extracurricular activities or work experiences."),
+              buildQuestion("6. Please report up to 10 activities that can help colleges better understand your life outside of the classroom "),
+              Container(
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.fromLTRB(16, 5, 16, 0),
+                child: Wrap(
+                  runSpacing: 10,
+                  spacing: 5.0,
+                  direction: Axis.horizontal,
+                  children: actions.map((e) {
+                    return Container(
+                      padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
+                      height: 29,
+                      // width: 150,
+                      width: getContainerWidth(e),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(width: 1, color: const Color(0xffB1B2FF))
+                      ),
+                            
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                e,
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: const Color(0xffB1B2FF)
+                                ),
+                              ),
+                        
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    actions.remove(e);
+                                  });
+                                }, 
+                                child: const Icon(
+                                  Icons.add,
+                                  size: 15,
+                                  color:  Color(0xffB1B2FF),
+                                )
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              buildMode(cont, Universities().clubCategories, "Select your activites", actions),
+ 
+            
+              // buildActivity([2, 1, 1], widget.activites2, ["Reading", "Sport", "Run"]),
+              // buildActivity([1, 2, 1], widget.activites2, ["Games", "Writing", "Walk"]),
+              // buildActivity([2, 1, 1], widget.activites2, ["Dancing", "TV", "Coding"]),
+              buildQuestion("7. Please briefly elaborate on your extracurricular activities or work experiences."),
               Container(
                 margin: const EdgeInsets.fromLTRB(23, 10, 23, 0),
                 height: 160,
@@ -232,7 +409,215 @@ class _Grade10thSecond extends State<Grade10thSecond> {
     );
   }
 
+  String count(List<String> temp, String value) {
+    String value = "";
+
+    setState(() {
+      value = "${temp.where((element) => element.contains(value)).length}";
+    });
+
+    return value;
+  }
+
+  Container buildMode(
+    TextEditingController controller,
+    List<String> items,
+    String lableText, 
+    List<String> actions) {
+    
+  List<String> temp = [];
+  setState(() {
+    temp = actions;
+  });
+  return Container(
+    margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
+    child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return TextFormField(
+        readOnly: true,
+            style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w400,
+                fontSize: 15,
+                fontStyle: FontStyle.normal,
+                color: Colors.white),
+            controller: controller,
+            decoration: InputDecoration(
+              alignLabelWithHint: true,
+              labelText: lableText,
+              // hintText: widget.hintText,
+              labelStyle: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                  fontStyle: FontStyle.normal,
+                  color: const Color(0xffD2DAFF)),
+              hintStyle: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                  fontStyle: FontStyle.normal,
+                  color: const Color(0xffD2DAFF)),
+              enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+              border: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+              focusColor: const Color(0xffD2DAFF),
+              focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xff36519D))),
+              suffixIcon: PopupMenuButton<String>(
+                color: const Color(0xffD2DAFF),
+                constraints:
+                    BoxConstraints.expand(height: 150, width: constraints.maxWidth),
+                icon: const Icon(
+                  Icons.arrow_drop_down,
+                  color: Color(0xffD2DAFF),
+                ),
+                onSelected: (String value) {
+                  // controller.text = value;
+                },
+                itemBuilder: (BuildContext context) {
+                  
+
+
+                  return items.map<PopupMenuItem<String>>((String value) {
+                    bool isEnabled = actions.where((element) => element.contains(value)).isNotEmpty;
+
+                    return PopupMenuItem(
+                        value: value,
+                        child: StatefulBuilder(
+                          builder: (context, state) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [ 
+                                    Container(
+                                      margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          state(() {
+                                            if(actions.length != 10) {
+                                              actions.add(value); 
+                                            }
+                                            
+                                            temp = actions;
+                                            isEnabled = !isEnabled;
+                                          });
+
+                                          setState(() {
+                                            
+                                          });
+                                          
+                                        },
+                                        child: Container(
+                                          width: 24,
+                                          height: 24,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5),
+                                            border: Border.all(width: 1,color: const Color(0xff355CCA))
+                                          ),
+                                          child:  Icon(
+                                            Icons.check,
+                                            size: 18,
+                                            color: isEnabled ?  const Color(0xff355CCA): Colors.transparent,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      value.length > 20 ? value.substring(0, 20): value,
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        color: const Color(0xff121623),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+      
+                                Row(
+                                  children: <Widget> [
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xff355CCA).withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(5),
+      
+                                        border: Border.all(width: 1, color: const Color(0xff355CCA))
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          state(() {
+                                            if(actions.length != 10) {
+                                              actions.add(value);
+                                            }
+                                            
+                                            temp = actions;
+                                          });
+
+                                          setState(() {
+                                            
+                                          });
+                                          
+                                          print(actions);
+                                        }, 
+                                        child: const Icon(
+                                          Icons.add,
+                                          size: 14,
+                                          color: Color(0xff355CCA)
+                                        )
+                                      ),
+                                    ),
+      
+                                    Text(
+                                      "${temp.where((e) => e.contains(value)).length + 1}"
+                                    ),
+                                    
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xff355CCA).withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(5),
+      
+                                        border: Border.all(width: 1, color: const Color(0xff355CCA))
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          state(() {
+                                            actions.remove(value);
+                                            temp = actions;
+                                          });
+                                          setState(() {
+                                            
+                                          });
+                                        }, 
+                                        child: const Icon(
+                                          Icons.remove,
+                                          size: 14,
+                                          color: Color(0xff355CCA),
+                                        )
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            );
+                          }
+                        ));
+                  }).toList();
+                },
+              ),
+            ),
+          );
+        }
+      ));
+    }
 }
+
+
 
 Image buildLogoIcon() {
   return Image.asset(

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class Button extends StatelessWidget {
   final double height;
   final double width;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String text;
   EdgeInsets? margin;
 
@@ -32,12 +32,15 @@ class Button extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xff355CCA),
+          disabledBackgroundColor: const Color(0xff355CCA).withOpacity(0.25),
+          disabledForegroundColor: Colors.white.withOpacity(0.25),
           textStyle: GoogleFonts.montserrat(
             fontWeight: FontWeight.w500,
             fontSize: 18,
             color: Colors.white
           )
         ),
+        
         child: Text(text),
       ),
     );

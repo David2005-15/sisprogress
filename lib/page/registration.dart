@@ -76,6 +76,8 @@ class _Registration extends State<Registration> {
   bool showValidationOrNo = false;
   bool showEmailValidation = false;
 
+  
+
   final RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
   bool emailMatch(String email) {
@@ -123,108 +125,126 @@ class _Registration extends State<Registration> {
   @override
   Widget build(BuildContext context) {
 
+    double height = MediaQuery.of(context).size.height - 141;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       // bottomNavigationBar: const NavBar(),
       appBar: CustomAppBar(buildLogoIcon(), List.empty()),
-      body: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xff3A3D4C),
-          borderRadius: BorderRadius.circular(5)
-        ),
-        width: double.infinity,
-        margin: const EdgeInsets.fromLTRB(16, 25, 16, 32),
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget> [
-              const ProgressBar(isPassed: [false, false, false]),
-              buildTitle(),
-              InputBox(controller: widget.fullName, context: context, isPassword: false, initialValue: "Full Name", onChanged: (String val) {print(val);}, textInputType: TextInputType.text, errorText: fullNameErrorText, showValidationOrNot: showValidationOrNo,),
-              InputBox(controller: widget.email, context: context, isPassword: false, initialValue: "Email", onChanged: (String val) {print(val);}, textInputType: TextInputType.emailAddress, errorText: emailErrorText, showValidationOrNot: showEmailValidation,),
-              Focus(onFocusChange: ((value) {
-                setState(() {
-                  isVisible = value;
-                });
-              }), child: InputBox(controller: widget.password, context: context, isPassword: true, initialValue: "Password", onChanged: (String val) {changeColor();}, textInputType: TextInputType.text)),
-              Visibility(
-                visible: isVisible,
-                child: Container(
-                    margin: const EdgeInsets.fromLTRB(31, 5, 23, 0),
-                    alignment: Alignment.centerLeft,
-                    child: RichText(
-                      text: TextSpan(
-                        children: <TextSpan> [
-                          TextSpan(text: "A", style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            color: capitalLetter,
-                            fontSize: 13
-                          )),
-                          TextSpan(text: "a", style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            color: containSmall,
-                            fontSize: 13
-                          )),
-                          TextSpan(text: 123456.toString(), style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            color: containNumber,
-                            fontSize: 13
-                          )),
-                          TextSpan(text: "*", style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            color: containSpecial,
-                            fontSize: 13
-                          ))
-                        ]
-                      ),
-                    )
-                  ),
-              ),
-              InputBox(controller: widget.confirmPassword, context: context, isPassword: true, initialValue: "Confirm Password", onChanged: (String val) {print(val);}, textInputType: TextInputType.text),
-              InputBox(controller: widget.phone, context: context, isPassword: false, initialValue: "Phone", onChanged: (String val) {print(val);}, textInputType: TextInputType.phone),
-              InputBox(controller: widget.age, context: context, isPassword: false, initialValue: "Age", onChanged: (String val) {print(val);}, textInputType: TextInputType.number),
-              InputBox(controller: widget.country, context: context, isPassword: false, initialValue: "Country", onChanged: (String val) {print(val);}, textInputType: TextInputType.text),
-              // InputBox(controller: widget.grade, context: context, isPassword: false, initialValue: "Grade",),
-              DropDown(context: context, dropDownDataClass: widget.dropDown),
-              Button(text: "Next", height: 38, width: double.infinity, onPressed: () async {
-                if(widget.dropDown.value == "9th Grade") {
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-                  prefs.setString("email", widget.email.text);
-                  prefs.setString("number", widget.phone.text);
-                  prefs.setString("full name", widget.fullName.text);
-
-                  widget.registration.fullName = widget.fullName.text;
-                  widget.registration.email = widget.email.text;
-                  widget.registration.password = widget.password.text;
-                  widget.registration.phone = widget.phone.text;
-                  widget.registration.country = widget.country.text;
-                  widget.registration.age = widget.age.text;
-                  widget.registration.grade = widget.dropDown.value;
-                  print(widget.registration.grade);
-                  
-
-                  // if(showValidationOrNo && showEmailValidation) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Grade9thFirst(registration: widget.registration,)));
-                  // }
-                } else if(widget.dropDown.value == "10th Grade") {
-                  widget.reg10.fullName = widget.fullName.text;
-                  widget.reg10.email = widget.email.text;
-                  widget.reg10.password = widget.password.text;
-                  widget.reg10.phone = widget.phone.text;
-                  widget.reg10.country = widget.country.text;
-                  widget.reg10.age = widget.age.text;
-                  widget.reg10.grade = widget.dropDown.value;
-                  // if(showValidationOrNo && showEmailValidation) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Grade10thFirst(registration: widget.reg10,)));
-                  // }
-                }
-              },)
-            ],
+      body: Column(
+        children: [
+          Text(
+            "It will take you 20 mins to Register.",
+            style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+              fontSize: 13
+            ),
           ),
-        ),
+          Container(
+            decoration: BoxDecoration(
+              color: const Color(0xff3A3D4C),
+              borderRadius: BorderRadius.circular(5)
+            ),
+            width: double.infinity,
+            height: height,
+            margin: const EdgeInsets.fromLTRB(16, 25, 16, 20),
+            alignment: Alignment.center,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget> [
+                  const ProgressBar(isPassed: [false, false, false]),
+                  buildTitle(),
+                  InputBox(controller: widget.fullName, context: context, isPassword: false, initialValue: "Full Name", onChanged: (String val) {print(val);}, textInputType: TextInputType.text, errorText: fullNameErrorText, showValidationOrNot: showValidationOrNo,),
+                  InputBox(controller: widget.email, context: context, isPassword: false, initialValue: "Email", onChanged: (String val) {print(val);}, textInputType: TextInputType.emailAddress, errorText: emailErrorText, showValidationOrNot: showEmailValidation,),
+                  Focus(onFocusChange: ((value) {
+                    setState(() {
+                      isVisible = value;
+                    });
+                  }), child: InputBox(controller: widget.password, context: context, isPassword: true, initialValue: "Password", onChanged: (String val) {changeColor();}, textInputType: TextInputType.text)),
+                  Visibility(
+                    visible: isVisible,
+                    child: Container(
+                        margin: const EdgeInsets.fromLTRB(31, 5, 23, 0),
+                        alignment: Alignment.centerLeft,
+                        child: RichText(
+                          text: TextSpan(
+                            children: <TextSpan> [
+                              TextSpan(text: "A", style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                color: capitalLetter,
+                                fontSize: 13
+                              )),
+                              TextSpan(text: "a", style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                color: containSmall,
+                                fontSize: 13
+                              )),
+                              TextSpan(text: 123456.toString(), style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                color: containNumber,
+                                fontSize: 13
+                              )),
+                              TextSpan(text: "*", style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                color: containSpecial,
+                                fontSize: 13
+                              ))
+                            ]
+                          ),
+                        )
+                      ),
+                  ),
+                  InputBox(controller: widget.confirmPassword, context: context, isPassword: true, initialValue: "Confirm Password", onChanged: (String val) {print(val);}, textInputType: TextInputType.text),
+                  InputBox(controller: widget.phone, context: context, isPassword: false, initialValue: "Phone", onChanged: (String val) {print(val);}, textInputType: TextInputType.phone),
+                  InputBox(controller: widget.age, context: context, isPassword: false, initialValue: "Age", onChanged: (String val) {print(val);}, textInputType: TextInputType.number),
+                  InputBox(controller: widget.country, context: context, isPassword: false, initialValue: "Country", onChanged: (String val) {print(val);}, textInputType: TextInputType.text),
+                  // InputBox(controller: widget.grade, context: context, isPassword: false, initialValue: "Grade",),
+                  DropDown(context: context, dropDownDataClass: widget.dropDown),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Button(text: "Next", height: 38, width: double.infinity, onPressed: () async {
+                      if(widget.dropDown.value == "9th Grade") {
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                  
+                        prefs.setString("email", widget.email.text);
+                        prefs.setString("number", widget.phone.text);
+                        prefs.setString("full name", widget.fullName.text);
+                  
+                        widget.registration.fullName = widget.fullName.text;
+                        widget.registration.email = widget.email.text;
+                        widget.registration.password = widget.password.text;
+                        widget.registration.phone = widget.phone.text;
+                        widget.registration.country = widget.country.text;
+                        widget.registration.age = widget.age.text;
+                        widget.registration.grade = widget.dropDown.value;
+                        print(widget.registration.grade);
+                        
+                  
+                        // if(showValidationOrNo && showEmailValidation) {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Grade9thFirst(registration: widget.registration,)));
+                        // }
+                      } else if(widget.dropDown.value == "10th Grade") {
+                        widget.reg10.fullName = widget.fullName.text;
+                        widget.reg10.email = widget.email.text;
+                        widget.reg10.password = widget.password.text;
+                        widget.reg10.phone = widget.phone.text;
+                        widget.reg10.country = widget.country.text;
+                        widget.reg10.age = widget.age.text;
+                        widget.reg10.grade = widget.dropDown.value;
+                        // if(showValidationOrNo && showEmailValidation) {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Grade10thFirst(registration: widget.reg10,)));
+                        // }
+                      }
+                    },),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

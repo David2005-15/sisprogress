@@ -22,6 +22,7 @@ class PersonalDetails extends StatelessWidget {
 
   TextEditingController number = TextEditingController();
   TextEditingController mail = TextEditingController();
+  TextEditingController secondaryMail = TextEditingController();
   TextEditingController instagram = TextEditingController();
 
 
@@ -53,7 +54,7 @@ class PersonalDetails extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.fromLTRB(20, 13, 0, 0),
                 child: Text(
-                  "University choice",
+                  "Personal Details",
                   style: GoogleFonts.montserrat(
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
@@ -110,7 +111,7 @@ class PersonalDetails extends StatelessWidget {
               ],
             ),
           ),
-            mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: mail, isPassword: false, initialValue: "Email",) :Container(
+            mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: mail, isPassword: false, initialValue: "Primary Email",) :Container(
             margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -118,7 +119,7 @@ class PersonalDetails extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.fromLTRB(20, 0, 15, 0),
                   child: Text(
-                    "Email",
+                    "Primary Email",
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
@@ -127,28 +128,26 @@ class PersonalDetails extends StatelessWidget {
                   ),
                 ),
           
-                Container(
-                  child: Text(
-                    email,
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 12,
-                      color: Colors.grey
-                    ),
+                Text(
+                  email,
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 12,
+                    color: Colors.grey
                   ),
                 )
               ],
             ),
           ),
-            mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: instagram, isPassword: false, initialValue: "Instagram",) :Container(
-            margin: const EdgeInsets.fromLTRB(0, 10, 0, 15),
+          mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: secondaryMail, isPassword: false, initialValue: "Secondary Email",) :Container(
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget> [
                 Container(
                   margin: const EdgeInsets.fromLTRB(20, 0, 15, 0),
                   child: Text(
-                    "Instagram",
+                    "Secondary Email",
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
@@ -157,14 +156,12 @@ class PersonalDetails extends StatelessWidget {
                   ),
                 ),
           
-                Container(
-                  child: Text(
-                    "https://www.instagram.com/",
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 12,
-                      color: Colors.grey
-                    ),
+                Text(
+                  email,
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 12,
+                    color: Colors.grey
                   ),
                 )
               ],
@@ -196,17 +193,17 @@ Future<void> _dialogBuilder(BuildContext context, VoidCallback onSave,) {
         return AlertDialog(
           backgroundColor: const Color(0xff121623),
           title: Text(
-            'Are you sure to change your university?',
+            'Are you sure to change your personal details?',
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w600, fontSize: 15, color: Colors.white),
           ),
-          content: Text(
-            'After you make a change, the tasks that have been already completed or in progress will not be deleted. ',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.montserrat(
-                fontWeight: FontWeight.w400, fontSize: 12, color: Colors.white),
-          ),
+          // content: Text(
+          //   'After you make a change, the tasks that have been already completed or in progress will not be deleted. ',
+          //   textAlign: TextAlign.center,
+          //   style: GoogleFonts.montserrat(
+          //       fontWeight: FontWeight.w400, fontSize: 12, color: Colors.white),
+          // ),
           actions: <Widget>[
             Container(
               alignment: Alignment.center,

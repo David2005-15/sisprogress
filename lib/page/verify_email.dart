@@ -32,11 +32,26 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
   }
 
   bool sendAgain = false;
+  bool isDisabled = true;
+  int count = 0;
   String resetOrSendAgain = "Send verification link";
+
+
+  void changeIsDiabled() {
+    Future.delayed(const Duration(minutes: 2), () {
+      setState(() {
+        isDisabled = true;
+      });
+    }); 
+  }
 
 
   @override
   Widget build(BuildContext context) {
+    if(resetOrSendAgain == "Resend verification link") {
+      changeIsDiabled();
+    }
+
     return Scaffold(
       appBar: CustomAppBar(buildLogoIcon(), List.empty()),
       body: Container(
@@ -60,18 +75,20 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
                 buildTitle(),
                 buildSubtitle(widget.email ?? ""),
                 buildDescription(),
-                Button(text: resetOrSendAgain, onPressed: () {
+                Button(text: resetOrSendAgain, onPressed: isDisabled ? () {
                   if(resetOrSendAgain == "Resend verification link") {
                     _dialogBuilder(context, widget.email ?? "");
                   }
                   setState(() {
                     sendAgain = true;
                     resetOrSendAgain = "Resend verification link";
+                    isDisabled = false;
+
                   });
 
 
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
-                }, height: 35, width: double.infinity),
+                } : null, height: 35, width: double.infinity),
     
                 Visibility(
                   visible: sendAgain,
@@ -83,6 +100,7 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
                           Align(
                             alignment: AlignmentDirectional.centerEnd,
                             child: Countdown(
+                              
                               animation: StepTween(
                                 begin: 2 * 60,
                                 end: 0

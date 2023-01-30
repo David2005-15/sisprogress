@@ -1,3 +1,4 @@
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +10,7 @@ import 'package:sis_progress/page/grades/grade_9th_second.dart';
 import 'package:sis_progress/widgets/radio_button.dart';
 import '../../widgets/drawers/app_bar.dart';
 import '../../widgets/progress/progress_bar.dart';
+import '../../widgets/progress/radio_button_group.dart';
 
 class Grade9thFirst extends StatefulWidget {
   // String term = "Start term";
@@ -22,18 +24,14 @@ class Grade9thFirst extends StatefulWidget {
   final RadioButtonHandler score = RadioButtonHandler(value: "Yes");
   final RadioButtonHandler legacy = RadioButtonHandler(value: "Yes");
 
-  Grade9thFirst({
-    required this.registration,
-    super.key
-  });
+  Grade9thFirst({required this.registration, super.key});
 
   @override
   State<StatefulWidget> createState() => _Grade9thFirst();
-
 }
 
 class _Grade9thFirst extends State<Grade9thFirst> {
-  List<String> terms = ["Start term", "Mandatory"];
+  List<String> terms = ["Fall 2023", "Fall 2024", "Fall 2025", "Fall 2026"];
   List<String> plans = ["Early Desicion", "Regular Desicion"];
   List<String> scores = ["Yes", "No"];
   List<String> legacys = ["Yes", "No"];
@@ -45,6 +43,8 @@ class _Grade9thFirst extends State<Grade9thFirst> {
   late TextEditingController _controller1;
   late TextEditingController _controller2;
   late TextEditingController _controller3;
+  late TextEditingController _controller4;
+    late SingleValueDropDownController _cnt;
 
   Client httpClient = Client();
 
@@ -55,8 +55,12 @@ class _Grade9thFirst extends State<Grade9thFirst> {
     _controller1 = TextEditingController();
     _controller2 = TextEditingController();
     _controller3 = TextEditingController();
+    _controller4 = TextEditingController();
+    _cnt = SingleValueDropDownController();
     super.initState();
   }
+
+  final GlobalKey _menuKey = GlobalKey<PopupMenuButtonState>();
 
   // void changeTerms(String? item) {
   //   setState(() {
@@ -88,62 +92,79 @@ class _Grade9thFirst extends State<Grade9thFirst> {
       appBar: CustomAppBar(buildLogoIcon(), List.empty()),
       body: Container(
         decoration: BoxDecoration(
-          color: const Color(0xff3A3D4C),
-          borderRadius: BorderRadius.circular(5)
-        ),
+            color: const Color(0xff3A3D4C),
+            borderRadius: BorderRadius.circular(5)),
         width: double.infinity,
         margin: const EdgeInsets.fromLTRB(16, 25, 16, 0),
         // alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center, 
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget> [
+            children: <Widget>[
               const ProgressBar(isPassed: [true, false, false]),
               buildTitle(),
               buildQuestion("1. Pick your dream university"),
-              buildMode(_controller1, Universities().universities, "University"),
-              buildQuestion("2. Choose the acedemic praogram"),
+              buildMode(
+                  _controller1, Universities().universities, "University"),
+              buildQuestion("2. What academic at college Choose the interests you?"),
               buildMode(_controller3, Universities().academics, "Profession"),
+              buildQuestion("3. Which field of study interests you?"),
+              buildMode(_controller4, Universities().subjects, "Study"),
               // buildMode(_controller2, , lableText),
               // CustomRadio(value: term, groupValue: terms),
-              buildQuestion("3. Preferred start term"),
+              buildQuestion("4. Choose the filed of study."),
               // buildAnswer(changeTerms, terms, term),
-              CustomRadio(handler: widget.term, groupValue: terms, methodParent: () => print("Hello")),
-              buildQuestion("4. Preferred admission plan."),
+              CustomRadioGroup(
+                handler: widget.term,
+                groupValue: terms,
+                methodParent: () => print("Hello"),
+              ),
+              buildQuestion("5. Preferred admission plan."),
               // buildAnswer(changePlan, plans, plan),
-              CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => print("Hello"),),
-              buildQuestion("5. Do you intend to pursue need-based Financial Aid?"),
+              CustomRadio(
+                handler: widget.plan,
+                groupValue: plans,
+                methodParent: () => print("Hello"),
+              ),
+              buildQuestion(
+                  "6. Do you intend to pursue need-based Financial Aid?"),
               // buildAnswer(changeScore, scores, score),
-              CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => print("Hello")),
-              buildQuestion("6. Are you a legacy?"),
+              CustomRadio(
+                  handler: widget.score,
+                  groupValue: scores,
+                  methodParent: () => print("Hello")),
+              buildQuestion("7. Are you a legacy?"),
               // buildAnswer(changeLegacy, legacys, legacy),
-              CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => print("Hello")),
-            
+              CustomRadio(
+                  handler: widget.legacy,
+                  groupValue: legacys,
+                  methodParent: () => print("Hello")),
+
               Container(
                 padding: const EdgeInsets.fromLTRB(0, 27, 0, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   // crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget> [
+                  children: <Widget>[
                     Container(
                       margin: const EdgeInsets.fromLTRB(20, 0, 0, 20),
-                      child: TextButton.icon(     // <-- TextButton
+                      child: TextButton.icon(
+                        // <-- TextButton
                         onPressed: () {
                           Navigator.pop(context);
                         },
                         icon: const ImageIcon(
                           AssetImage("assets/previous.png"),
                           size: 14,
-                          color:Color(0xffBFBFBF),
+                          color: Color(0xffBFBFBF),
                         ),
                         label: Text(
                           'Previous',
                           style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                            color: const Color(0xffBFBFBF)
-                          ),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                              color: const Color(0xffBFBFBF)),
                         ),
                       ),
                     ),
@@ -151,20 +172,18 @@ class _Grade9thFirst extends State<Grade9thFirst> {
                       margin: const EdgeInsets.fromLTRB(0, 0, 20, 20),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff36519D)
-                        ),
+                            backgroundColor: const Color(0xff36519D)),
                         child: Text(
                           "Next",
                           style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18
-                          ),
+                              fontWeight: FontWeight.w500, fontSize: 18),
                         ),
                         onPressed: () async {
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+
                           prefs.setString("university", _controller1.text);
-                
+
                           widget.registration.university = _controller1.text;
                           widget.registration.school = _controller2.text;
                           widget.registration.proffession = _controller3.text;
@@ -172,8 +191,13 @@ class _Grade9thFirst extends State<Grade9thFirst> {
                           widget.registration.addmision = widget.plan.value;
                           widget.registration.aid = widget.score.value;
                           widget.registration.legacy = widget.legacy.value;
-              
-                          Navigator.push(context,  MaterialPageRoute(builder: (context) => Grade9thSecond(registration: widget.registration,)));
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Grade9thSecond(
+                                        registration: widget.registration,
+                                      )));
                         },
                       ),
                     )
@@ -184,10 +208,9 @@ class _Grade9thFirst extends State<Grade9thFirst> {
           ),
         ),
       ),
-    ); 
+    );
   }
 }
-
 
 Image buildLogoIcon() {
   return Image.asset(
@@ -203,17 +226,15 @@ Container buildTitle() {
       child: Text(
         "Start Your Journey Today",
         style: GoogleFonts.montserrat(
-          fontWeight: FontWeight.w700,
-          fontSize: 24,
-          fontStyle: FontStyle.normal,
-          letterSpacing: -0.02,
-          color: Colors.white
-        ),
+            fontWeight: FontWeight.w700,
+            fontSize: 24,
+            fontStyle: FontStyle.normal,
+            letterSpacing: -0.02,
+            color: Colors.white),
       ),
     ),
   );
 }
-
 
 Container buildQuestion(String question) {
   return Container(
@@ -222,18 +243,13 @@ Container buildQuestion(String question) {
     child: Text(
       question,
       style: GoogleFonts.montserrat(
-        fontWeight: FontWeight.w400,
-        fontSize: 16,
-        color: Colors.white
-      ),
+          fontWeight: FontWeight.w400, fontSize: 16, color: Colors.white),
     ),
   );
 }
 
 Container buildMode(
-    TextEditingController controller,
-    List<String> items,
-    String lableText) {
+    TextEditingController controller, List<String> items, String lableText) {
   return Container(
     margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
     child: LayoutBuilder(
@@ -276,6 +292,106 @@ Container buildMode(
             ),
             onSelected: (String value) {
               controller.text = value;
+            },
+            itemBuilder: (BuildContext context) {
+              return items.map<PopupMenuItem<String>>((String value) {
+                return PopupMenuItem(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
+                        color: const Color(0xff121623),
+                      ),
+                    ));
+              }).toList();
+            },
+          ),
+        ),
+      );
+    }),
+  );
+}
+
+Container buildStudy(
+    TextEditingController controller, List<String> items, String lableText, GlobalKey key, VoidCallback onChange) {
+
+
+  PopupMenuButton popmenubutton = PopupMenuButton<String>(
+            color: const Color(0xffD2DAFF),
+            key: key,
+            constraints:
+                BoxConstraints.expand(height: 150, width: 314),
+            icon: const Icon(
+              Icons.arrow_drop_down,
+              color: Color(0xffD2DAFF),
+            ),
+            onSelected: (String value) {
+              controller.text = value;
+            },
+            itemBuilder: (BuildContext context) {
+              return items.map<PopupMenuItem<String>>((String value) {
+                return PopupMenuItem(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
+                        color: const Color(0xff121623),
+                      ),
+                    ));
+              }).toList();
+            },
+          );
+
+  return Container(
+    margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
+    child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return TextFormField(
+        style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w400,
+            fontSize: 15,
+            fontStyle: FontStyle.normal,
+            color: Colors.white),
+        controller: controller,
+        onChanged: (value) {
+          onChange();
+        },
+        decoration: InputDecoration(
+          alignLabelWithHint: true,
+          labelText: lableText,
+          // hintText: widget.hintText,
+          labelStyle: GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: 15,
+              fontStyle: FontStyle.normal,
+              color: const Color(0xffD2DAFF)),
+          hintStyle: GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: 15,
+              fontStyle: FontStyle.normal,
+              color: const Color(0xffD2DAFF)),
+          enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+          border: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+          focusColor: const Color(0xffD2DAFF),
+          focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xff36519D))),
+          suffixIcon: PopupMenuButton<String>(
+            color: const Color(0xffD2DAFF),
+            constraints:
+                BoxConstraints.expand(height: 150, width: constraints.maxWidth),
+            icon: const Icon(
+              Icons.arrow_drop_down,
+              color: Color(0xffD2DAFF),
+            ),
+            onSelected: (String value) {
+              controller.text = value;
+              print(constraints.maxWidth);
             },
             itemBuilder: (BuildContext context) {
               return items.map<PopupMenuItem<String>>((String value) {

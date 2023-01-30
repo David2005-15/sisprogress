@@ -35,8 +35,18 @@ class _Profile extends State<Profile> {
 
   late String phone = "";
   late String mail = "";
-  late String fullName = "";
   late String country = "";
+  late String fullName = "";
+
+  void setUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var value = await httpClient.getUserData();
+    setState(() {
+
+      fullName = value["fullName"];
+      prefs.setString("country", value["country"]);    
+    });
+  }
 
 
   Future getImage() async {
@@ -78,6 +88,9 @@ class _Profile extends State<Profile> {
     getPoint();
     setUniversity();
     setEmail();
+    setUsername();
+
+
     
     super.initState();
   }
@@ -109,7 +122,6 @@ class _Profile extends State<Profile> {
     setState(() {
       mail = prefs.getString("email").toString();
       phone = prefs.getString("number").toString();
-      fullName = prefs.getString("full name").toString();
       country = prefs.getString("country").toString();
     });
   }

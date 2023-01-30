@@ -46,8 +46,8 @@ class _GoalPage extends State<GoalPage> {
         goals.add(Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children:  [
-              ExploreTile(title: tasks[i - 1]["positionName"], disabled: !(tasks[i - 1]["isFree"] == "false2"), taskId: tasks[i - 1]["id"], taskCount: "${tasks[i - 1]["SubTasks"].where((p0) => p0['done'] == true).length}/${tasks[i - 1]["SubTasks"].length}",),
-              ExploreTile(title: tasks[i]["positionName"], disabled:!(tasks[i]["isFree"] == "false2"), taskId: tasks[i]["id"], taskCount: "${tasks[i]["SubTasks"].where((p0) => p0['done'] == true).length}/${tasks[i]["SubTasks"].length}",)
+              ExploreTile(title: tasks[i - 1]["positionName"], disabled: !(tasks[i - 1]["isFree"] == false), taskId: tasks[i - 1]["id"], taskCount: "${tasks[i - 1]["SubTasks"].where((p0) => p0['done'] == true).length}/${tasks[i - 1]["SubTasks"].length}", onClick: (){getAllTasks();},),
+              ExploreTile(title: tasks[i]["positionName"], disabled:!(tasks[i]["isFree"] == false), taskId: tasks[i]["id"], taskCount: "${tasks[i]["SubTasks"].where((p0) => p0['done'] == true).length}/${tasks[i]["SubTasks"].length}", onClick: (){getAllTasks();},)
             ],
         ));
       });

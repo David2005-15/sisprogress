@@ -27,16 +27,18 @@ class _Tile extends State<Tile> {
     return FittedBox(
       fit: BoxFit.contain,
       child: Container(
-        width: 154,
+        width: 100,
         height: 148,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(15),
           color: widget.color
         ),
-        child: Stack(
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget> [
             Container(
-              margin: const EdgeInsets.fromLTRB(20, 16, 0, 0),
+              margin: const EdgeInsets.fromLTRB(13, 15, 0, 0),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: widget.icon,
@@ -44,14 +46,14 @@ class _Tile extends State<Tile> {
             ),
 
             Container(
-              margin: const EdgeInsets.fromLTRB(20, 26, 0, 0),
+              margin: const EdgeInsets.fromLTRB(13, 5, 0, 0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   widget.point.toString(),
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
-                    fontSize: 32,
+                    fontSize: 28,
                     color: const Color(0xff2E2323)
                   ),
                 )
@@ -59,14 +61,16 @@ class _Tile extends State<Tile> {
             ),
 
             Container(
-              margin: const EdgeInsets.fromLTRB(20, 0, 0, 16),
+              margin: const EdgeInsets.fromLTRB(13, 5, 0, 16),
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
+                  
                   widget.description,
+                  textAlign: TextAlign.left,
                   style: GoogleFonts.montserrat(
                     fontWeight: FontWeight.w400,
-                    fontSize: 14,
+                    fontSize: 12,
                     color: const Color(0xff2E2323)
                   ),
                 ),

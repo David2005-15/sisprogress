@@ -8,8 +8,10 @@ class ExploreTile extends StatelessWidget {
   final bool disabled;
   final int taskId;
   final String taskCount;
+  final VoidCallback onClick;
 
   ExploreTile({
+    required this.onClick,
     required this.taskCount,
     required this.taskId,
     required this.title,
@@ -97,8 +99,9 @@ class ExploreTile extends StatelessWidget {
                           var outputFormat = "yyyy-mm-dd hh:mm:ss";
                           DateFormat outputFormatter = DateFormat(outputFormat);
                           var output = DateTime.parse(outputFormatter.format(DateTime.now()));
-                          print(output);
+                          
                           httpClient.addTask(taskId, output.toString());
+                          onClick();
                         } : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xff355CCA)

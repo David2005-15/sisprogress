@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/input_box.dart';
 
@@ -148,7 +149,7 @@ class _UniversityTile extends State<UniversityTile> {
                       ),
                     ),
               widget.mode
-                  ? buildMode(_controller2, widget.university, dreamPointCont,
+                  ? buildMode(_controller2, Universities().academics, dreamPointCont,
                       targetPointCont, safetyPointCont, widget.points, "School")
                   : Container(
                       margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -181,7 +182,7 @@ class _UniversityTile extends State<UniversityTile> {
               widget.mode
                   ? buildMode(
                       _controller3,
-                      widget.university,
+                      Universities().clubCategories,
                       dreamPointCont,
                       targetPointCont,
                       safetyPointCont,

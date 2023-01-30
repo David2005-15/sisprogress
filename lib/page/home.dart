@@ -135,7 +135,7 @@ class _HomePage extends State<HomePage> {
                             side: const BorderSide(width: 1, color: Color(0xff36519D))
                           ),
                           child: Text(
-                            "Sign Up",
+                            "Registration",
                             style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w500,
                               fontSize: 18,

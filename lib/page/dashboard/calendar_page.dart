@@ -48,7 +48,15 @@ class _CalendarPage extends State<CalendarPage> {
       event.clear();
 
       temp.forEach((element) {
-        DateTime date;
+        DateTime date = DateTime.parse(element["startDate"]);
+        print(date.day);
+        print(widget.choosenDate.day);
+        if(date.day == widget.choosenDate.day) {
+          event.add(element);
+        }
+
+        print(event);
+        
 
         // if(element["startDate"] != null) {
         //   DateTime date = DateTime.parse(element["startDate"]);
@@ -62,17 +70,17 @@ class _CalendarPage extends State<CalendarPage> {
         //   }
         // } 
         
-        if(element["startDate"] != null) {
-          DateTime date = DateTime.parse(element["startDate"]);
-          if(date.day == widget.choosenDate.day) {
-            event.add(element);
-          } else {
-            print(date.year);
-            print(widget.choosenDate.year);
-            print(date.month);
-            print(widget.choosenDate.month);
-          }
-        } 
+        // if(element["createdAt"] != null) {
+        //   DateTime date = DateTime.parse(element["createdAt"]);
+        //   if(date.day == widget.choosenDate.day) {
+        //     event.add(element);
+        //   } else {
+        //     print(date.year);
+        //     print(widget.choosenDate.year);
+        //     print(date.month);
+        //     print(widget.choosenDate.month);
+        //   }
+        // } 
         // DateTime date = DateTime.parse(element["startDate"])
         // if(date.year == widget.choosenDate.year && date.month == widget.choosenDate.month && date.day == widget.choosenDate.day) {
         //   event.add(element);
@@ -241,6 +249,8 @@ class _CalendarPage extends State<CalendarPage> {
                   setState(() {
                     widget.choosenDate = selectedDay;
                     updateEvent();
+                    print(widget.choosenDate);
+                    print(event);
                   });
                 },
                 calendarBuilders: CalendarBuilders(
@@ -390,17 +400,26 @@ class _CalendarPage extends State<CalendarPage> {
            ), 
            Column(
             children: event.map((e) {
-              print(e["SubTasks"][0]["name"]);
+              // print(e["SubTasks"][0]["name"]);
+              print(e["Tasks"]);
 
               List<List<dynamic>> swap = []; 
               List<String> temp = [];
+              // List<List<bool>> passedStatus = [];
+              List<bool> temp2 = [];
+              print(e["deadlineAtWeek"]);
+
               e["SubTasks"].forEach((p0) {
                 // swap.add(p0["name"]);
-                swap.add([p0["name"], p0["id"], p0["description"]]);
+                print(p0["name"]);
+                // passedStatus.add(p0["status"]);
+                swap.add([p0["name"], p0["id"], p0["description"], p0["status"]]);
                 temp.add("${p0["points"]} Points");
-              });              
+              });        
 
-              return EventTile(proccess: getProccess(e["status"]), title: e["Tasks"][0]["positionName"], description: "Lorem ipsum is placeholder text that is often used in the design and typesetting industry to demonstrate the visual effects of different typefaces and layouts. The text is in Latin and appears to be random, but is actually derived from a section of a work by Cicero", subtasks: swap, points: temp,);
+              // print(passedStatus);     
+
+              return EventTile(proccess: getProccess(e["status"]), title: e["positionName"], description: "Lorem ipsum is placeholder text that is often used in the design and typesetting industry to demonstrate the visual effects of different typefaces and layouts. The text is in Latin and appears to be random, but is actually derived from a section of a work by Cicero", subtasks: swap, points: temp, eventDate: e["deadlineAtWeek"],);
             }).toList(),
            ),        
           ],

@@ -22,6 +22,7 @@ dependencies:
   watcher: ^1.0.2
   shared_preferences: ^2.0.16
   dropdownfield: ^1.0.3
+  dropdown_textfield: ^1.0.7
   table_calendar: ^3.0.8
   image_picker: ^0.8.6
   intl: ^0.17.0
@@ -43,4 +44,10 @@ flutter:
     - assets/Rectangle 1114.png
     - assets/Vectorchevorn.png
     - assets/Vector.svg
+    - assets/Calendar.svg
+    - assets/Calendar.png
+    - assets/svgviewer-output.svg
+    - assets/Rocket (2).svg
+    - assets/Test.svg
+    - assets/yyy.png
   

@@ -12,6 +12,7 @@ import 'package:sis_progress/page/dashboard/notification_page.dart';
 import 'package:sis_progress/page/dashboard/profile.dart';
 import 'package:sis_progress/widgets/bottom_nav_bar.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'calendar_page.dart';
 import 'my_task.dart';
 
@@ -35,7 +36,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   Color iconColor = Colors.blue;
   Color backgroundColor = Colors.white;
 
-  String? fullName;
+  String fullName = "";
 
   Client httpClient = Client();
 
@@ -110,13 +111,29 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   bool isVisible = false;
   bool isFloatingButtonVisisble = true;
 
+  var format = DateFormat("yyyy-MM-dd");
+
   void changeFloatingButtonState() {
     setState(() {
-      if (page.getChoosenDate().day < DateTime.now().day) {
+      var diff = page.getChoosenDate().compareTo(DateTime.now());
+      // print(DateTime.now());
+      // print(diff);
+      if(isSameDay(page.getChoosenDate(), DateTime.now())) {
+        isFloatingButtonVisisble = true;
+      }
+      else if((diff < 0)) {
         isFloatingButtonVisisble = false;
       } else {
         isFloatingButtonVisisble = true;
       }
+      // if (page.getChoosenDate().day >= DateTime.now().day) {
+      //   if(page.getChoosenDate().month >= DateTime.now().month){
+      //     isFloatingButtonVisisble = true;
+      //   }
+      // } else {
+      //   print(page)
+      //   isFloatingButtonVisisble = false;
+      // }
     });
   }
 
@@ -363,7 +380,6 @@ Future<void> _dialogBuilder(
               var outputFormat = "yyyy-mm-dd hh:mm:ss";
               DateFormat outputFormatter = DateFormat(outputFormat);
               var output = DateTime.parse(outputFormatter.format(date));
-              print(output);
               httpClient.addTask(addedTasks[0]["id"], output.toString());
 
               Navigator.pop(context);

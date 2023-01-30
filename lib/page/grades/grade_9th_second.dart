@@ -53,10 +53,10 @@ class _Grade9thSecond extends State<Grade9thSecond> {
                 const ProgressBar(isPassed: [true, true, false]),
                 buildTitle(),
                 Container(
-                  margin: const EdgeInsets.fromLTRB(13, 25, 13, 15),
+                  margin: const EdgeInsets.fromLTRB(24, 25, 13, 15),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Please briefly elaborate on one of your extracurricular activities or work experiences",
+                    "Please briefly elaborate on your extracurricular activities or work experiences",
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w400,
                       fontSize: 14,

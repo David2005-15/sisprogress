@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
 
 class MyTask extends StatefulWidget {
   const MyTask({super.key});
@@ -10,9 +12,26 @@ class MyTask extends StatefulWidget {
 }
 
 class _MyTask extends State<MyTask> {
-  List<String> status = ["Completed", "In Progress", "Late Done"];
+  List<String> status = ["Completed", "In Progress", "Late Done", "Planned", "Overdue"];
 
   String statusText = "Task Status";
+
+  var httpClient = Client();
+  var tasks = [];
+
+  @override
+  void initState() {
+    printAllTasks();
+
+    print(tasks);
+  }
+
+  void printAllTasks() async {
+    var temp = await httpClient.getCalendarEvents();;
+    setState(() {
+      tasks = temp;
+    });
+  }
 
 
   @override
@@ -58,6 +77,8 @@ class _MyTask extends State<MyTask> {
                   onSelected: (val) {
                     setState(() {
                       statusText = val;
+                      
+                      tasks = tasks.where((element) => element["status"] == val).toList();
                     });
                   },
                   shape: RoundedRectangleBorder(
@@ -112,9 +133,17 @@ class _MyTask extends State<MyTask> {
               ),
             ),
 
-            buildTile("Company", "In Progress", "Position Name", "7th of Dec, 2023", const Color(0xff94B49F)),
-            buildTile("Company", "Overdue", "Position Name", "7th of Dec, 2023", const Color(0xffFFC900)),
-            buildTile("Company", "Late Done", "Position Name", "7th of Dec, 2023", const Color(0xffE31F1F))
+            Column(
+              children: tasks.map((e) {
+                String monthName = DateFormat.MMMM().format(DateTime.parse(e["createdAt"])).substring(0, 3);
+                print(monthName);
+                return buildTile(e["compamyName"], e["status"], e["positionName"], "${DateTime.parse(e["createdAt"]).day}th of $monthName, ${DateTime.parse(e["createdAt"]).year}", const Color(0xff94B49F));
+              }).toList(),
+            )
+
+            // buildTile("Company", "In Progress", "Position Name", "7th of Dec, 2023", const Color(0xff94B49F)),
+            // buildTile("Company", "Overdue", "Position Name", "7th of Dec, 2023", const Color(0xffFFC900)),
+            // buildTile("Company", "Late Done", "Position Name", "7th of Dec, 2023", const Color(0xffE31F1F))
           ],
         ),
       ),
@@ -157,40 +186,49 @@ Container buildTile(String title, String status, String position, String date, C
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: const Color(0xffB1B2FF)
-                        ),
-                      ),
-                      Text(
-                        position,
-                        style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: const Color(0xffB1B2FF)
-                        ),
-                      ),
-
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(25, 5, 0, 0),
-                        child: Text(
-                          status,
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            decoration: TextDecoration.underline,
-                            color: statusColor
+                  Container(
+                    width: 200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.contain,
+                          child: Text(
+                            title,
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: const Color(0xffB1B2FF)
+                            ),
                           ),
                         ),
-                      )
-                    ],
+                        FittedBox(
+                          fit: BoxFit.contain,
+                          child: Text(
+                            position,
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: const Color(0xffB1B2FF)
+                            ),
+                          ),
+                        ),
+                  
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(25, 5, 0, 0),
+                          child: Text(
+                            status,
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              decoration: TextDecoration.underline,
+                              color: statusColor
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Container(
                     margin: const EdgeInsets.fromLTRB(0, 0, 45, 10),

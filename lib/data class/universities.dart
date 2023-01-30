@@ -14,6 +14,70 @@ class Universities {
   ];
 
   final List<String> academics = [
+  "Biological Sciences",
+  "Computer Science",
+  "Engineering",
+  "Humanities",
+  "Mathematics",
+  "Physical Sciences",
+  "Social Sciences",
+  "Undecided"];
+
+  final List<String> subjects = [
+  "African and African American Studies",
+  "Anthropology",
+  "Applied Mathematics",
+  "Art, Film, and Visual Studies",
+  "Astrophysics",
+  "Biomedical Engineering",
+  "Chemical and Physical Biology",
+  "Chemistry",
+  "Chemistry and Physics",
+  "Classics",
+  "Comparative Literature",
+  "Computer Science",
+  "Earth and Planetary Sciences",
+  "East Asian Studies",
+  "Economics",
+  "Electrical Engineering",
+  "Engineering Sciences",
+  "English",
+  "Environmental Science and Engineering",
+  "Environmental Science and Public Policy",
+  "Folklore and Mythology",
+  "Germanic Languages and Literatures",
+  "Government",
+  "History",
+  "History and Literature",
+  "History and Science",
+  "History of Art and Architecture",
+  "Human Development and Regenerative Biology",
+  "Human Evolution Biology",
+  "Integrative Biology",
+  "Linguistics",
+  "Mathematics",
+  "Mechanical Engineer",
+  "Molecular and Cellular Biology",
+  "Music",
+  "Near Eastern Languages and Civilizations",
+  "Neuroscience",
+  "Philosophy",
+  "Physics",
+  "Psychology",
+  "Religion",
+  "Romance Languages and Literatures",
+  "Slavic Languages and Literatures",
+  "Social Studies",
+  "Sociology",
+  "South Asian Studies",
+  "Special Concertation",
+  "Statistics",
+  "Theater, Dance, and Media",
+  "Women, Gender, and Sexuality"
+];
+
+final List<String> clubCategories = [
+  "Academic",
   "Art",
   "Athletics: Club",
   "Athletics: JV/Varsity",
@@ -44,5 +108,6 @@ class Universities {
   "Work (Paid)",
   "Other Club/Activity"
 ];
+
 
 }

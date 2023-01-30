@@ -7,6 +7,7 @@ import 'package:sis_progress/widgets/radio_button.dart';
 import '../../data class/registration_data_grade10.dart';
 import '../../widgets/drawers/app_bar.dart';
 import '../../widgets/progress/progress_bar.dart';
+import '../../widgets/progress/radio_button_group.dart';
 import 'grade_10th_second.dart';
 
 class Grade10thFirst extends StatefulWidget {
@@ -27,7 +28,7 @@ class Grade10thFirst extends StatefulWidget {
 }
 
 class _Grade10thFirst extends State<Grade10thFirst> {
-  List<String> terms = ["Start term", "Mandatory"];
+  List<String> terms = ["Fall 2023", "Fall 2024", "Fall 2025", "Fall 2026"];
   List<String> plans = ["Early Desicion", "Regular Desicion"];
   List<String> scores = ["Yes", "No"];
   List<String> legacys = ["Yes", "No"];
@@ -35,6 +36,7 @@ class _Grade10thFirst extends State<Grade10thFirst> {
   final dynamic _controller1 = TextEditingController();
   final dynamic _controller2 = TextEditingController();
   final dynamic _controller3 = TextEditingController();
+  final dynamic _controller4 = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -57,19 +59,25 @@ class _Grade10thFirst extends State<Grade10thFirst> {
               buildTitle(),
               buildQuestion("1. Pick your dream university"),
               buildMode(_controller1, Universities().universities, "University"),
-              buildQuestion("2. Choose the acedemic praogram"),
+              buildQuestion("2. What academic at college Choose the interests you?"),
               buildMode(_controller3, Universities().academics, "Profession"),
+              buildQuestion("3. Which field of study interests you?"),
+              buildMode(_controller4, Universities().subjects, "Study"),
               // CustomRadio(value: term, groupValue: terms),
-              buildQuestion("3. Preferred start term"),
+              buildQuestion("4. Preferred Start term options."),
               // buildAnswer(changeTerms, terms, term),
-              CustomRadio(handler: widget.term, groupValue: terms, methodParent: () => print("Hello")),
-              buildQuestion("4. Preferred admission plan."),
+              CustomRadioGroup(
+                handler: widget.term,
+                groupValue: terms,
+                methodParent: () => print("Hello"),
+              ),
+              buildQuestion("5. Preferred admission plan."),
               // buildAnswer(changePlan, plans, plan),
               CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => print("Hello")),
-              buildQuestion("5. Do you intend to pursue need-based Financial Aid?"),
+              buildQuestion("6. Do you intend to pursue need-based Financial Aid?"),
               // buildAnswer(changeScore, scores, score),
               CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => print("Hello")),
-              buildQuestion("6. Are you a legacy?"),
+              buildQuestion("7. Are you a legacy?"),
               // buildAnswer(changeLegacy, legacys, legacy),
               CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => print("Hello")),
               Container(
