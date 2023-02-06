@@ -1,4 +1,3 @@
-import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,9 +43,17 @@ class _Grade9thFirst extends State<Grade9thFirst> {
   late TextEditingController _controller2;
   late TextEditingController _controller3;
   late TextEditingController _controller4;
-    late SingleValueDropDownController _cnt;
+  // late SingleValueDropDownController _cnt;
 
   Client httpClient = Client();
+
+  String universityErrorText = "";
+  String studyErrorText = "";
+  String academicErrorText = "";
+
+  bool showuniversityErrorText = false;
+  bool showstudyErrorText = false;
+  bool showacademicErrorText = false;
 
   late List<String> uni;
 
@@ -56,7 +63,7 @@ class _Grade9thFirst extends State<Grade9thFirst> {
     _controller2 = TextEditingController();
     _controller3 = TextEditingController();
     _controller4 = TextEditingController();
-    _cnt = SingleValueDropDownController();
+    // _cnt = SingleValueDropDownController();
     super.initState();
   }
 
@@ -105,12 +112,11 @@ class _Grade9thFirst extends State<Grade9thFirst> {
               const ProgressBar(isPassed: [true, false, false]),
               buildTitle(),
               buildQuestion("1. Pick your dream university"),
-              buildMode(
-                  _controller1, Universities().universities, "University"),
-              buildQuestion("2. What academic at college Choose the interests you?"),
-              buildMode(_controller3, Universities().academics, "Profession"),
+              buildMode(_controller1, Universities().universities, "University", showuniversityErrorText, universityErrorText),
+              buildQuestion("2. What academic at college Choose the interests you?",),
+              buildMode(_controller3, Universities().academics, "Profession", showacademicErrorText, academicErrorText),
               buildQuestion("3. Which field of study interests you?"),
-              buildMode(_controller4, Universities().subjects, "Study"),
+              buildMode(_controller4, Universities().subjects, "Study", showstudyErrorText, studyErrorText),
               // buildMode(_controller2, , lableText),
               // CustomRadio(value: term, groupValue: terms),
               buildQuestion("4. Choose the filed of study."),
@@ -191,13 +197,54 @@ class _Grade9thFirst extends State<Grade9thFirst> {
                           widget.registration.addmision = widget.plan.value;
                           widget.registration.aid = widget.score.value;
                           widget.registration.legacy = widget.legacy.value;
+                          if(_controller1.text == "University") {
+                            setState(() {
+                              showuniversityErrorText= true;
+                              universityErrorText = "Please select your university";
+                            });
+                          } else {
+                            setState(() {
+                              showuniversityErrorText= false;
+                            });
+                          }
 
-                          Navigator.push(
+                          if(_controller3.text == "Profession") {
+                            setState(() {
+                              showacademicErrorText= true;
+                              academicErrorText = "Please select your academic program";
+                            });
+                          } else {
+                            setState(() {
+                              showacademicErrorText= false;
+                            });
+                          }
+
+                          if(_controller4.text == "Study") {
+                            setState(() {
+                              showstudyErrorText = true;
+                              studyErrorText = "Please select your study";
+                            });
+                          } else {
+                            setState(() {
+                              showstudyErrorText = false;
+                            });
+                          }
+              
+                          if(!(showstudyErrorText && showacademicErrorText && showuniversityErrorText)) {
+                             await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Grade9thSecond(
                                         registration: widget.registration,
                                       )));
+                          }
+
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => Grade9thSecond(
+                          //               registration: widget.registration,
+                          //             )));
                         },
                       ),
                     )
@@ -249,12 +296,16 @@ Container buildQuestion(String question) {
 }
 
 Container buildMode(
-    TextEditingController controller, List<String> items, String lableText) {
+    TextEditingController controller,
+    List<String> items,
+    String lableText, bool? showValidationOrNo, String errorText) {
+  controller.text = lableText;
   return Container(
     margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
     child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       return TextFormField(
+        readOnly: true,
         style: GoogleFonts.poppins(
             fontWeight: FontWeight.w400,
             fontSize: 15,
@@ -263,107 +314,14 @@ Container buildMode(
         controller: controller,
         decoration: InputDecoration(
           alignLabelWithHint: true,
-          labelText: lableText,
+          // labelText: lableText,
           // hintText: widget.hintText,
-          labelStyle: GoogleFonts.poppins(
-              fontWeight: FontWeight.w400,
-              fontSize: 15,
-              fontStyle: FontStyle.normal,
-              color: const Color(0xffD2DAFF)),
-          hintStyle: GoogleFonts.poppins(
-              fontWeight: FontWeight.w400,
-              fontSize: 15,
-              fontStyle: FontStyle.normal,
-              color: const Color(0xffD2DAFF)),
-          enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
-          border: const UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
-          focusColor: const Color(0xffD2DAFF),
-          focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xff36519D))),
-          suffixIcon: PopupMenuButton<String>(
-            color: const Color(0xffD2DAFF),
-            constraints:
-                BoxConstraints.expand(height: 150, width: constraints.maxWidth),
-            icon: const Icon(
-              Icons.arrow_drop_down,
-              color: Color(0xffD2DAFF),
-            ),
-            onSelected: (String value) {
-              controller.text = value;
-            },
-            itemBuilder: (BuildContext context) {
-              return items.map<PopupMenuItem<String>>((String value) {
-                return PopupMenuItem(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        color: const Color(0xff121623),
-                      ),
-                    ));
-              }).toList();
-            },
+          errorText: showValidationOrNo ?? false ? errorText: null,
+          errorStyle: GoogleFonts.poppins(
+            fontWeight: FontWeight.w400,
+            fontSize: 10,
+            color: const Color(0xffE31F1F)
           ),
-        ),
-      );
-    }),
-  );
-}
-
-Container buildStudy(
-    TextEditingController controller, List<String> items, String lableText, GlobalKey key, VoidCallback onChange) {
-
-
-  PopupMenuButton popmenubutton = PopupMenuButton<String>(
-            color: const Color(0xffD2DAFF),
-            key: key,
-            constraints:
-                BoxConstraints.expand(height: 150, width: 314),
-            icon: const Icon(
-              Icons.arrow_drop_down,
-              color: Color(0xffD2DAFF),
-            ),
-            onSelected: (String value) {
-              controller.text = value;
-            },
-            itemBuilder: (BuildContext context) {
-              return items.map<PopupMenuItem<String>>((String value) {
-                return PopupMenuItem(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        color: const Color(0xff121623),
-                      ),
-                    ));
-              }).toList();
-            },
-          );
-
-  return Container(
-    margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
-    child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      return TextFormField(
-        style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w400,
-            fontSize: 15,
-            fontStyle: FontStyle.normal,
-            color: Colors.white),
-        controller: controller,
-        onChanged: (value) {
-          onChange();
-        },
-        decoration: InputDecoration(
-          alignLabelWithHint: true,
-          labelText: lableText,
-          // hintText: widget.hintText,
           labelStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.w400,
               fontSize: 15,
@@ -391,7 +349,6 @@ Container buildStudy(
             ),
             onSelected: (String value) {
               controller.text = value;
-              print(constraints.maxWidth);
             },
             itemBuilder: (BuildContext context) {
               return items.map<PopupMenuItem<String>>((String value) {

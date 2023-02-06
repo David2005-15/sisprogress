@@ -46,7 +46,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
       const Dashboard(),
       page,
       const ExploreMoreGoals(),
-      MyTask(),
+      MyTask(choosenDate: page.choosenDate),
       const Profile()
     ];
   }
@@ -141,61 +141,20 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   Widget build(BuildContext context) {
     changeFloatingButtonState();
 
-    return WillPopScope(
-      onWillPop: _onBackButtonPressed,
-      child: Scaffold(
-        bottomNavigationBar: NavBar(
-            selected: _selected,
-            onChange: (int count) {
-              setState(() {
-                _selected = count;
-                body = pages[_selected];
-              });
-            }),
-        appBar: CustomAppBar(buildLogoIcon(onIcon), <Widget>[
-          buildNotification(onTap: onNotification),
-          buildAvatar(onTap: onAvatar)
-        ]),
-        body: body,
-        floatingActionButton: Visibility(
-          visible: isFloatingButtonVisisble,
-          child: SizedBox(
-            width: 45,
-            height: 45,
-            child: _selected == 1
-                ? FloatingActionButton(
-                    onPressed: () async {
-                      var prefs = await SharedPreferences.getInstance();
-                      var id = prefs.getString("user id").toString();
-
-                      var value = await httpClient.getAllTaskAndFilter();
-                      print(value.length);
-
-                      // var freeTasks = value.map((e) => e["compamyName"].toString()).toList();
-
-                      List<List<dynamic>> subtasks = [];
-                      List<List<String>> points = [];
-
-                      List<dynamic> tasks = [];
-
-                      _dialogBuilder(context, value, points, tasks, httpClient,
-                          page.getChoosenDate(), () {
-                        setState(() {
-                          var temp = tasks;
-                        });
-                      });
-                    },
-                    backgroundColor: const Color(0xff355CCA),
-                    child: const Icon(
-                      Icons.add_rounded,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                  )
-                : null,
-          ),
-        ),
-      ),
+    return Scaffold(
+      bottomNavigationBar: NavBar(
+          selected: _selected,
+          onChange: (int count) {
+            setState(() {
+              _selected = count;
+              body = pages[_selected];
+            });
+          }),
+      appBar: CustomAppBar(buildLogoIcon(onIcon), <Widget>[
+        buildNotification(onTap: onNotification),
+        buildAvatar(onTap: onAvatar)
+      ]),
+      body: body,
     );
   }
 }
@@ -383,7 +342,6 @@ Future<void> _dialogBuilder(
               httpClient.addTask(addedTasks[0]["id"], output.toString());
 
               Navigator.pop(context);
-              reload();
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xff355CCA),

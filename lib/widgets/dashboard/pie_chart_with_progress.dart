@@ -38,55 +38,130 @@ class _PieChart extends State<PieChartWithProgressBar> {
             ]
           )
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget> [
-            Stack(
-              children: <Widget> [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
-                    child: Text(
-                      "Progress",
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w700,
-                        fontSize: fontSize[0].toDouble(),
-                        color: Colors.white
-                      ),
-                    ),
-                  ),
-                ),
 
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: Container(
-                      alignment: Alignment.bottomCenter,
-                      margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      width: 130,
-                      height: 150,
-                      child: CustomPaint(
-                        painter: LinearProgressIndicator(value: widget.values, width: width),
-                        child: Container(),
-                      )
-                    ),
-                  ),
-                )
-              ],
+        child: Column(
+          children: <Widget> [
+            Row(
+              children: [
+                Container(
+              margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
+              child: Text(
+                "Progress",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w700,
+                  fontSize: fontSize[0].toDouble(),
+                  color: Colors.white
+                ),
+              ),
             ),
             Container(
-              // margin: const EdgeInsets.all(5),
-              width: containerSize[0],
-              height: containerSize[1],
-              child: CustomPaint(
-                painter: ProgressBarPainter(value: widget.values, width: width),
-                child: Container(),
+              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+              margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [   
+                    Color(0xffE31F1F).withOpacity(0.69),
+                    // Color.fromRGBO(227, 31, 31, 0.69),
+                    Color(0xff355CCA),
+                  ],
+                  // stops: [
+                  //   0.0166,
+                  //   0.7738,
+                  //   0.9548,
+                  // ],
+                ),
               ),
+              child: Text(
+                "Inactive categories will come soon.",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
+                  color: Colors.white
+                ),
+              ),
+            ),
+              ],
+            ),
+
+            Row(
+              children: [
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  margin: const EdgeInsets.fromLTRB(10, 25, 0, 0),
+                  width: 130,
+                  height: 150,
+                  child: CustomPaint(
+                    painter: LinearProgressIndicator(value: widget.values, width: width),
+                    child: Container(),
+                  )
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 10, 5, 5),
+                  width: containerSize[0],
+                  height: containerSize[1],
+                  child: CustomPaint(
+                    painter: ProgressBarPainter(value: widget.values, width: width),
+                    child: Container(),
+                  ),
+                )
+
+              ],
             )
           ],
         ),
+        // child: Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: <Widget> [
+        //     Stack(
+        //       children: <Widget> [
+        //         Align(
+        //           alignment: Alignment.topLeft,
+        //           child:Container(
+        //                 margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
+        //                 child: Text(
+        //                   "Progress",
+        //                   style: GoogleFonts.montserrat(
+        //                     fontWeight: FontWeight.w700,
+        //                     fontSize: fontSize[0].toDouble(),
+        //                     color: Colors.white
+        //                   ),
+        //                 ),
+        //               ),
+
+        //         ),
+
+        //         Align(
+        //           alignment: Alignment.bottomLeft,
+        //           child: FittedBox(
+        //             fit: BoxFit.contain,
+        //             child: Container(
+        //               alignment: Alignment.bottomCenter,
+        //               margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+        //               width: 130,
+        //               height: 150,
+        //               child: CustomPaint(
+        //                 painter: LinearProgressIndicator(value: widget.values, width: width),
+        //                 child: Container(),
+        //               )
+        //             ),
+        //           ),
+        //         )
+        //       ],
+        //     ),
+            // Container(
+            //   margin: const EdgeInsets.fromLTRB(5, 20, 5, 5),
+            //   width: containerSize[0],
+            //   height: containerSize[1],
+            //   child: CustomPaint(
+            //     painter: ProgressBarPainter(value: widget.values, width: width),
+            //     child: Container(),
+            //   ),
+            // )
+        //   ],
+        // ),
       ),
     );
   }
@@ -132,16 +207,16 @@ class LinearProgressIndicator extends CustomPainter {
     List<double> textPlace = getTextPlace(width);
 
     drawProgressLine(canvas, 40, linearCoord[0], Colors.red);
-    drawProgressLine(canvas, 45, linearCoord[1], Colors.blue);
-    drawProgressLine(canvas, 23, linearCoord[2], Colors.amber);
-    drawProgressLine(canvas, 68, linearCoord[3], Colors.orange);
-    drawProgressLine(canvas, 32, linearCoord[4], Colors.purple);
+    drawProgressLine(canvas, 25, linearCoord[1], Colors.blue.withOpacity(0.3));
+    drawProgressLine(canvas, 25, linearCoord[2], Colors.amber.withOpacity(0.3));
+    drawProgressLine(canvas, 25, linearCoord[3], Colors.orange.withOpacity(0.3));
+    // drawProgressLine(canvas, 32, linearCoord[4], Colors.purple);
 
-    drawPointer(canvas, textPlace[0], "Category 1");
-    drawPointer(canvas, textPlace[1], "Category 2");
-    drawPointer(canvas, textPlace[2], "Category 3");
-    drawPointer(canvas, textPlace[3], "Category 4");
-    drawPointer(canvas, textPlace[4], "Category 5");
+    drawPointer(canvas, textPlace[0], "Extraculicular", Colors.white);
+    drawPointer(canvas, textPlace[1], "Personal development", Colors.white.withOpacity(0.3));
+    drawPointer(canvas, textPlace[2], "Academics", Colors.white.withOpacity(0.3));
+    drawPointer(canvas, textPlace[3], "Standardized test", Colors.white.withOpacity(0.3));
+    // drawPointer(canvas, textPlace[4], "Category 5");
   }
 
   void drawProgressLine(Canvas canvas, int percentage, double offset, Color color) {
@@ -149,11 +224,11 @@ class LinearProgressIndicator extends CustomPainter {
     canvas.drawLine(Offset(20, offset), Offset(percentage.toDouble(), offset), Paint()..color=color..strokeWidth=3..strokeCap=StrokeCap.round);
   }
 
-  void drawPointer(Canvas canvas, double offset, String category) {
+  void drawPointer(Canvas canvas, double offset, String category, Color color) {
     var textSpan = TextSpan(
       text: category,
       style: GoogleFonts.roboto(
-        color: Colors.white,
+        color: color,
         fontWeight: FontWeight.w500,
         fontSize: 10
       ),
@@ -228,22 +303,24 @@ class ProgressBarPainter extends CustomPainter {
     final Map<String, List<double>> pointsCoord = getPointCoord(width);
 
     final center = Offset((size.width + 50) / 2, size.height / 2);
-    drawPie(canvas, Colors.red, makeCenter(center, widthSize[0]), 5.7);
-    drawPie(canvas, Colors.blue, makeCenter(center, widthSize[1]), 5.5);
-    drawPie(canvas, Colors.amber, makeCenter(center, widthSize[2]), 4);
-    drawPie(canvas, Colors.orange, makeCenter(center, widthSize[3]), 4.5);
-    drawPie(canvas, Colors.purple, makeCenter(center, widthSize[4]), 3.5);
+    drawPie(canvas, Colors.red, makeCenter(center, widthSize[0]), (3.1415 * 2) * (value[0] / 100));
+    drawPie(canvas, Colors.blue.withOpacity(0.3), makeCenter(center, widthSize[1]), 0.2);
+    drawPie(canvas, Colors.amber.withOpacity(0.3), makeCenter(center, widthSize[2]), 0.2);
+    drawPie(canvas, Colors.orange.withOpacity(0.3), makeCenter(center, widthSize[3]), 0.2);
+    // drawPie(canvas, Colors.purple, makeCenter(center, widthSize[4]), 3.5);
 
     drawPointer(canvas, points["first"], pointsCoord["first"], Colors.red, Colors.white, value[0]);
-    drawPointer(canvas, points["second"], pointsCoord["second"], Colors.blue, Colors.white, value[1]);
-    drawPointer(canvas, points["third"], pointsCoord["third"], Colors.amber, Colors.white, value[2]);
-    drawPointer(canvas, points["fourth"], pointsCoord["fourth"], Colors.orange, Colors.white, value[3]);
-    drawPointer(canvas, points["fifth"], pointsCoord["fifth"], Colors.purple, Colors.white, value[4]);
+    drawPointer(canvas, points["second"], pointsCoord["second"], Colors.blue.withOpacity(0.3), Colors.white.withOpacity(0.3), value[1]);
+    drawPointer(canvas, points["third"], pointsCoord["third"], Colors.amber.withOpacity(0.3), Colors.white.withOpacity(0.3), value[2]);
+    drawPointer(canvas, points["fourth"], pointsCoord["fourth"], Colors.orange.withOpacity(0.3), Colors.white.withOpacity(0.3), value[3]);
+    // drawPointer(canvas, points["fifth"], pointsCoord["fifth"], Colors.purple, Colors.white, value[4]);
   }
 
   void drawPie(Canvas canvas, Color color, Rect rect, double value) {
     canvas.drawArc(rect, 0, value, false, Paint()..color=color..strokeWidth=3..style=PaintingStyle.stroke);
   }
+
+  double degToRad(double degree) => degree * (3.1415 / 180);
 
   void drawPointer(Canvas canvas, List<double>? first, List<double>? second, Color color, Color textColor, int value) {
     canvas.drawLine(Offset(first!.first, first.last), Offset(second!.first, second.last), Paint()..color=color..strokeWidth=2);
@@ -252,7 +329,7 @@ class ProgressBarPainter extends CustomPainter {
     var textSpan = TextSpan(
       text: "$value %",
       style: GoogleFonts.roboto(
-        color: Colors.white,
+        color: textColor,
         fontWeight: FontWeight.w500,
         fontSize: 10
       ),

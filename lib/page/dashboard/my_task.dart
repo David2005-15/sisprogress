@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
+import 'package:sis_progress/widgets/dashboard/my_task_tile.dart';
+
+import '../../data class/event_process.dart';
 
 class MyTask extends StatefulWidget {
-  const MyTask({super.key});
+  final DateTime choosenDate;
+  const MyTask({
+    required this.choosenDate,
+    super.key
+  });
 
   @override
   State<StatefulWidget> createState() => _MyTask();
@@ -12,7 +19,7 @@ class MyTask extends StatefulWidget {
 }
 
 class _MyTask extends State<MyTask> {
-  List<String> status = ["Completed", "In Progress", "Late Done", "Planned", "Overdue"];
+  List<String> status = ["All", "Completed", "In Progress", "Late Done", "Planned", "Overdue"];
 
   String statusText = "Task Status";
 
@@ -22,15 +29,30 @@ class _MyTask extends State<MyTask> {
   @override
   void initState() {
     printAllTasks();
-
+    super.initState();
     print(tasks);
   }
 
-  void printAllTasks() async {
-    var temp = await httpClient.getCalendarEvents();;
+  Future printAllTasks() async {
+    var temp = await httpClient.getCalendarEvents();
     setState(() {
       tasks = temp;
     });
+  }
+
+  EventProccess getProccess(String name) {
+    switch(name) {
+      case "In Progress":
+        return EventProccess.progress;
+      case "Planned":
+        return EventProccess.planned;
+      case "Overdue":
+        return EventProccess.overdue;
+      case "Late Done":
+        return EventProccess.later;
+      default:
+        return EventProccess.completed;
+    }
   }
 
 
@@ -68,20 +90,23 @@ class _MyTask extends State<MyTask> {
                   ),
 
                   PopupMenuButton(
-                    icon: ImageIcon(
+                    icon: const ImageIcon(
                       AssetImage("assets/Vectorchevorn.png"),
                       size: 14,
                       color: Colors.grey,
                     ),
           
-                  onSelected: (val) {
+                  onSelected: (val) async {
+                    await printAllTasks();
+
                     setState(() {
                       statusText = val;
-                      
-                      tasks = tasks.where((element) => element["status"] == val).toList();
+                      if(statusText != "All") {
+                        tasks = tasks.where((element) => element["status"] == val).toList();
+                      }
                     });
                   },
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5.0))
                   ),
 
@@ -108,7 +133,18 @@ class _MyTask extends State<MyTask> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget> [
                   Container(
-                    margin: const EdgeInsets.fromLTRB(45, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(32, 0, 0, 0),
+                    child: Text(
+                      "My Points",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: const Color(0xffBFBFBF)
+                      ),
+                    )
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     child: Text(
                       "Status",
                       style: GoogleFonts.poppins(
@@ -135,9 +171,28 @@ class _MyTask extends State<MyTask> {
 
             Column(
               children: tasks.map((e) {
-                String monthName = DateFormat.MMMM().format(DateTime.parse(e["createdAt"])).substring(0, 3);
+                String monthName = DateFormat.MMMM().format(DateTime.parse(e["deadline"])).substring(0, 3);
                 print(monthName);
-                return buildTile(e["compamyName"], e["status"], e["positionName"], "${DateTime.parse(e["createdAt"]).day}th of $monthName, ${DateTime.parse(e["createdAt"]).year}", const Color(0xff94B49F));
+
+                List<List<dynamic>> swap = []; 
+                List<String> temp = [];
+                List<bool> temp2 = [];
+                List<int> temp3 = [];
+                
+                e["SubTasks"].forEach((p0) {
+                  swap.add([p0["name"], p0["id"], p0["description"], p0["status"]]);
+                  if(p0["status"] == true) {
+                    temp2.add(true);
+                  }
+                  temp.add("${p0["points"]} Points");
+                  temp3.add(p0["points"]);
+                });  
+
+                print(e);
+    
+                String substringValue = "${temp2.length}/${swap.length}";
+                return MyTaskTile(proccess: getProccess(e["status"]), title: e["positionName"], description: "Lorem ipsum is placeholder text that is often used in the design and typesetting industry to demonstrate the visual effects of different typefaces and layouts. The text is in Latin and appears to be random, but is actually derived from a section of a work by Cicero", subtasks: swap, points: temp, eventDate: "${DateTime.parse(e["deadline"]).day}th of $monthName", substringValue: substringValue, updateState: printAllTasks, position: e["companyName"], status: e["status"], facultyName: e["facultName"], companyName: e["startDate"], choosenDate: DateTime.parse(e["deadline"]), point: "${e["point"]} Points");
+
               }).toList(),
             )
 

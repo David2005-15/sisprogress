@@ -63,6 +63,11 @@ class _CalendarWidget extends State<CalendarWidget> {
                 onSelected: (val) {
                   widget.onMonthSelect(val.toString());
                 },
+                icon: const ImageIcon(
+                  AssetImage("assets/Vectorchevorn.png"),
+                    size: 14,
+                    color:Color(0xffBFBFBF),
+                ),
                 offset: const Offset(20, 50),
                 color: const Color(0xff3A3D4C),
                 itemBuilder: (BuildContext context) {

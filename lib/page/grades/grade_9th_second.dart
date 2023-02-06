@@ -158,7 +158,7 @@ class _Grade9thSecond extends State<Grade9thSecond> {
                             ),
                             onPressed: () async {
                               widget.registration.workExp = widget.work.text;
-                              // await httpClient.registerForGrade9(widget.registration);
+                              await httpClient.registerForGrade9(widget.registration);
                               Navigator.push(context,  MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.registration.email,)));
                             },
                           ),

@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
 import '../../http client/http_client.dart';
 import '../../widgets/dashboard/profile_university_tile.dart';
@@ -31,12 +33,19 @@ class _Profile extends State<Profile> {
   List<String> uni = [""];
   List<List<dynamic>> points = [];
 
-  String university = "Harvard";
 
   late String phone = "";
   late String mail = "";
   late String country = "";
   late String fullName = "";
+  late String age = "";
+  late String gradeLevel = "";
+  late String academicProgram = "";
+  late String university = "";
+  late String study = "";
+  late String dreamPoints = "";
+  late String targetPoints = "";
+  late String safetyPoints = "";
 
   void setUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,6 +57,18 @@ class _Profile extends State<Profile> {
     });
   }
 
+  int traingDays = 0;
+  int totalPoints = 0;
+  int completedTasks = 0; 
+
+  void printValue() async {
+    var value = await httpClient.getDashboardData();
+    setState(() {
+      traingDays = value["TrainingDays"];
+      totalPoints = value["totalPoints"];
+      completedTasks = value["completed"];
+    });
+  }
 
   Future getImage() async {
     var image = await _picker.pickImage(source: ImageSource.gallery, maxWidth: 120, maxHeight: 120);
@@ -66,8 +87,11 @@ class _Profile extends State<Profile> {
   void onSave() async {
     setState(() {
       isEditable = false;
-      setUniversity();
     });
+
+    setEmail();
+    setEmail();
+    setEmail();
   }
 
   void onPersonalEdit() {
@@ -80,15 +104,22 @@ class _Profile extends State<Profile> {
     setState(() {
       editPersonal = false;
     });
+
+    setEmail();
+    setUsername();
   }
 
   @override
   void initState() {
     getUniver();
     getPoint();
-    setUniversity();
+    // setUniversity();
     setEmail();
     setUsername();
+    printValue();
+
+    print(university);
+
 
 
     
@@ -100,6 +131,7 @@ class _Profile extends State<Profile> {
     // await httpClient.getPoints();
     setState(() {
       uni = temp;
+
     });
   }
 
@@ -110,27 +142,41 @@ class _Profile extends State<Profile> {
     });
   }
 
-  void setUniversity() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      university = prefs.getString("university").toString();
-    });
-  }
+  // void setUniversity() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     university = prefs.getString("university").toString();
+  //   });
+  // }
 
   void setEmail() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    var value = await httpClient.getUserData();
+    print(value);
     setState(() {
-      mail = prefs.getString("email").toString();
-      phone = prefs.getString("number").toString();
-      country = prefs.getString("country").toString();
+      // mail = prefs.getString("email").toString();
+      mail = value["UserEmails"][0]["email"];
+      phone = value["phone"].toString();
+      country = value["country"].toString();
+      age = value["age"].toString();
+      university = value["university"].toString();
+      academicProgram = value["academicProgram"].toString();
+      study = value["study"];
+      gradeLevel = "${value["grade"]!}th Grade";
     });
   }
+
+
 
   
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
+    // setEmail();
+    // if(!isEditable) {
+    // setEmail();
+    // }
 
     // print(points);
     return Container(
@@ -140,10 +186,11 @@ class _Profile extends State<Profile> {
           children: <Widget> [
             buildTitle(),
             Container(
+              margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
               width: double.infinity,
-              height: 200,
+              height: 100,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Container(
                     width: 120,
@@ -219,14 +266,17 @@ class _Profile extends State<Profile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget> [
-                buildCard(<Color> [const Color(0xffD2DAFF), const Color(0xff355CCA)]),
-                buildCard(<Color> [const Color(0xffFCD2D1),const Color(0xffFF5C58)]),
-                buildCard(<Color> [const Color(0xffD2C5DF), const Color(0xff8675A9)]),
+                buildCard(<Color> [const Color(0xffD2DAFF), const Color(0xff355CCA)], traingDays.toString(), "Days in training"),
+                buildCard(<Color> [const Color(0xffFCD2D1),const Color(0xffFF5C58)], totalPoints.toString(), "Total\nPoints"),
+                buildCard(<Color> [const Color(0xffD2C5DF), const Color(0xff8675A9)], completedTasks.toString(), "Completed Tasks"),
               ],
             ),
 
-            UniversityTile(onEdit: changeMode, mode: isEditable, onSave: onSave, university: uni, points: points, selectedUniversity: university,),
-            PersonalDetails(mode: editPersonal, onEdit: onPersonalEdit, onSave: onPersonalSave, phone: phone, email: mail,),
+            UniversityTile(onEdit: changeMode, mode: isEditable, onSave: onSave, university: uni, points: points, selectedUniversity: university, academicProgram: academicProgram, study: study, 
+              dreamPoint: dreamPoints,
+              targetPoint: targetPoints,
+              safetyPoint: safetyPoints),
+            PersonalDetails(mode: editPersonal, onEdit: onPersonalEdit, onSave: onPersonalSave, phone: phone, email: mail, age: age != "" ? DateFormat('dd/MM/yyyy').format(DateTime.parse(age)): "", country: country, name: fullName,),
           ],
         ),
       ),
@@ -254,7 +304,7 @@ Container buildTitle() {
 }
 
 
-Container buildCard(List<Color> colors) {
+Container buildCard(List<Color> colors, String value, String val) {
   return Container( 
     margin: const EdgeInsets.fromLTRB(0, 37, 0, 0), 
     height: 115,
@@ -269,7 +319,7 @@ Container buildCard(List<Color> colors) {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget> [
         Text(
-          "24",
+          value,
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w500,
             fontSize: 24,
@@ -278,7 +328,7 @@ Container buildCard(List<Color> colors) {
         ),
 
         Text(
-          "Days in training",
+          val,
           textAlign: TextAlign.center,
           style: GoogleFonts.montserrat(
             fontWeight: FontWeight.w400,

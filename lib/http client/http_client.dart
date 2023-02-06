@@ -24,7 +24,7 @@ class Client {
     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
 
     Response response = await dio.get("http://164.90.224.111/dashboard");
-
+    print(await response.data);
     return response.data;
   }
 
@@ -91,6 +91,15 @@ class Client {
 
     return allTasks.data["newTasks"];
   }
+
+  Future updateUniversityAndAcademic(Map<String, dynamic> value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    var result = await dio.patch("http://164.90.224.111/settings/", data: value);
+    print(result);
+  } 
 
   Future<List<dynamic>> getCalendarEvents() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -194,19 +203,17 @@ class Client {
       "country": data.country,
       "whichClass": 10,
       "university": data.university,
-      "Unyshcool": data.school,
       "proffession": data.profession,
       "term": data.term,
       "planType": data.addmision,
       "aid": data.aid == "Yes" ? true : false,
       "legacy": data.legacy == "Yes" ? true : false,
-      "activityName": data.uniActvity.toString(),
-      "applyingFrom": data.place,
-      "testSubmit": data.addmisionTest,
+      "activityName": data.outActivity.toString(),
+      "applyingFrom": false,
+      "testSubmit": false,
       "recentSchool": data.highSchool,
       "report": false,
       "hadtests": false,
-      "hobby": data.outActivity,
       "workExperience": data.essayWorkExp,
       "addinfo": true,
       "moreInfo": data.details

@@ -11,13 +11,12 @@ class RegistrationGrade10 {
   String? aid;
   String? legacy;
   String? workExp;
-  List<String>? uniActvity;
+  // List<String>? uniActvity;
   String? place;
   String? testScore;
   String? highSchool;
   String? honors;
   String? university;
-  String? school;
   String? profession;
   // String? test;
   String? addmisionTest;
@@ -38,13 +37,11 @@ class RegistrationGrade10 {
     this.aid,
     this.legacy,
     this.workExp,
-    this.uniActvity,
     this.place,
     this.testScore,
     this.highSchool,
     this.honors,
     this.university,
-    this.school,
     this.profession,
     // this.test,
     this.addmisionTest,

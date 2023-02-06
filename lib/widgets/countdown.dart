@@ -10,7 +10,7 @@ class Countdown extends AnimatedWidget {
     Duration clockTimer = Duration(seconds: animation.value);
 
     String timerText =
-        '${clockTimer.inMinutes.remainder(60).toString()}:${(clockTimer.inSeconds.remainder(60) % 60).toString().padLeft(2, '0')}';
+        '0:${(clockTimer.inSeconds.remainder(30)).toString().padLeft(2, '0')}';
    
 
     return Text(

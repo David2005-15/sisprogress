@@ -38,6 +38,16 @@ class _Grade10thFirst extends State<Grade10thFirst> {
   final dynamic _controller3 = TextEditingController();
   final dynamic _controller4 = TextEditingController();
 
+  String universityErrorText = "";
+  String studyErrorText = "";
+  String academicErrorText = "";
+
+  bool showuniversityErrorText = false;
+  bool showstudyErrorText = false;
+  bool showacademicErrorText = false;
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,11 +68,11 @@ class _Grade10thFirst extends State<Grade10thFirst> {
               const ProgressBar(isPassed: [true, false, false]),
               buildTitle(),
               buildQuestion("1. Pick your dream university"),
-              buildMode(_controller1, Universities().universities, "University"),
+              buildMode(_controller1, Universities().universities, "University", showuniversityErrorText, universityErrorText),
               buildQuestion("2. What academic at college Choose the interests you?"),
-              buildMode(_controller3, Universities().academics, "Profession"),
+              buildMode(_controller3, Universities().academics, "Profession", showacademicErrorText, academicErrorText),
               buildQuestion("3. Which field of study interests you?"),
-              buildMode(_controller4, Universities().subjects, "Study"),
+              buildMode(_controller4, Universities().subjects, "Study", showstudyErrorText, studyErrorText),
               // CustomRadio(value: term, groupValue: terms),
               buildQuestion("4. Preferred Start term options."),
               // buildAnswer(changeTerms, terms, term),
@@ -128,8 +138,43 @@ class _Grade10thFirst extends State<Grade10thFirst> {
                           widget.registration.addmision = widget.plan.value;
                           widget.registration.aid = widget.score.value;
                           widget.registration.legacy = widget.legacy.value;
+
+                          if(_controller1.text == "University") {
+                            setState(() {
+                              showuniversityErrorText= true;
+                              universityErrorText = "Please select your university";
+                            });
+                          } else {
+                            setState(() {
+                              showuniversityErrorText= false;
+                            });
+                          }
+
+                          if(_controller3.text == "Profession") {
+                            setState(() {
+                              showacademicErrorText= true;
+                              academicErrorText = "Please select your academic program";
+                            });
+                          } else {
+                            setState(() {
+                              showacademicErrorText= false;
+                            });
+                          }
+
+                          if(_controller4.text == "Study") {
+                            setState(() {
+                              showstudyErrorText = true;
+                              studyErrorText = "Please select your study";
+                            });
+                          } else {
+                            setState(() {
+                              showstudyErrorText = false;
+                            });
+                          }
               
-                          await Navigator.push(context,  MaterialPageRoute(builder: (context) => Grade10thSecond(reg: widget.registration,)));
+                          if(!(showstudyErrorText && showacademicErrorText && showuniversityErrorText)) {
+                            await Navigator.push(context,  MaterialPageRoute(builder: (context) => Grade10thSecond(reg: widget.registration,)));
+                          }
                         },
                       ),
                     )
@@ -189,12 +234,14 @@ Container buildQuestion(String question) {
 Container buildMode(
     TextEditingController controller,
     List<String> items,
-    String lableText) {
+    String lableText, bool? showValidationOrNo, String errorText) {
+  controller.text = lableText;
   return Container(
     margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
     child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       return TextFormField(
+        readOnly: true,
         style: GoogleFonts.poppins(
             fontWeight: FontWeight.w400,
             fontSize: 15,
@@ -203,8 +250,14 @@ Container buildMode(
         controller: controller,
         decoration: InputDecoration(
           alignLabelWithHint: true,
-          labelText: lableText,
+          // labelText: lableText,
           // hintText: widget.hintText,
+          errorText: showValidationOrNo ?? false ? errorText: null,
+          errorStyle: GoogleFonts.poppins(
+            fontWeight: FontWeight.w400,
+            fontSize: 10,
+            color: const Color(0xffE31F1F)
+          ),
           labelStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.w400,
               fontSize: 15,

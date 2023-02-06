@@ -5,7 +5,8 @@ import 'package:sis_progress/http%20client/http_client.dart';
 
 class ExploreTile extends StatelessWidget {
   final String title;
-  final bool disabled;
+  final String position;
+  bool disabled;
   final int taskId;
   final String taskCount;
   final VoidCallback onClick;
@@ -16,6 +17,7 @@ class ExploreTile extends StatelessWidget {
     required this.taskId,
     required this.title,
     required this.disabled,
+    required this.position,
     super.key
   });
 
@@ -23,99 +25,159 @@ class ExploreTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 154,
-      height: 190,
-      margin: const EdgeInsets.fromLTRB(15, 14, 15, 0),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        color: Color(0xFFD2DAFF),
-      ),
-      child: Stack(
-        children: <Widget> [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              child: const Image(
-                image: AssetImage("assets/Rectangle 1114.png"),
-                fit: BoxFit.contain
-              ),
-            ),
+    return StatefulBuilder(
+      builder: (context, state) {
+        return Container(
+          width: MediaQuery.of(context).size.width - 30,
+          height: 190,
+          margin: const EdgeInsets.fromLTRB(15, 14, 15, 0),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            color: Color(0xFFAAC4FF),
           ),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              height: (190 / 2) - 12,
-              child: Stack(
-                children: <Widget> [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Container(
-                      margin: const EdgeInsets.all(5),
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text(
-                          title,
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: const Color(0xff2E2323)
-                          ),
-                        ),
-                      ),
+          child: Stack(
+            children: <Widget> [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: MediaQuery.of(context).size.width - 30,
+                  child: const ClipRRect(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+                    child: Image(
+                      image: AssetImage("assets/Books.png"),
+                      height: 95,
+                      fit: BoxFit.cover
                     ),
                   ),
-
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: <Widget> [
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(17, 0, 7, 0),
-                          child: const Icon(Icons.calendar_month, size: 11, color: Color(0xff2E2323),)
-                        ),
-                        Text(
-                          taskCount,
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 11,
-                            color: const Color(0xff2E2323)
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(0, 0, 4, 8),
-                      height: 23,
-                      width: 73,
-                      child: ElevatedButton(
-                        onPressed: disabled ? () {
-                          var outputFormat = "yyyy-mm-dd hh:mm:ss";
-                          DateFormat outputFormatter = DateFormat(outputFormat);
-                          var output = DateTime.parse(outputFormatter.format(DateTime.now()));
-                          
-                          httpClient.addTask(taskId, output.toString());
-                          onClick();
-                        } : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff355CCA)
-                        ),
-                        child: const Text("ADD"),
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
-            )
-          )
-        ],
-      ),
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  height: (190 / 2) - 12,
+                  child: Stack(
+                    children: <Widget> [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Container(
+                          margin: const EdgeInsets.all(5),
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.fromLTRB(14, 0, 20, 0),
+                                    child: Text(
+                                      "Company",
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                        color: const Color(0xff2E2323)
+                                      ),
+                                    ),
+                                  ),
+                                  FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(
+                                      title,
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: const Color(0xff2E2323)
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.fromLTRB(14, 0, 20, 0),
+                                    child: Text(
+                                      "Position",
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                        color: const Color(0xff2E2323)
+                                      ),
+                                    ),
+                                  ),
+                                  FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(
+                                      position,
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: const Color(0xff2E2323)
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Row(
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget> [
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(17, 0, 7, 10),
+                              child: const Icon(Icons.calendar_month, size: 11, color: Color(0xff2E2323),)
+                            ),
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(0, 0, 7, 10),
+                              child: Text(
+                                taskCount,
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 11,
+                                  color: const Color(0xff2E2323)
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(0, 0, 8, 10),
+                          height: 23,
+                          width: 73,
+                          child: ElevatedButton(
+                            onPressed: disabled ? () {
+                              state(() {                              
+                                httpClient.addTask(taskId, DateTime.now().toIso8601String());
+                                onClick();
+                                disabled = false;
+                              });   
+                            } : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xff355CCA)
+                            ),
+                            child: const Text("ADD"),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              )
+            ],
+          ),
+        );
+      }
     );
   }
 

@@ -11,6 +11,7 @@ import 'package:sis_progress/widgets/input_box.dart';
 import 'package:sis_progress/widgets/radio_button.dart';
 import 'package:sis_progress/widgets/select_box.dart';
 import 'package:sis_progress/data%20class/radio_button_handler.dart';
+import '../../widgets/dashboard/registration_activities.dart';
 import '../../widgets/progress/progress_bar.dart';
 
 class Grade10thSecond extends StatefulWidget {
@@ -85,6 +86,8 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
   @override
   Widget build(BuildContext context) {
+    print(actions);
+
     return Scaffold(
       appBar: CustomAppBar(buildLogoIcon(), List.empty()),
       body: Container(
@@ -250,7 +253,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                   });
                                 }, 
                                 child: const Icon(
-                                  Icons.add,
+                                  Icons.remove,
                                   size: 15,
                                   color:  Color(0xffB1B2FF),
                                 )
@@ -263,7 +266,232 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   }).toList(),
                 ),
               ),
-              buildMode(cont, Universities().clubCategories, "Select your activites", actions),
+              Container(
+    margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
+    child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          
+
+      return TextFormField(
+        readOnly: true,
+            style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w400,
+                fontSize: 15,
+                fontStyle: FontStyle.normal,
+                color: Colors.white),
+            controller: cont,
+            decoration: InputDecoration(
+              alignLabelWithHint: true,
+              labelText: "Select your activites",
+              // hintText: widget.hintText,
+              labelStyle: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                  fontStyle: FontStyle.normal,
+                  color: const Color(0xffD2DAFF)),
+              hintStyle: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                  fontStyle: FontStyle.normal,
+                  color: const Color(0xffD2DAFF)),
+              enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+              border: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+              focusColor: const Color(0xffD2DAFF),
+              focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xff36519D))),
+              suffixIcon: PopupMenuButton<String>(
+                color: const Color(0xffD2DAFF),
+                constraints:
+                    BoxConstraints.expand(height: 150, width: constraints.maxWidth),
+                icon: const Icon(
+                  Icons.arrow_drop_down,
+                  color: Color(0xffD2DAFF),
+                ),
+                onSelected: (String value) {
+                  // controller.text = value;
+                },
+                itemBuilder: (BuildContext context) {
+                  
+
+
+                  return Universities().clubCategories.map<PopupMenuItem<String>>((String value) {
+                    bool isEnabled = actions.where((element) => element.contains(value)).isNotEmpty;
+
+                    return PopupMenuItem(
+                        value: value,
+                        child: StatefulBuilder(
+                          builder: (context, state) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [ 
+                                    Container(
+                                      margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          state(() {
+                                            var temp = isEnabled;
+
+                                          },); 
+
+                                          setState(() {
+                                            var temp = actions;
+                                          });
+
+                                          setState(() {
+                                            if(actions.length != 10) {
+                                              if(!isEnabled) {
+                                                actions.add(value); 
+                                              } else {
+                                                print(actions);
+                                                actions.removeWhere((e) => e.contains(value));
+
+                                                print(actions);
+                                              }
+                                            }
+                                          });
+
+                                          state(() {             
+                                            // actions = temp;
+                                            isEnabled = !isEnabled;
+                                          });
+                                          
+                                        },
+                                        child: Container(
+                                          width: 24,
+                                          height: 24,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5),
+                                            border: Border.all(width: 1,color: const Color(0xff355CCA))
+                                          ),
+                                          child:  Icon(
+                                            Icons.check,
+                                            size: 18,
+                                            color: isEnabled ?  const Color(0xff355CCA): Colors.transparent,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      value.length > 20 ? value.substring(0, 20): value,
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        color: const Color(0xff121623),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+      
+                                Row(
+                                  children: <Widget> [
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xff355CCA).withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(5),
+      
+                                        border: Border.all(width: 1, color: const Color(0xff355CCA))
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          state(() {
+                                            var temp = actions;
+                                          });
+
+
+                                          setState(() {
+                                            actions.remove(value);
+                                          });
+
+                                          state(() {
+                                            var val = 0;
+                                          },);
+
+                                          setState(() {
+                                            var temp = actions.reversed;
+                                            print(temp);
+                                          },);
+                                          
+                                          
+                                          print(actions);
+                                        }, 
+                                        child: const Icon(
+                                          Icons.remove,
+                                          size: 14,
+                                          color: Color(0xff355CCA)
+                                        )
+                                      ),
+                                    ),
+      
+                                    Text(
+                                      isEnabled ? "${actions.where((e) => e.contains(value)).length}" : "1"
+                                    ),
+                                    
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xff355CCA).withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(5),
+      
+                                        border: Border.all(width: 1, color: const Color(0xff355CCA))
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          state(() {
+                                            var val = 0;
+                                          },);
+
+                                          setState(() {
+                                            if(actions.length != 10) {
+                                              if(actions.where((element) => element.contains(value)).length > 0) {
+                                                actions.add("$value (${actions.where((element) => element.contains(value)).length + 1})");
+                                              }
+                                            }                
+                                            // temp = actions;
+                                          });
+
+                                          state(() {
+                                            var val = 0;
+                                          },);
+
+
+
+                                          setState(() {
+                                            var temp = actions.reversed;
+                                            print(temp);
+                                          },);
+                                        }, 
+                                        child: const Icon(
+                                          Icons.add,
+                                          size: 14,
+                                          color: Color(0xff355CCA),
+                                        )
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            );
+                          }
+                        ));
+                  }).toList();
+                },
+              ),
+            ),
+          );
+        }
+      )),
+              // RegistrationActivities(cont, Universities().clubCategories, "Select your activities", actions),
+              // RegistrationActivities(labelText: "Select your activities", controller: cont, items: Universities().clubCategories, actions: actions),
  
             
               // buildActivity([2, 1, 1], widget.activites2, ["Reading", "Sport", "Run"]),
@@ -384,21 +612,22 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 ),
               ),
               buildNavigation(context, widget.activites, () async {
-                widget.reg.uniActvity = widget.activites;
                 widget.reg.place = widget.secondQuest.value;
                 widget.reg.testScore = widget.thirdQuest.value;
-                widget.reg.school = widget.controller.text;
+                // widget.reg.school = widget.controller.text;
                 widget.reg.honors = widget.fifthQuest.value;
                 // widget.reg.test = sixthQuest;
                 widget.reg.addmisionTest = widget.sixthQuest.value;
-                widget.reg.outActivity = widget.activites2;
+                widget.reg.outActivity = actions;
                 widget.reg.essayWorkExp = widget.work.text;
+                
                 if (widget.ninthQuest.value == "Yes") {
                   widget.reg.details = widget.work2.text;
                 } else {
                   widget.reg.details = "No";
                 }
-                // await httpClient.registerForGrade10(widget.reg);
+                await httpClient.registerForGrade10(widget.reg);
+
                 Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.reg.email,)));
               }),
 
@@ -422,13 +651,13 @@ class _Grade10thSecond extends State<Grade10thSecond> {
   Container buildMode(
     TextEditingController controller,
     List<String> items,
-    String lableText, 
-    List<String> actions) {
+    String lableText, ) {
     
   List<String> temp = [];
   setState(() {
     temp = actions;
   });
+
   return Container(
     margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
     child: LayoutBuilder(
@@ -495,15 +724,15 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                         onTap: () {
                                           state(() {
                                             if(actions.length != 10) {
-                                              actions.add(value); 
+                                              if(!isEnabled) {
+                                                actions.add(value); 
+                                              } else {
+                                                actions.remove(value);
+                                              }
                                             }
                                             
-                                            temp = actions;
+                                            // actions = temp;
                                             isEnabled = !isEnabled;
-                                          });
-
-                                          setState(() {
-                                            
                                           });
                                           
                                         },
@@ -549,13 +778,10 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                       child: InkWell(
                                         onTap: () {
                                           state(() {
-                                            if(actions.length != 10) {
-                                              actions.add(value);
-                                            }
-                                            
-                                            temp = actions;
-                                          });
+                                            actions.remove(value);
 
+                                            actions = temp;
+                                          });
                                           setState(() {
                                             
                                           });
@@ -563,7 +789,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                           print(actions);
                                         }, 
                                         child: const Icon(
-                                          Icons.add,
+                                          Icons.remove,
                                           size: 14,
                                           color: Color(0xff355CCA)
                                         )
@@ -571,7 +797,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                     ),
       
                                     Text(
-                                      "${temp.where((e) => e.contains(value)).length + 1}"
+                                      isEnabled ? "${temp.where((e) => e.contains(value)).length}" : "1"
                                     ),
                                     
                                     Container(
@@ -587,15 +813,15 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                       child: InkWell(
                                         onTap: () {
                                           state(() {
-                                            actions.remove(value);
-                                            temp = actions;
-                                          });
-                                          setState(() {
-                                            
+                                            if(actions.length != 10) {
+                                                actions.add("$value (${temp.where((element) => element == value).length})");
+                                            }
+                                          
+                                            // temp = actions;
                                           });
                                         }, 
                                         child: const Icon(
-                                          Icons.remove,
+                                          Icons.add,
                                           size: 14,
                                           color: Color(0xff355CCA),
                                         )

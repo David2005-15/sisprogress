@@ -5,25 +5,30 @@ import 'package:intl/intl.dart';
 import 'package:sis_progress/data%20class/event_process.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
-import 'package:sis_progress/widgets/dashboard/show_subtask.dart';
 
-class EventTile extends StatefulWidget {
+class MyTaskTile extends StatefulWidget {
   final String title;
+  final String position;
+  final String status;
   final EventProccess proccess;
-  final String facultyName;
-  final String companyName;
   final String eventDate;
   final String description;
   final List<List<dynamic>> subtasks;
   final List<String> points;
   final String substringValue;
   final VoidCallback updateState;
+  final String companyName;
+  final String facultyName;
   final DateTime choosenDate;
+  final String point;
+
 
   // final List<bool> passed;
 
-  EventTile(
+  MyTaskTile(
       {required this.eventDate,
+      required this.position,
+      required this.status,    
       required this.points,
       required this.subtasks,
       required this.description,
@@ -31,17 +36,18 @@ class EventTile extends StatefulWidget {
       required this.title,
       required this.substringValue,
       required this.updateState,
-      required this.facultyName,
       required this.companyName,
+      required this.facultyName,
       required this.choosenDate,
+      required this.point,
       // required this.passed,
       super.key});
 
   @override
-  State<StatefulWidget> createState() => _EventTile();
+  State<StatefulWidget> createState() => _MyTaskTile();
 }
 
-class _EventTile extends State<EventTile> {
+class _MyTaskTile extends State<MyTaskTile> {
   Client httpClient = Client();
 
   var tasks = [];
@@ -68,101 +74,113 @@ class _EventTile extends State<EventTile> {
 
     return InkWell(
       onTap: () {
-        if(widget.choosenDate.day <= DateTime.now().day) {
+        if(DateTime.now().day >= widget.choosenDate.day) {
           _dialogBuiler(context, widget.title);
         } else {
           _youCanStart(widget.title);
         }
       },
-      highlightColor: Colors.transparent,
+      highlightColor:  Colors.transparent,
       splashColor: Colors.transparent,
       child: Container(
-          width: double.infinity,
-          height: 75,
-          margin: const EdgeInsets.fromLTRB(16, 5, 16, 5),
-          decoration: BoxDecoration(
-              color: widget.proccess.eventColor,
-              borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              margin: const EdgeInsets.fromLTRB(16, 25, 16, 0),
+              width: double.infinity,
+              height: 75,
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+                border: Border(
+                  bottom: BorderSide(width: 2.5, color: Color(0xffB1B2FF))
+                )
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: const EdgeInsets.fromLTRB(7, 0, 0, 0),
-                    width: 4,
-                    height: 63,
-                    decoration: BoxDecoration(
-                        color: widget.proccess.leftColor,
-                        borderRadius: BorderRadius.circular(7)),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(17, 8, 0, 0),
-                        child: Text(
-                          widget.title,
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                              color: const Color(0xff2E2323)),
+                    width: 200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.contain,
+                          child: Text(
+                            widget.title,
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: const Color(0xffB1B2FF)
+                            ),
+                          ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                  margin:
-                                      const EdgeInsets.fromLTRB(17, 0, 5, 8),
-                                  child: widget.proccess.icon),
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                                child: Text(
-                                  widget.proccess.eventName,
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 13,
-                                      color: const Color(0xff2E2323)),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(100, 0, 0, 10),
-                            child: Text(
-                              widget.substringValue,
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 11,
-                                  color: Colors.black),
+                        FittedBox(
+                          fit: BoxFit.contain,
+                          child: Text(
+                            widget.position,
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: const Color(0xffB1B2FF)
                             ),
                           ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-                            child: Text(
-                              widget.eventDate,
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 11,
-                                  color: Colors.black),
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(8, 5, 0, 5),
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                          margin: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                          child: Text(
+                            widget.point,
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13,
+                              color: Colors.white
+                            ),
+                          ),
+                        ),
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            child: Text(
+                              widget.status,
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                                decoration: TextDecoration.underline,
+                                color: widget.proccess.eventColor
+                              ),
+                            ),
+                          ),
+                          ],
+                        ),
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(0, 0, 45, 0),
+                          child: Text(
+                            "${widget.eventDate}, ${widget.choosenDate.year}",
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13,
+                              color: Colors.white
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
-            ],
-          )),
+            )
     );
   }
-
 
   Future<void> _youCanStart(String title) {
     return showDialog(
@@ -221,7 +239,7 @@ class _EventTile extends State<EventTile> {
                           ),
                         ),
                         Text(
-                          widget.companyName,
+                          widget.companyName.length > 15 ? widget.companyName.substring(0, 10) : widget.companyName,
                           textAlign: TextAlign.left,
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w600,
@@ -250,7 +268,9 @@ class _EventTile extends State<EventTile> {
                           ),
                         ),
                         Text(
-                          title,
+                          title.length > 15
+                              ? "${title.substring(0, 10)}..."
+                              : title,
                           textAlign: TextAlign.left,
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w600,
@@ -280,18 +300,157 @@ class _EventTile extends State<EventTile> {
     );
   }
 
-  Future<void> _dialogBuiler(BuildContext context, String title) {
-    // List<int> subTaskId = [];
-    List<int> subtaskId = [];
-    List<dynamic> enabledValues = [];
-    List<bool> cantYouSee = [];
-    List<Widget> taskContent = [];
+  Future<void> _showEssay(BuildContext context, String subtaskTitle,
+      String taskName, int taskId, String? description) {
+    var essayController = TextEditingController();
 
-    var swap = [];
+    print(description);
+
+    if (description != null) {
+      essayController.text = description;
+    }
+
+    return showDialog<void>(
+      // barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Container(
+            child: Column(
+              children: [
+                _getCloseButton(context),
+                RichText(
+                  textAlign: TextAlign.left,
+                  text: TextSpan(
+                      text: taskName,
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: const Color(0xff2E2323)),
+                      children: [
+                        TextSpan(
+                          text: "\n$subtaskTitle",
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: const Color(0xff2E2323)),
+                        )
+                      ]),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            Column(
+              children: [
+                StatefulBuilder(builder: ((context, setState) {
+                  return Container(
+                    margin: const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                    height: 160,
+                    child: TextFormField(
+                      onChanged: ((value) {
+                        setState(() {
+                          description = essayController.text;
+                        });
+                      }),
+                      controller: essayController,
+                      expands: false,
+                      maxLines: 8,
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 12,
+                          color: const Color(0xff646464)),
+                      // initialValue: "Type about your activites or work experiance",
+                      decoration: InputDecoration(
+                        hintText:
+                            "Type about your activites or work experiance",
+                        hintStyle: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            fontStyle: FontStyle.normal,
+                            color: const Color(0xff646464)),
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Color(0xffD2DAFF), width: 1)),
+                        border: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Color(0xffD2DAFF), width: 1)),
+                        focusColor: const Color(0xffD2DAFF),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xffD2DAFF))),
+                      ),
+                    ),
+                  );
+                })),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Button(
+                    //   text: "Cancel",
+                    //   onPressed: () async {
+                    //     // await httpClient.sendEssay(essayController.text, taskId);
+                    //     Navigator.pop(context);
+                    //   },
+                    //   height: 34,
+                    //   width: 101
+                    // ),
+                    Container(
+                      height: 34,
+                      width: 101,
+                      margin: const EdgeInsets.fromLTRB(18, 10, 0, 0),
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          foregroundColor: const Color(0xff355CCA),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          side: const BorderSide(
+                              color: Color(0xff355CCA), width: 1),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Cancel",
+                          style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: const Color(0xff355CCA)),
+                        ),
+                      ),
+                    ),
+                    Button(
+                        text: "Add",
+                        onPressed: () async {
+                          await httpClient.sendEssay(
+                              essayController.text, taskId);
+                          widget.updateState();
+                          Navigator.pop(context);
+                        },
+                        height: 34,
+                        width: 86),
+                  ],
+                )
+              ],
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _dialogBuiler(BuildContext context, String title) {
+    List<int> subTaskId = [];
+    List<dynamic> enabledValues = [];
+    List<bool> canyYouSee = [];
+    List<Widget> taskContent = [];
 
     for (int i = 0; i < widget.subtasks.length; i++) {
       enabledValues.add(widget.subtasks[i][3]);
-      cantYouSee.add(widget.subtasks[i][3]);
+      canyYouSee.add(widget.subtasks[i][3]);
 
       taskContent.add(Container(
         alignment: Alignment.centerLeft,
@@ -306,10 +465,17 @@ class _EventTile extends State<EventTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.subtasks[i][0].length > 20 ? "${widget.subtasks[i][0].substring(0, 20)}..." : widget.subtasks[i][0],
+                    widget.subtasks[i][0].length > 15 ? "${widget.subtasks[i][0].substring(0, 15)}..." : widget.subtasks[i][0],
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
+                        color: const Color(0xff2E2323)),
+                  ),
+                  Text(
+                    widget.points[i],
+                    style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
                         color: const Color(0xff2E2323)),
                   ),
                 ],
@@ -317,15 +483,8 @@ class _EventTile extends State<EventTile> {
             ),
             Row(
               children: [
-                Text(
-                    widget.points[i],
-                    style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 11,
-                        color: const Color(0xff2E2323)),
-                  ),
                 Container(
-                  margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
+                  margin: const EdgeInsets.fromLTRB(5, 0, 20, 0),
                   padding: const EdgeInsets.all(0),
                   height: 24,
                   width: 24,
@@ -335,16 +494,13 @@ class _EventTile extends State<EventTile> {
                         scale: 1.2,
                         child: Checkbox(
                             fillColor: MaterialStateProperty.resolveWith(getColor),
-                            // checkColor: Colors.blue,
                             value: enabledValues[i],
                             onChanged: ((val) async {
                               state(
                                 () {
-                                  // if(enabledValues[i] == false) {
-                                    if(cantYouSee[i] == false) {
-                                      enabledValues[i] = val!;
-                                    }
-                                  // }
+                                  if(canyYouSee[i] == false) {
+                                    enabledValues[i] = val!;
+                                  }
                       
                                   widget.subtasks[i][3] = enabledValues[i];
                                   
@@ -353,12 +509,12 @@ class _EventTile extends State<EventTile> {
                                   // print(p0[3]);
                                   
                                   if (enabledValues[i]) {
-                                    subtaskId.add(widget.subtasks[i][1]);
+                                    subTaskId.add(widget.subtasks[i][1]);
                                   } else {
-                                    subtaskId.remove(widget.subtasks[i][1]);
+                                    subTaskId.remove(widget.subtasks[i][1]);
                                   }
                       
-                                  print(subtaskId);
+                                  print(subTaskId);
                       
                                   // _showEssay(context, p0[0], title, p0[1], p0[2]);
                                 },
@@ -392,104 +548,88 @@ class _EventTile extends State<EventTile> {
               title: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget> [
-                         Row(
-                          children: <Widget> [
-                            Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                          child: SvgPicture.asset(
-                            "assets/Vector.svg",
-                            height: 25,
-                            width: 25,
-                            // color: Colors.black,
-                          ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget> [
+                       Row(
+                        children: <Widget> [
+                          Container(
+                        margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                        child: SvgPicture.asset(
+                          "assets/Vector.svg",
+                          height: 25,
+                          width: 25,
+                          // color: Colors.black,
                         ),
-                        Container(
-                          width: 150,
-                          child: Text(
-                            widget.facultyName,
-                            textAlign: TextAlign.left,
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
-                                color: const Color(0xff2E2323)),
-                          ),
-                        ),
-                          ],
-                        ),
-                         Container(
-                          margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                          child: _getUpdateCloseButton(context, widget.updateState),
-                        )
-                      ],
-                    ),
+                      ),
+                      Text(
+                        widget.facultyName.length > 15 ? widget.facultyName.substring(0, 15) : widget.facultyName,
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22,
+                            color: const Color(0xff2E2323)),
+                      ),
+                        ],
+                      ),
+                       Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: _getUpdateCloseButton(context, widget.updateState),
+                      )
+                    ],
                   ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    child: Row(
-                      children: <Widget> [
-                         Row(
-                          children: <Widget> [
-                            Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                          child: SvgPicture.asset(
-                            "assets/Vector.svg",
-                            height: 25,
-                            width: 25,
-                            // color: Colors.black,
-                          ),
+                  Row(
+                    children: <Widget> [
+                       Row(
+                        children: <Widget> [
+                          Container(
+                        margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                        child: SvgPicture.asset(
+                          "assets/Vector.svg",
+                          height: 25,
+                          width: 25,
+                          // color: Colors.black,
                         ),
-                        Container(
-                          width: 200,
-                          child: Text(
-                            widget.companyName,
-                            textAlign: TextAlign.left,
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
-                                color: const Color(0xff2E2323)),
-                          ),
-                        ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      ),
+                      Text(
+                        widget.companyName.length > 15 ? widget.companyName.substring(0, 10) : widget.companyName,
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22,
+                            color: const Color(0xff2E2323)),
+                      ),
+                        ],
+                      ),
+                    ],
                   ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: <Widget> [
-                            Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                          child: SvgPicture.asset(
-                            "assets/Vector.svg",
-                            height: 25,
-                            width: 25,
-                            // color: Colors.black,
-                          ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: <Widget> [
+                          Container(
+                        margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                        child: SvgPicture.asset(
+                          "assets/Vector.svg",
+                          height: 25,
+                          width: 25,
+                          // color: Colors.black,
                         ),
-                        Container(
-                          width: 200,
-                          child: Text(
-                            title,
-                            textAlign: TextAlign.left,
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
-                                color: const Color(0xff2E2323)),
-                          ),
-                        ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      ),
+                      Text(
+                        title.length > 15
+                            ? "${title.substring(0, 10)}..."
+                            : title,
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22,
+                            color: const Color(0xff2E2323)),
+                      ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -694,134 +834,6 @@ class _EventTile extends State<EventTile> {
                                           ),
                                         )
                                       ],
-                                    ),
-
-                                    Container(
-                                      margin: const EdgeInsets.fromLTRB(10, 15, 10, 15),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: <Widget> [
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  height: 10,
-                                                  alignment: Alignment.center,
-                                                  // decoration: BoxDecoration(
-                                                  //   color: Color(0xffCEE5D0),
-                                                  //   borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))
-                                                  // ),
-                                                  child: Text(
-                                                    "Up to 6 weeks",
-                                                    style: GoogleFonts.montserrat(
-                                                      fontWeight: FontWeight.w400,
-                                                      fontSize: 8,
-                                                      color: const Color(0xff121623)
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  height: 10,
-                                                  alignment: Alignment.center,
-                                                  // decoration: BoxDecoration(
-                                                  //   color: Color(0xffFFF89A)
-                                                  // ),
-                                                  child: Text(
-                                                    "8 - 10 weeks",
-                                                    style: GoogleFonts.montserrat(
-                                                      fontWeight: FontWeight.w400,
-                                                      fontSize: 8,
-                                                      color: const Color(0xff121623)
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  height: 10,
-                                                  alignment: Alignment.center,
-                                                  // decoration: BoxDecoration(
-                                                  //   color: Color(0xffFEBE8F)
-                                                  // ),
-                                                  child: Text(
-                                                    "10 - 12 weeks",
-                                                    style: GoogleFonts.montserrat(
-                                                      fontWeight: FontWeight.w400,
-                                                      fontSize: 8,
-                                                      color: const Color(0xff121623)
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  height: 10,
-                                                  alignment: Alignment.center,
-                                                  // decoration: BoxDecoration(
-                                                  //   color: Color(0xffFE8F8F),
-                                                  //   borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))
-                                                  // ),
-                                                  child: Text(
-                                                    "12 & more weeks",
-                                                    style: GoogleFonts.montserrat(
-                                                      fontWeight: FontWeight.w400,
-                                                      fontSize: 8,
-                                                      color: const Color(0xff121623)
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          Row(
-                                            children: <Widget> [
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  height: 10,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0xffCEE5D0),
-                                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  height: 10,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0xffFFF89A)
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  height: 10,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0xffFEBE8F)
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  height: 10,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0xffFE8F8F),
-                                                    borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
                                     )
                                   ],
                                 )
@@ -899,37 +911,35 @@ class _EventTile extends State<EventTile> {
                                         ),
                                       ),
                                       Container(
-                                            width: 104,
-                                            height: 36,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    const Color(0xff355CCA),
-                                                shadowColor: Colors.transparent,
-                                                foregroundColor: Colors.white,
-                                              ),
-                                              onPressed: () {
-                                                print(subtaskId);
+                                        width: 104,
+                                        height: 36,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xff355CCA),
+                                            shadowColor: Colors.transparent,
+                                            foregroundColor: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            subTaskId.forEach((element) async {
+                                              await httpClient.doneSubtask(
+                                                  element, true);
+                                                  widget.updateState();
+                                            });
+                                            widget.updateState();
+                                            // widget.updateState();
 
-                                                subtaskId.forEach((element) async {
-                                                  await httpClient.doneSubtask(
-                                                      element, true);
-                                                      widget.updateState();
-                                                });
-                                                widget.updateState();
-                                                // widget.updateState();
-
-                                                Navigator.pop(context);
-                                                
-                                              },
-                                              child: Text(
-                                                "Submit",
-                                                style: GoogleFonts.montserrat(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 15,
-                                                    color: Colors.white),
-                                              ),
-                                            ),                   
+                                            Navigator.pop(context);
+                                            
+                                          },
+                                          child: Text(
+                                            "Submit",
+                                            style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15,
+                                                color: Colors.white),
+                                          ),
+                                        ),
                                       )
                                     ],
                                   ),

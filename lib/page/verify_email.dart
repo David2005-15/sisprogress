@@ -36,13 +36,43 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
   int count = 0;
   String resetOrSendAgain = "Send verification link";
 
+  int timer = 30;
+  String time = "0:30";
+
+  void startTimer () {
+    // _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    //   setState(() {
+    //     if (_seconds > 0) {
+    //       _seconds--;
+    //     } else {
+    //       _timer.cancel();
+    //     }
+    //   });
+    // });
+
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        if(timer != 0) {
+                  timer--;
+        }
+        time = "0:$timer";
+      });
+    });
+  }
+
 
   void changeIsDiabled() {
-    Future.delayed(const Duration(minutes: 2), () {
+    Future.delayed(const Duration(seconds: 30), () {
       setState(() {
         isDisabled = true;
       });
     }); 
+
+    setState(() {
+      if(timer == 0) {
+        isDisabled = true;
+      }
+    });
   }
 
 
@@ -51,6 +81,8 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
     if(resetOrSendAgain == "Resend verification link") {
       changeIsDiabled();
     }
+
+    startTimer();
 
     return Scaffold(
       appBar: CustomAppBar(buildLogoIcon(), List.empty()),
@@ -99,13 +131,14 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
                         children: <Widget> [     
                           Align(
                             alignment: AlignmentDirectional.centerEnd,
-                            child: Countdown(
-                              
-                              animation: StepTween(
-                                begin: 2 * 60,
-                                end: 0
-                              ).animate(_controller),
-                            ),
+                            child: Text(
+                              time,
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                color: const Color(0xffB1B2FF),
+                              ),
+                            )
                           )
                         ],
                       ),

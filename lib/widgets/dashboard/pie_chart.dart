@@ -4,13 +4,19 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class PieChart extends StatelessWidget {
   final String title;
-  final Map<String, dynamic> metadata;
+  final String halfPerc;
+  final String percentage;
+  final double redLine;
+  final double blueLine;
   final BuildContext context;
 
   const PieChart({
     required this.context,
-    required this.metadata,
+    required this.halfPerc,
     required this.title,
+    required this.redLine,
+    required this.blueLine,
+    required this.percentage,
     super.key
   });
 
@@ -65,7 +71,7 @@ class PieChart extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.fromLTRB(18, 22, 0, 0),
                   child: Text(
-                    metadata["points"].toString(),
+                    halfPerc,
                     style: GoogleFonts.roboto(
                       fontWeight: FontWeight.w500,
                       fontSize: fonts[1].toDouble(),
@@ -141,12 +147,12 @@ class PieChart extends StatelessWidget {
                     child: CircularPercentIndicator(
                       radius: fonts[3].toDouble(),
                       lineWidth: 5.0,
-                      percent: 0.75,
+                      percent: redLine,
                       circularStrokeCap: CircularStrokeCap.round,
                       center: RotatedBox(
                         quarterTurns: 3,
                         child: Text(
-                          "89%",
+                          percentage,
                           style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w700,
                             fontSize: fonts[0].toDouble(),
@@ -163,7 +169,7 @@ class PieChart extends StatelessWidget {
                     child: CircularPercentIndicator(
                       radius: fonts[4].toDouble(),
                       lineWidth: 5.0,
-                      percent: 0.60,
+                      percent: blueLine,
                       circularStrokeCap: CircularStrokeCap.round,
                       progressColor: Colors.blue,
                       backgroundColor: Colors.transparent,

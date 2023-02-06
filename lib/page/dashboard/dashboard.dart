@@ -4,13 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/graph_data.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
-import 'package:sis_progress/widgets/dashboard/graph.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart_with_progress.dart';
 import 'package:sis_progress/widgets/tile.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../widgets/dashboard/little_calendar.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({
@@ -24,16 +22,36 @@ class Dashboard extends StatefulWidget {
 class _Dashboard extends State<Dashboard> {
   final int index = 0;
 
-  List<Color> colors = [const Color(0xffFCD2D1),const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1)];
-  List<String> days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  List<Color> colors = [
+    const Color(0xffFCD2D1),
+    const Color(0xffFCD2D1),
+    const Color(0xffFCD2D1),
+    const Color(0xffFCD2D1),
+    const Color(0xffFCD2D1),
+    const Color(0xffFCD2D1),
+    const Color(0xffFCD2D1)
+  ];
+  List<String> days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+  ];
   List<int> weekDays = getDays();
 
   Client httpClient = Client();
   String fullName = "";
+  String greeting = "";
 
   int traingDays = 1;
   int totalPoints = 1;
-  int completedTasks = 1; 
+  int completedTasks = 1;
+  double extraculicular = 0;
+  String successMessage = "";
+  String statusMessage = "";
 
   @override
   void initState() {
@@ -46,29 +64,63 @@ class _Dashboard extends State<Dashboard> {
     super.initState();
   }
 
+  List<Color> getSuccessColor(String value) {
+    switch(value) {
+      case "Excellent":
+        return [const Color(0xff1A992E), const Color(0xff94B49F)];
+      case "Good":
+        return [const Color(0xff355CCA), const Color(0xffD2DAFF)];
+      default:
+        return [const Color(0xffFFC900), const Color(0xffFFF89A)];
+    }
+  }
+
   void setUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var value = await httpClient.getUserData();
     setState(() {
-
       fullName = value["fullName"];
-      prefs.setString("country", value["country"]);    
+      // print(value["RandomGreetingMessages"]["text"]);
+      print(fullName);
+      prefs.setString("country", value["country"]);
     });
   }
+
+  String halfPercentage = "";
+  String percentage = "";
+  int overallDone = 0;
+  int overallProgress = 0;
 
   void printValue() async {
     var value = await httpClient.getDashboardData();
-
     setState(() {
+      extraculicular = value["extraculicular"].toDouble();
       traingDays = value["TrainingDays"];
       totalPoints = value["totalPoints"];
-      completedTasks = value["complitedTask"];
+      completedTasks = value["completed"];
+      halfPercentage = "${value["myPoints"]} / ${value["totalPoints"]}";
+      overallProgress = value["overAllProgressInProgress"];
+      overallDone = value["overAllProgressDone"];
+      percentage = "${value["progressWithPercent"] * 10}%";
+      greeting = value["RandomGreetingMessages"]["text"];
+      statusMessage = value["successMesange"]["status"];
+      successMessage = value["successMesange"]["textPart1"];
     });
   }
 
 
+
+
   void onTaps(int index) {
-    colors = [const Color(0xffFCD2D1),const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1), const Color(0xffFCD2D1)];
+    colors = [
+      const Color(0xffFCD2D1),
+      const Color(0xffFCD2D1),
+      const Color(0xffFCD2D1),
+      const Color(0xffFCD2D1),
+      const Color(0xffFCD2D1),
+      const Color(0xffFCD2D1),
+      const Color(0xffFCD2D1)
+    ];
 
     setState(() {
       colors[index] = const Color(0xffFF5C58);
@@ -76,14 +128,14 @@ class _Dashboard extends State<Dashboard> {
   }
 
 
-  
-
   final GlobalKey<LittleCalendarWidget> _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-
-    List<int> fonts = getFontSize(MediaQuery.of(context).size.width);
+    List<int> fonts = getFontSize(MediaQuery
+        .of(context)
+        .size
+        .width);
     final List<GraphData> chartData = [
       GraphData(0, 37),
       GraphData(5, 33),
@@ -104,274 +156,380 @@ class _Dashboard extends State<Dashboard> {
 
     var choosenDate = DateTime.now();
 
-    return Container(
+    Future<void> _refreshPage() async {
+      setState(() {
+        printValue();
+      });
+    }
+
+    return RefreshIndicator(
+      onRefresh: _refreshPage,
+      child: Container(
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
-          
+
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget> [
-              buildTitle([fonts[0].toDouble(), fonts[1].toDouble()], fullName),
-              buildTileRow([const Color(0xffD2DAFF), const Color(0xffAAC4FF), const Color(0xffFCD2D1)], [SvgPicture.asset("assets/Calendar.svg", width: 25, height: 25,), const Icon(Icons.calculate, size: 24,), ImageIcon(
-                          AssetImage("assets/yyy.png"),
-                          size: 20,
-                          color: Colors.black,
-                        )], ["Days in\ntraining", "Total\nPoints", "Completed\nTask"], [traingDays, totalPoints, completedTasks]),
+            children: <Widget>[
+              buildTitle([fonts[0].toDouble(), fonts[1].toDouble()], fullName,
+                  greeting),
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.fromLTRB(16, 20, 16, 20),
+                // width: 328,
+                // height: MediaQuery.of(context.size.height),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: const <BoxShadow>[
+                      BoxShadow(offset: Offset(0, 10),
+                          spreadRadius: 0,
+                          blurRadius: 30)
+                    ],
+                    gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: <Color>[
+                          Color(0xff272935),
+                          Color(0xff121623)
+                        ]
+                    )
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget> [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(27, 14, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget> [
+                          Text(
+                            statusMessage,
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                              color: getSuccessColor(statusMessage)[0]
+                            ),
+                          ),
+                          Container()
+                        ],
+                      ),
+                    ),
+
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(27, 5, 17, 15),
+                      child: Text(
+                        successMessage,
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                          color: getSuccessColor(statusMessage)[1]
+                        ),
+                      )
+                    )
+                  ],
+                ),
+              ),
+              buildTileRow([
+                const Color(0xffD2DAFF),
+                const Color(0xffAAC4FF),
+                const Color(0xffFCD2D1)
+              ], [const ImageIcon(
+                AssetImage("assets/Cal.png"),
+                size: 20,
+                color: Colors.black,
+              ), const ImageIcon(
+                AssetImage("assets/yyy.png"),
+                size: 20,
+                color: Colors.black,
+              ), const ImageIcon(
+                AssetImage("assets/Target.png"),
+                size: 20,
+                color: Colors.black,
+              )
+              ], ["Days in\ntraining", "Total\nPoints", "Completed\nTask"],
+                  [traingDays, totalPoints, completedTasks]),
               // buildTileRow([const Color(0xffFCD2D1), const Color(0xffFE8F8F)], [const Icon(Icons.book, size: 24,), const Icon(Icons.bar_chart, size: 24,)], ["Description", "Description"], [10, 145]),
               // LittleCalendar(date: "December, 2022", colors: colors, onTaps: onTaps, days: days, dayNumber: weekDays, slideFunctions: [leftSlide, rightSlide], key: _key,),
               // ElevatedButton(onPressed: () {
               //   print(choosenDate);
               // }, child: Text("click")),
               StatefulBuilder(
-                builder: (context, setState) {
-                  return Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: TableCalendar(
-                      
-                      focusedDay:choosenDate, 
-                      firstDay: DateTime.utc(2010, 10, 16),
-                      lastDay: DateTime.utc(2030, 3, 14),
-                      calendarFormat: CalendarFormat.week,
-                      headerStyle: HeaderStyle(
-                        titleCentered: true,
-                        formatButtonVisible: false,
-                        leftChevronIcon: const Icon(
-                          Icons.chevron_left_outlined,
-                          size: 25,
-                          color: Colors.white,
+                  builder: (context, setState) {
+                    return Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                      child: TableCalendar(
+
+                        focusedDay: choosenDate,
+                        firstDay: DateTime.utc(2010, 10, 16),
+                        lastDay: DateTime.utc(2030, 3, 14),
+                        calendarFormat: CalendarFormat.week,
+                        headerStyle: HeaderStyle(
+                            titleCentered: true,
+                            formatButtonVisible: false,
+                            leftChevronIcon: const Icon(
+                              Icons.chevron_left_outlined,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+
+                            rightChevronIcon: const Icon(
+                              Icons.chevron_right_outlined,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                            titleTextStyle: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                fontSize: 16
+                            )
                         ),
+                        selectedDayPredicate: (day) =>
+                            isSameDay(choosenDate, day),
+                        onDaySelected: (selectedDay, focusedDay) async {
+                          var value = await httpClient.getAllTaskAndFilter();
+                          List<List<dynamic>> subtasks = [];
+                          List<List<String>> points = [];
 
-                        rightChevronIcon: const Icon(
-                          Icons.chevron_right_outlined,
-                          size: 25,
-                          color: Colors.white,
-                        ),
-                        titleTextStyle: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          fontSize: 16
-                        )
-                      ),
-                      selectedDayPredicate: (day) => isSameDay(choosenDate, day),
-                      onDaySelected: (selectedDay, focusedDay) async {
-                        var value = await httpClient.getAllTaskAndFilter();
-                        List<List<dynamic>> subtasks = [];
-                        List<List<String>> points = [];
-
-                        List<dynamic> tasks = [];
-                        setState(() {
-                          choosenDate = selectedDay;
+                          List<dynamic> tasks = [];
+                          setState(() {
+                            choosenDate = selectedDay;
 
 
-                          _dialogBuilder(context, value, points, tasks, httpClient, choosenDate, () {});
-                        });
-                      },
-                      calendarBuilders: CalendarBuilders(
-                        
-                        todayBuilder: ((context, day, focusedDay) {
-                          String monthName = DateFormat.E().format(day).substring(0, 3);
-                                    
-                          return Container(
-                            height: 73,
-                            width: 40,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffFCD2D1),
-                              borderRadius: BorderRadius.circular(12)
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text(
-                                    monthName,
-                                    style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: Colors.black
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  "${day.day}",
-                                  style:  GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 18,
-                                    color: Colors.black
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                        defaultBuilder: ((context, day, focusedDay) {
-                          String monthName = DateFormat.E().format(day).substring(0, 3);
-                                    
-                          return Container(
-                            height: 63,
-                            width: 40,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffFCD2D1),
-                              borderRadius: BorderRadius.circular(12)
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text(
-                                    monthName,
-                                    style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: Colors.black
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  "${day.day}",
-                                  style:  GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 18,
-                                    color: Colors.black
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                                
-                        outsideBuilder: (context, day, focusedDay) {
-                          String monthName = DateFormat.E().format(day).substring(0, 3);
-                                    
-                          return Container(
-                            height: 63,
-                            width: 40,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffFCD2D1),
-                              borderRadius: BorderRadius.circular(12)
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text(
-                                    monthName,
-                                    style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: Colors.black
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  "${day.day}",
-                                  style:  GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 18,
-                                    color: Colors.black
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
+                            _dialogBuilder(
+                                context,
+                                value,
+                                points,
+                                tasks,
+                                httpClient,
+                                choosenDate, () {});
+                          });
                         },
-                        selectedBuilder: (context, day, focusedDay) {
-                          // return Container(
-                          //   height: 38,
-                          //   width: 38,
-                          //   alignment: Alignment.center,
-                          //   decoration: BoxDecoration(
-                          //     shape: BoxShape.circle,
-                          //     color: Colors.transparent,
-                          //     border: Border.all(color: Colors.white, width: 1)
-                          //   ),
-                          //   child: Text(
-                          //     "${day.day}",
-                          //     style:  GoogleFonts.poppins(
-                          //       fontWeight: FontWeight.w400,
-                          //       fontSize: 20,
-                          //       color: Colors.white
-                          //     ),
-                          //   ),
-                          // );
-                                    
-                          String monthName = DateFormat.E().format(day).substring(0, 3);
-                          return Container(
-                            // margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                            height: 63,
-                            width: 40,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(12)
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text(
-                                    monthName,
-                                    style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: Colors.white
+                        calendarBuilders: CalendarBuilders(
+
+                          todayBuilder: ((context, day, focusedDay) {
+                            String monthName = DateFormat.E()
+                                .format(day)
+                                .substring(0, 3);
+
+                            return Container(
+                              height: 73,
+                              width: 40,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: const Color(0xffFCD2D1),
+                                  borderRadius: BorderRadius.circular(12)
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.fromLTRB(
+                                        0, 5, 0, 0),
+                                    child: Text(
+                                      monthName,
+                                      style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          color: Colors.black
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  "${day.day}",
-                                  style:  GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 18,
-                                    color: Colors.white
+                                  Text(
+                                    "${day.day}",
+                                    style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18,
+                                        color: Colors.black
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                                ],
+                              ),
+                            );
+                          }),
+                          defaultBuilder: ((context, day, focusedDay) {
+                            String monthName = DateFormat.E()
+                                .format(day)
+                                .substring(0, 3);
+
+                            return Container(
+                              height: 63,
+                              width: 40,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: const Color(0xffFCD2D1),
+                                  borderRadius: BorderRadius.circular(12)
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.fromLTRB(
+                                        0, 5, 0, 0),
+                                    child: Text(
+                                      monthName,
+                                      style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          color: Colors.black
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "${day.day}",
+                                    style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18,
+                                        color: Colors.black
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+
+                          outsideBuilder: (context, day, focusedDay) {
+                            String monthName = DateFormat.E()
+                                .format(day)
+                                .substring(0, 3);
+
+                            return Container(
+                              height: 63,
+                              width: 40,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: const Color(0xffFCD2D1),
+                                  borderRadius: BorderRadius.circular(12)
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.fromLTRB(
+                                        0, 5, 0, 0),
+                                    child: Text(
+                                      monthName,
+                                      style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          color: Colors.black
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "${day.day}",
+                                    style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18,
+                                        color: Colors.black
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          selectedBuilder: (context, day, focusedDay) {
+                            // return Container(
+                            //   height: 38,
+                            //   width: 38,
+                            //   alignment: Alignment.center,
+                            //   decoration: BoxDecoration(
+                            //     shape: BoxShape.circle,
+                            //     color: Colors.transparent,
+                            //     border: Border.all(color: Colors.white, width: 1)
+                            //   ),
+                            //   child: Text(
+                            //     "${day.day}",
+                            //     style:  GoogleFonts.poppins(
+                            //       fontWeight: FontWeight.w400,
+                            //       fontSize: 20,
+                            //       color: Colors.white
+                            //     ),
+                            //   ),
+                            // );
+
+                            String monthName = DateFormat.E()
+                                .format(day)
+                                .substring(0, 3);
+                            return Container(
+                              // margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              height: 63,
+                              width: 40,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(12)
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.fromLTRB(
+                                        0, 5, 0, 0),
+                                    child: Text(
+                                      monthName,
+                                      style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          color: Colors.white
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "${day.day}",
+                                    style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18,
+                                        color: Colors.white
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        daysOfWeekVisible: false,
+                        calendarStyle: CalendarStyle(
+                          withinRangeTextStyle: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+
+
+                          defaultTextStyle: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                          holidayTextStyle: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                          weekendTextStyle: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                      daysOfWeekVisible: false,
-                      calendarStyle: CalendarStyle(
-                        withinRangeTextStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                        
-                        
-                                
-                        defaultTextStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                        holidayTextStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                        weekendTextStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  );
-                }
+                    );
+                  }
               ),
-              Graph(data: chartData, lineData: chartLine,),
-              PieChart(context: context, title: "Overall Progress", metadata: const {"points": "1400 / 1600 pt"},),
-              const PieChartWithProgressBar(values: <int>[45, 65, 2, 3, 1]),
+              // Graph(data: chartData, lineData: chartLine,),
+              PieChart(context: context,
+                title: "Overall Progress",
+                halfPerc: halfPercentage + " pt",
+                redLine: (overallDone / 100) == 0 ? 0.01 : overallDone / 100,
+                blueLine: (overallProgress / 100) == 0
+                    ? 0.01
+                    : overallProgress / 100,
+                percentage: percentage,),
+              PieChartWithProgressBar(
+                  values: [extraculicular.toInt(), 0, 0, 0, 0]),
             ],
           ),
         ),
-      );
+      ),
+    );
   }
 }
 
@@ -381,10 +539,10 @@ Image buildLogoIcon() {
   );
 }
 
-Container buildTitle(List<double> fontSizes, String fullName) {
+Container buildTitle(List<double> fontSizes, String fullName, String greating) {
   return Container(
-    height: 66,
-    padding: const EdgeInsets.all(5),
+    height: 80,
+    // padding: const EdgeInsets.all(5),
     margin: const EdgeInsets.fromLTRB(15, 0, 0, 2),
     // alignment: Alignment.center,
     child: AspectRatio(
@@ -392,28 +550,25 @@ Container buildTitle(List<double> fontSizes, String fullName) {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget> [
+        children: <Widget>[
           FittedBox(
             fit: BoxFit.contain,
             child: Text(
               "Good morning, $fullName !",
               style: GoogleFonts.montserrat(
-                fontWeight: FontWeight.w700,
-                fontSize: fontSizes[0],
-                color: Colors.white
+                  fontWeight: FontWeight.w700,
+                  fontSize: fontSizes[0],
+                  color: Colors.white
               ),
             ),
           ),
-                
-          FittedBox(
-            fit: BoxFit.contain,
-            child: Text(
-              "You are doing great",
-              style: GoogleFonts.poppins(
+
+          Text(
+            greating,
+            style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w400,
                 fontSize: fontSizes[1],
                 color: Colors.white
-              ),
             ),
           )
         ],
@@ -422,22 +577,38 @@ Container buildTitle(List<double> fontSizes, String fullName) {
   );
 }
 
-Container buildTileRow(List<Color> colors, List<Widget> icons, List<String> descriptions, List<int> points) {
+Container buildTileRow(List<Color> colors, List<Widget> icons,
+    List<String> descriptions, List<int> points) {
   return Container(
     margin: const EdgeInsets.fromLTRB(16, 15, 16, 0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget> [
-        Expanded(flex: 1, child: Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0), child: Tile(color: colors.first, description: descriptions.first, point: points.first, icon: icons.first,))),
-        Expanded(flex: 1, child: Container(margin: const EdgeInsets.fromLTRB(2, 0, 2, 0), child: Tile(color: colors[1], description: descriptions[1], point: points[1], icon: icons[1],))),
-        Expanded(flex: 1, child: Container(margin: const EdgeInsets.fromLTRB(5, 0, 0, 0), child: Tile(color: colors.last, description: descriptions.last, point: points.last, icon: icons.last,))),
+      children: <Widget>[
+        Expanded(flex: 1,
+            child: Container(margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                child: Tile(color: colors.first,
+                  description: descriptions.first,
+                  point: points.first,
+                  icon: icons.first,))),
+        Expanded(flex: 1,
+            child: Container(margin: const EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: Tile(color: colors[1],
+                  description: descriptions[1],
+                  point: points[1],
+                  icon: icons[1],))),
+        Expanded(flex: 1,
+            child: Container(margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                child: Tile(color: colors.last,
+                  description: descriptions.last,
+                  point: points.last,
+                  icon: icons.last,))),
       ],
     ),
   );
 }
 
 List<int> getFontSize(double height) {
-  if(height > 400) {
+  if (height > 400) {
     return [25, 17];
   }
 
@@ -448,16 +619,17 @@ List<int> getDays() {
   DateTime today = DateTime.now();
 
   DateTime firstDayOfTheweek =
-        today.subtract(Duration(days: today.weekday - 1));
+  today.subtract(Duration(days: today.weekday - 1));
 
   var monday = 26;
-  var monthDays = getDaysInMonth(firstDayOfTheweek.year, firstDayOfTheweek.month);
+  var monthDays = getDaysInMonth(
+      firstDayOfTheweek.year, firstDayOfTheweek.month);
 
   List<int> days = [];
 
-  for(int i = 0; i < 7; i++) {
+  for (int i = 0; i < 7; i++) {
     days.add(monday);
-    if(monday + 1 > monthDays) {
+    if (monday + 1 > monthDays) {
       monday = 0;
     }
 
@@ -469,15 +641,28 @@ List<int> getDays() {
 
 int getDaysInMonth(int year, int month) {
   if (month == DateTime.february) {
-    final bool isLeapYear = (year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0);
+    final bool isLeapYear = (year % 4 == 0) && (year % 100 != 0) ||
+        (year % 400 == 0);
     return isLeapYear ? 29 : 28;
   }
-  const List<int> daysInMonth = <int>[31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const List<int> daysInMonth = <int>[
+    31,
+    -1,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31
+  ];
   return daysInMonth[month - 1];
 }
 
-Future<void> _dialogBuilder(
-    BuildContext context,
+Future<void> _dialogBuilder(BuildContext context,
     List<dynamic> tasks,
     List<List<String>> points,
     List<dynamic> addedTasks,
@@ -493,7 +678,7 @@ Future<void> _dialogBuilder(
 
   for (int i = 0; i < tasks.length; i++) {
     boolan.add(false);
-    
+
     // print(tasks[i]);
     taskContent.add(
       Container(
@@ -503,7 +688,7 @@ Future<void> _dialogBuilder(
           children: [
             Theme(
               data:
-                  Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              Theme.of(context).copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -526,67 +711,67 @@ Future<void> _dialogBuilder(
                         padding: const EdgeInsets.all(0),
                         child: Checkbox(
                             fillColor:
-                                MaterialStateProperty.resolveWith(getColor),
+                            MaterialStateProperty.resolveWith(getColor),
                             value: (tasks[i]["isFree"] == false)
                                 ? true
                                 : boolan[i],
                             onChanged: (tasks[i]["isFree"] == false)
                                 ? null
                                 : ((value) {
-                                    setState(() {
-                                      boolan[i] = value!;
-                                      value
-                                          ? addedTasks.add(tasks[i])
-                                          : addedTasks.remove(tasks[i]);
-                                      print(addedTasks);
-                                    });
-                                  })),
+                              setState(() {
+                                boolan[i] = value!;
+                                value
+                                    ? addedTasks.add(tasks[i])
+                                    : addedTasks.remove(tasks[i]);
+                                print(addedTasks);
+                              });
+                            })),
                       );
                     }))
                   ],
                 ),
                 children: List<Widget>.from(tasks[i]["SubTasks"]
-                        .map((e) =>
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(15, 0, 0, 5),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      e["name"].length > 15
-                                          ? e["name"].substring(0, 15)
-                                          : e["name"],
-                                      style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                          color: const Color(0xff646464)),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.fromLTRB(
-                                          0, 0, 15, 0),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.fromLTRB(
-                                                8, 0, 5, 0),
-                                            child: Text(
-                                              "${e["points"]} Points",
-                                              style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 14,
-                                                  color:
-                                                      const Color(0xff646464)),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
+                    .map((e) =>
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(15, 0, 0, 5),
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            e["name"].length > 15
+                                ? e["name"].substring(0, 15)
+                                : e["name"],
+                            style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: const Color(0xff646464)),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(
+                                0, 0, 15, 0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.fromLTRB(
+                                      8, 0, 5, 0),
+                                  child: Text(
+                                    "${e["points"]} Points",
+                                    style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14,
+                                        color:
+                                        const Color(0xff646464)),
+                                  ),
                                 ),
-                              )
-                            )
-                        .toList()),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                )
+                    .toList()),
               ),
             ),
           ],
@@ -628,7 +813,7 @@ Future<void> _dialogBuilder(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-          // contentPadding: const EdgeInsets.fromLTRB(5, 30, 5, 30),
+        // contentPadding: const EdgeInsets.fromLTRB(5, 30, 5, 30),
           backgroundColor: Colors.white,
           title: Text(
             'Tasks',
