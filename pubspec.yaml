@@ -19,6 +19,7 @@ dependencies:
   custom_check_box: ^0.0.4
   dropdown_button2: ^1.9.2
   syncfusion_flutter_charts: ^20.4.38
+  flutter_verification_code: ^1.1.6
   shared_preferences: ^2.0.16
   dropdownfield: ^1.0.3
   table_calendar: ^3.0.8
@@ -59,5 +60,10 @@ flutter:
     - assets/MyPoints.png
     - assets/Info.png
     - assets/Tooltip.svg
+    - assets/Camera.svg
+    - assets/Greyquest.svg
+    - assets/AvatarAvatar.png
+    - assets/Smile.png
+    - assets/Happy.png
     
   

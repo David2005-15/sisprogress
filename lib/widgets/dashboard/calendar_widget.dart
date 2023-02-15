@@ -45,11 +45,14 @@ class _CalendarWidget extends State<CalendarWidget> {
       child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget> [
-              Container(
+              Row(
+                children: [
+                  Container(
                 margin: const EdgeInsets.fromLTRB(16, 0, 0, 0),
                 child: Text(
-                  "${widget.month} 4, ",
+                  widget.month,
                   style: GoogleFonts.montserrat(
                     fontWeight: FontWeight.w700,
                     fontSize: 24,
@@ -59,6 +62,7 @@ class _CalendarWidget extends State<CalendarWidget> {
               ),
 
               widget.calendarType == "Year" ? 
+
               PopupMenuButton(
                 onSelected: (val) {
                   widget.onMonthSelect(val.toString());
@@ -66,7 +70,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                 icon: const ImageIcon(
                   AssetImage("assets/Vectorchevorn.png"),
                     size: 14,
-                    color:Color(0xffBFBFBF),
+                    color:Color(0xffB1B2FF),
                 ),
                 offset: const Offset(20, 50),
                 color: const Color(0xff3A3D4C),
@@ -81,9 +85,13 @@ class _CalendarWidget extends State<CalendarWidget> {
                 ).toList();
                 },
 
-              ) : Container(),
+              ) : Container()
+                ],
+              ),
 
-              Text(
+              Row(
+                children: [
+                  Text(
                 widget.value,
                 style: GoogleFonts.montserrat(
                   fontWeight: FontWeight.w500,
@@ -91,54 +99,40 @@ class _CalendarWidget extends State<CalendarWidget> {
                   color: const Color(0xffB1B2FF)
                 )
               ),
-              // RichText(
-              //   text: TextSpan(
-              //     text: "${widget.month} ",
-              //     style: GoogleFonts.montserrat(
-              //       fontWeight: FontWeight.w700,
-              //       fontSize: 24,
-              //       color: const Color(0xffB1B2FF)
-              //     ),
-              //     children: <TextSpan> [
-              //       TextSpan(
-              //         text: "4, ${widget.value}",
-              //         style: GoogleFonts.montserrat(
-              //           fontWeight: FontWeight.w500,
-              //           fontSize: 24,
-              //           color: const Color(0xffB1B2FF)
-              //         )
-              //       )
-              //     ]
-              //   ),
-              // ),
 
-              widget.calendarType == "Day" || widget.calendarType == "Year" ? PopupMenuButton(
-                onSelected: (val) {
-                  widget.onSelected(val.toString());
-                },
-                
-                onCanceled: widget.onCanceled,
-                offset: const Offset(20, 50),
-                icon: widget.status == PopupMenuStatus.closed ? const ImageIcon(
-                  AssetImage("assets/Vectorchevorn.png"),
-                    size: 14,
-                    color:Color(0xffBFBFBF),
-                  ) : const ImageIcon(
-                      AssetImage("assets/Vectorchevorn.png"),
-                        size: 14,
-                        color:Color(0xffBFBFBF),
+
+              widget.calendarType == "Day" || widget.calendarType == "Year" ? Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 16, 0),
+                child: PopupMenuButton(
+                  onSelected: (val) {
+                    widget.onSelected(val.toString());
+                  },
+                  
+                  onCanceled: widget.onCanceled,
+                  offset: const Offset(20, 50),
+                  icon: widget.status == PopupMenuStatus.closed ? const ImageIcon(
+                    AssetImage("assets/Vectorchevorn.png"),
+                      size: 14,
+                      color:Color(0xffB1B2FF),
+                    ) : const ImageIcon(
+                        AssetImage("assets/Vectorchevorn.png"),
+                          size: 14,
+                          color:Color(0xffB1B2FF),
+                  ),
+                  color: const Color(0xff3A3D4C),
+                  itemBuilder: (BuildContext context) {  
+                    return widget.years.map<PopupMenuItem<String>>((int value) {
+                      return PopupMenuItem(value: value.toString(), child: Text(value.toString(), style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
+                        color: Colors.white
+                      ),));
+                    }
+                  ).toList();},
                 ),
-                color: const Color(0xff3A3D4C),
-                itemBuilder: (BuildContext context) {  
-                  return widget.years.map<PopupMenuItem<String>>((int value) {
-                    return PopupMenuItem(value: value.toString(), child: Text(value.toString(), style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15,
-                      color: Colors.white
-                    ),));
-                  }
-                ).toList();},
-              ) : Container() 
+              ) : Container()
+                ],
+              ) 
             ],
           ),
         ],

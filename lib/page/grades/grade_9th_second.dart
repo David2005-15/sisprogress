@@ -26,10 +26,22 @@ class _Grade9thSecond extends State<Grade9thSecond> {
 
   String text = "0/160";
 
+  bool canPass = true;
+  bool anyError = false;
+
   void getInputLength(TextEditingController controller) {
     setState(() {
       text = "${controller.text.length}/160";
     });
+  }
+
+  @override
+  void initState() {
+    if(widget.registration.workExp != null) {
+      widget.work.text = widget.registration.workExp!;
+    }
+
+    super.initState();
   }
 
   @override
@@ -52,6 +64,24 @@ class _Grade9thSecond extends State<Grade9thSecond> {
               children: <Widget>[
                 const ProgressBar(isPassed: [true, true, false]),
                 buildTitle(),
+
+                Visibility(
+                  visible: anyError,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    child: Text(
+                      "This email is already been used, please try again",
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
+                        color: const Color(0xffE31F1F)
+                      ),
+                    ),
+                  )
+                ),
+
                 Container(
                   margin: const EdgeInsets.fromLTRB(24, 25, 13, 15),
                   alignment: Alignment.centerLeft,
@@ -71,24 +101,37 @@ class _Grade9thSecond extends State<Grade9thSecond> {
                   child: TextFormField(
                     onChanged: (value) {
                       setState(() {
-                        text = "${value.length}/160";
+                        text = "${value.split(" ").length - 1}/160";
                       });
                     },
                     controller: widget.work,
                     expands: false,
                     maxLines: 8,
+                    maxLength: 160,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
                       fontSize: 12,
                       color: const Color(0xffD2DAFF)
                     ),
+                    
                     decoration: InputDecoration(
+                      errorText: !canPass ? "Please fill required fields" : null,
                       hintText: "Type about your activites or work experiance",
+                      counterStyle: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12,
+                        color: const Color(0xffD2DAFF)
+                      ),
                       hintStyle: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
                         fontStyle: FontStyle.normal,
                         color: const Color(0xffD2DAFF)
+                      ),
+                      errorStyle: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 10,
+                        color: const Color(0xffE31F1F)
                       ),
                       enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
@@ -104,18 +147,18 @@ class _Grade9thSecond extends State<Grade9thSecond> {
                   ),
                 ),
           
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 7, 23, 0),
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    text,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: const Color(0xffD2DAFF)
-                    )
-                  ),
-                ),
+                // Container(
+                //   margin: const EdgeInsets.fromLTRB(0, 7, 23, 0),
+                //   alignment: Alignment.centerRight,
+                //   child: Text(
+                //     text,
+                    // style: GoogleFonts.poppins(
+                    //   fontWeight: FontWeight.w400,
+                    //   fontSize: 12,
+                    //   color: const Color(0xffD2DAFF)
+                    // )
+                //   ),
+                // ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 15, 0, 5),
                   alignment: Alignment.bottomCenter,
@@ -126,6 +169,7 @@ class _Grade9thSecond extends State<Grade9thSecond> {
                           margin: const EdgeInsets.fromLTRB(20, 0, 0, 20),
                           child: TextButton.icon(     // <-- TextButton
                             onPressed: () {
+                              widget.registration.workExp = widget.work.text;
                               Navigator.pop(context);
                             },
                             icon: const ImageIcon(
@@ -158,8 +202,27 @@ class _Grade9thSecond extends State<Grade9thSecond> {
                             ),
                             onPressed: () async {
                               widget.registration.workExp = widget.work.text;
-                              await httpClient.registerForGrade9(widget.registration);
-                              Navigator.push(context,  MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.registration.email,)));
+                              
+
+                              if(widget.work.text.length == 0) {
+                                setState(() {
+                                  canPass = false;
+                                });
+                              } else {
+                                setState(() {
+                                  canPass = true;
+                                });
+                              }
+                              if(canPass) {
+                                var value = await httpClient.registerForGrade9(widget.registration);
+                                if(value == "user alredy exit") {
+                                  setState(() {
+                                    anyError = true;
+                                  });
+                                } else {
+                                  Navigator.push(context,  MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.registration.email,)));
+                                }                               
+                              } 
                             },
                           ),
                         )

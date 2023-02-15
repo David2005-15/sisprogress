@@ -21,7 +21,7 @@ class _PieChart extends State<PieChartWithProgressBar> {
     List<int> fontSize = getFontSize(width);
     
     return AspectRatio(
-      aspectRatio: 16 / 10,
+      aspectRatio: 16 / 10.45,
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 20, 16, 20),
         decoration: BoxDecoration(
@@ -55,6 +55,8 @@ class _PieChart extends State<PieChartWithProgressBar> {
               ),
             ),
             Container(
+              // width: 200
+              width: 220,
               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
               margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
               decoration: BoxDecoration(
@@ -67,19 +69,17 @@ class _PieChart extends State<PieChartWithProgressBar> {
                     // Color.fromRGBO(227, 31, 31, 0.69),
                     Color(0xff355CCA),
                   ],
-                  // stops: [
-                  //   0.0166,
-                  //   0.7738,
-                  //   0.9548,
-                  // ],
                 ),
               ),
-              child: Text(
-                "Inactive categories will come soon.",
-                style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12,
-                  color: Colors.white
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Text(
+                  "Inactive categories will come soon.",
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                    color: Colors.white
+                  ),
                 ),
               ),
             ),
@@ -90,7 +90,7 @@ class _PieChart extends State<PieChartWithProgressBar> {
               children: [
                 Container(
                   alignment: Alignment.bottomCenter,
-                  margin: const EdgeInsets.fromLTRB(10, 25, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                   width: 130,
                   height: 150,
                   child: CustomPaint(
@@ -99,7 +99,7 @@ class _PieChart extends State<PieChartWithProgressBar> {
                   )
                 ),
                 Container(
-                  margin: const EdgeInsets.fromLTRB(20, 10, 5, 5),
+                  margin: const EdgeInsets.fromLTRB(15, 10, 0, 5),
                   width: containerSize[0],
                   height: containerSize[1],
                   child: CustomPaint(
@@ -111,57 +111,7 @@ class _PieChart extends State<PieChartWithProgressBar> {
               ],
             )
           ],
-        ),
-        // child: Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: <Widget> [
-        //     Stack(
-        //       children: <Widget> [
-        //         Align(
-        //           alignment: Alignment.topLeft,
-        //           child:Container(
-        //                 margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
-        //                 child: Text(
-        //                   "Progress",
-        //                   style: GoogleFonts.montserrat(
-        //                     fontWeight: FontWeight.w700,
-        //                     fontSize: fontSize[0].toDouble(),
-        //                     color: Colors.white
-        //                   ),
-        //                 ),
-        //               ),
-
-        //         ),
-
-        //         Align(
-        //           alignment: Alignment.bottomLeft,
-        //           child: FittedBox(
-        //             fit: BoxFit.contain,
-        //             child: Container(
-        //               alignment: Alignment.bottomCenter,
-        //               margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-        //               width: 130,
-        //               height: 150,
-        //               child: CustomPaint(
-        //                 painter: LinearProgressIndicator(value: widget.values, width: width),
-        //                 child: Container(),
-        //               )
-        //             ),
-        //           ),
-        //         )
-        //       ],
-        //     ),
-            // Container(
-            //   margin: const EdgeInsets.fromLTRB(5, 20, 5, 5),
-            //   width: containerSize[0],
-            //   height: containerSize[1],
-            //   child: CustomPaint(
-            //     painter: ProgressBarPainter(value: widget.values, width: width),
-            //     child: Container(),
-            //   ),
-            // )
-        //   ],
-        // ),
+        )
       ),
     );
   }
@@ -317,7 +267,7 @@ class ProgressBarPainter extends CustomPainter {
   }
 
   void drawPie(Canvas canvas, Color color, Rect rect, double value) {
-    canvas.drawArc(rect, 0, value, false, Paint()..color=color..strokeWidth=3..style=PaintingStyle.stroke);
+    canvas.drawArc(rect, 0, value, false, Paint()..color=color..strokeWidth=3..style=PaintingStyle.stroke..strokeCap=StrokeCap.round);
   }
 
   double degToRad(double degree) => degree * (3.1415 / 180);

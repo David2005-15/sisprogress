@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sis_progress/page/home.dart';
 import 'package:sis_progress/page/login.dart';
 import 'package:sis_progress/widgets/countdown.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
@@ -85,7 +86,7 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
     startTimer();
 
     return Scaffold(
-      appBar: CustomAppBar(buildLogoIcon(), List.empty()),
+      appBar: CustomAppBar(buildLogoIcon(context), List.empty()),
       body: Container(
         alignment: Alignment.topCenter,
         child: Container(
@@ -256,9 +257,14 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
 
 }
 
-Image buildLogoIcon() {
-  return Image.asset(
-    "assets/logo.png",
+InkWell buildLogoIcon(BuildContext context) {
+  return InkWell(
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (build) => const HomePage()),);
+    },
+    child: Image.asset(
+      "assets/logo.png",
+    ),
   );
 }
 

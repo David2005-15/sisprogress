@@ -30,7 +30,16 @@ class _MyTask extends State<MyTask> {
   void initState() {
     printAllTasks();
     super.initState();
-    print(tasks);
+  }
+
+
+
+  Future<List<dynamic>> getAllFeedbacks(taskId) {
+    var temp = httpClient.getAllFeedbacks(taskId).then((value) {
+      return value;
+    });
+
+    return temp;
   }
 
   Future printAllTasks() async {
@@ -55,151 +64,175 @@ class _MyTask extends State<MyTask> {
     }
   }
 
+  GlobalKey _menuKey = GlobalKey();
+
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget> [
-            buildTitle(),
-            Container(
-              margin: const EdgeInsets.fromLTRB(16, 10, 0, 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(width: 1, color: const Color(0xff355CCA))
-              ),
-              width: 176,
-              height: 40,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget> [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                    child: Text(
-                      statusText,
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        color: const Color(0xff355CCA)
-                      ),
-                    ),
-                  ),
+    return WillPopScope(
+      onWillPop: () {
+        print("Hello");
 
-                  PopupMenuButton(
-                    icon: const ImageIcon(
-                      AssetImage("assets/Vectorchevorn.png"),
-                      size: 14,
-                      color: Colors.grey,
-                    ),
-          
-                  onSelected: (val) async {
-                    await printAllTasks();
-
-                    setState(() {
-                      statusText = val;
-                      if(statusText != "All") {
-                        tasks = tasks.where((element) => element["status"] == val).toList();
-                      }
-                    });
-                  },
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0))
-                  ),
-
-                  offset: const Offset(-120, 50),
-                // color: const Color(0xff3A3D4C),
-                  color: const Color(0xffD2DAFF),
-                  itemBuilder: (BuildContext context) {
-                    return status.map<PopupMenuItem<String>>((String value) {
-                      return PopupMenuItem(value: value.toString(), child: Text(value.toString(), style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        color: const Color(0xff3A3D4C)
-                      ),));
-                    }
-                  ).toList();
+        return Future.value(false);
+      },
+      child: Container(
+        width: double.infinity,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget> [
+              buildTitle(),
+              InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () {
+                  dynamic state = _menuKey.currentState;
+                  state.showButtonMenu();
                 },
-                )
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(5, 32, 5, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget> [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(32, 0, 0, 0),
-                    child: Text(
-                      "My Points",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                        color: const Color(0xffBFBFBF)
-                      ),
-                    )
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(16, 10, 0, 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(width: 1, color: const Color(0xff355CCA))
                   ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: Text(
-                      "Status",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                        color: const Color(0xffBFBFBF)
+                  width: 176,
+                  height: 40,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget> [
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        child: Text(
+                          statusText,
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            color: const Color(0xff355CCA)
+                          ),
+                        ),
                       ),
-                    )
+              
+                      Theme(
+                        data: Theme.of(context).copyWith(
+                          highlightColor: const Color(0xffAAC4FF),
+                          splashColor: Colors.transparent,
+                        ),
+                        child: PopupMenuButton(
+                          key: _menuKey,
+                          icon: const ImageIcon(
+                            AssetImage("assets/Vectorchevorn.png"),
+                            size: 14,
+                            color: Colors.grey,
+                          ),
+                          
+                        onSelected: (val) async {
+                          await printAllTasks();
+                                  
+                          setState(() {
+                            statusText = val;
+                            if(statusText != "All") {
+                              tasks = tasks.where((element) => element["status"] == val).toList();
+                            }
+                          });
+                        },
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0))
+                        ),
+                                  
+                        offset: const Offset(-120, 50),
+                                        // color: const Color(0xff3A3D4C),
+                        color: const Color(0xffD2DAFF),
+                        itemBuilder: (BuildContext context) {
+                          return status.map<PopupMenuItem<String>>((String value) {
+                            return PopupMenuItem(value: value.toString(), child: Text(value.toString(), style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15,
+                              color: const Color(0xff3A3D4C)
+                            ),));
+                          }
+                        ).toList();
+                                        },
+                                        ),
+                      )
+                    ],
                   ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 32, 0),
-                    child: Text(
-                      "Due date for max points",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                        color: const Color(0xffBFBFBF)
-                      ),
-                    )
-                  )
-                ],
+                ),
               ),
-            ),
-
-            Column(
-              children: tasks.map((e) {
-                String monthName = DateFormat.MMMM().format(DateTime.parse(e["deadline"])).substring(0, 3);
-                print(monthName);
-
-                List<List<dynamic>> swap = []; 
-                List<String> temp = [];
-                List<bool> temp2 = [];
-                List<int> temp3 = [];
-                
-                e["SubTasks"].forEach((p0) {
-                  swap.add([p0["name"], p0["id"], p0["description"], p0["status"]]);
-                  if(p0["status"] == true) {
-                    temp2.add(true);
-                  }
-                  temp.add("${p0["points"]} Points");
-                  temp3.add(p0["points"]);
-                });  
-
-                print(e);
+              Container(
+                margin: const EdgeInsets.fromLTRB(5, 32, 5, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget> [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(32, 0, 0, 0),
+                      child: Text(
+                        "My Points",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                          color: const Color(0xffBFBFBF)
+                        ),
+                      )
+                    ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: Text(
+                        "Status",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                          color: const Color(0xffBFBFBF)
+                        ),
+                      )
+                    ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 32, 0),
+                      child: Text(
+                        "Due date for max points",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                          color: const Color(0xffBFBFBF)
+                        ),
+                      )
+                    )
+                  ],
+                ),
+              ),
     
-                String substringValue = "${temp2.length}/${swap.length}";
-                return MyTaskTile(proccess: getProccess(e["status"]), title: e["positionName"], description: "Lorem ipsum is placeholder text that is often used in the design and typesetting industry to demonstrate the visual effects of different typefaces and layouts. The text is in Latin and appears to be random, but is actually derived from a section of a work by Cicero", subtasks: swap, points: temp, eventDate: "${DateTime.parse(e["deadline"]).day}th of $monthName", substringValue: substringValue, updateState: printAllTasks, position: e["companyName"], status: e["status"], facultyName: e["facultName"], companyName: e["startDate"], choosenDate: DateTime.parse(e["deadline"]), point: "${e["point"]} Points");
-
-              }).toList(),
-            )
-
-            // buildTile("Company", "In Progress", "Position Name", "7th of Dec, 2023", const Color(0xff94B49F)),
-            // buildTile("Company", "Overdue", "Position Name", "7th of Dec, 2023", const Color(0xffFFC900)),
-            // buildTile("Company", "Late Done", "Position Name", "7th of Dec, 2023", const Color(0xffE31F1F))
-          ],
+              Column(
+                children: tasks.map((e) {
+                  String monthName = DateFormat.MMMM().format(DateTime.parse(e["deadline"])).substring(0, 3);
+                  print(monthName);
+    
+                  List<List<dynamic>> swap = []; 
+                  List<String> temp = [];
+                  List<bool> temp2 = [];
+                  List<int> temp3 = [];
+                  
+                  e["SubTasks"].forEach((p0) {
+                    swap.add([p0["name"], p0["id"], p0["description"], p0["status"]]);
+                    if(p0["status"] == true) {
+                      temp2.add(true);
+                    }
+                    temp.add("${p0["points"]} Points");
+                    temp3.add(p0["points"]);
+                  });  
+    
+                  print(e);
+      
+                  String substringValue = "${temp2.length}/${swap.length}";
+                  return MyTaskTile(proccess: getProccess(e["status"]), title: e["positionName"], description: "", subtasks: swap, points: temp, eventDate: "${DateTime.parse(e["deadline"]).day}/${DateTime.parse(e["deadline"]).month}/${DateTime.parse(e["deadline"]).year}", substringValue: substringValue, updateState: printAllTasks, position: e["companyName"], status: e["status"], facultyName: e["facultName"], companyName: e["companyName"], choosenDate: DateTime.parse(e["startDate"]), point: "${e["point"]} Points", taskId: e["id"], feedbacks: getAllFeedbacks(e["id"]),);
+    
+                }).toList(),
+              )
+    
+              // buildTile("Company", "In Progress", "Position Name", "7th of Dec, 2023", const Color(0xff94B49F)),
+              // buildTile("Company", "Overdue", "Position Name", "7th of Dec, 2023", const Color(0xffFFC900)),
+              // buildTile("Company", "Late Done", "Position Name", "7th of Dec, 2023", const Color(0xffE31F1F))
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,4 @@
-package com.example.sis_progress;
+package com.sp.sis_progress;
 
 import io.flutter.embedding.android.FlutterActivity;
 

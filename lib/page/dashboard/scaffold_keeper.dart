@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -177,11 +178,14 @@ Container buildAvatar({required VoidCallback onTap}) {
   return Container(
     margin: const EdgeInsets.fromLTRB(10, 0, 16, 0),
     child: InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       onTap: onTap,
-      child: const CircleAvatar(
-        backgroundColor: Colors.yellow,
-        radius: 18,
-      ),
+      child: Image.asset(
+        "assets/AvatarAvatar.png",
+        width: 35,
+        height: 35,
+      )
     ),
   );
 }

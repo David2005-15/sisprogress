@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class InputBox extends StatefulWidget {
@@ -11,12 +12,14 @@ class InputBox extends StatefulWidget {
   String? errorText;
   bool? enabled;
   bool? showValidationOrNot;
+  bool? disabledSymbols;
 
   InputBox({
     this.initialValue,
     this.enabled,
     this.errorText,
     this.showValidationOrNot,
+    this.disabledSymbols,
     required this.textInputType,
     required this.onChanged,
     required this.context,
@@ -33,8 +36,14 @@ class InputBox extends StatefulWidget {
 class _InputBox extends State<InputBox> {
   bool _passwordVisible = false;
 
+
+  List<TextInputFormatter> formatters = [];
+
   @override
   void initState() {
+    if(widget.disabledSymbols == true) {
+      formatters.add(FilteringTextInputFormatter.allow(RegExp("^[a-zA-Z0-9_ ]*")));
+    }
     super.initState();
     _passwordVisible = false;
   }
@@ -61,7 +70,11 @@ class _InputBox extends State<InputBox> {
         readOnly: widget.enabled ?? false,
         maxLines: 1,
         keyboardType: widget.textInputType,
-        onChanged: (value) => {widget.onChanged(value), getColor(value)},
+        onChanged: (value) => {
+          widget.onChanged(value), 
+          getColor(value)
+        },
+        inputFormatters: formatters,
         obscureText: widget.isPassword ? !_passwordVisible: widget.isPassword,
         autocorrect: false,
         // initialValue: widget.initialValue,

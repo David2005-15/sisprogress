@@ -34,14 +34,25 @@ class Client {
     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
 
     var body = {
-      "subTaskId": taskId,
-      "description": description
+      "taskId": taskId,
+      "feedback": description
     };
 
     print(body);
 
-    Response response = await dio.patch('http://164.90.224.111/change/subTaskStatus', data: body);
+    Response response = await dio.post('http://164.90.224.111/add/feedback', data: body);
     print(response.data);
+  }
+
+  Future<List<dynamic>> getAllFeedbacks(int taskId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+
+    Response response = await dio.get('http://164.90.224.111/add/feedback', queryParameters: {"taskId": taskId});
+    
+    return response.data;
   }
 
   Future doneSubtask(int userId, bool status) async {
@@ -90,6 +101,40 @@ class Client {
     print(allTasks.data["newTasks"]);
 
     return allTasks.data["newTasks"];
+  }
+
+  Future sendTask(int taskId, String description) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    var body = {
+      "id": taskId,
+      "description": description
+    };
+
+    await dio.patch("http://164.90.224.111/change/taskDescription", data: body);
+  }
+
+  Future removeTask(int taskId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    await dio.delete("http://164.90.224.111/getTasks/delete", queryParameters: {"taskId": taskId});
+  }
+
+  Future<List<dynamic>> getAllTasks() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    var allTasks = await dio.get("http://164.90.224.111/getTasks/rest");
+
+    print(allTasks.data["newTasks"]);
+
+    return allTasks.data["item"];
   }
 
   Future updateUniversityAndAcademic(Map<String, dynamic> value) async {
@@ -166,6 +211,36 @@ class Client {
     }
   }
 
+  Future sendUpdateEmail(String email) async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+     var body = {
+      "email": email
+     };
+
+     var response = await dio.post('http://164.90.224.111/addEmail', data: body);
+
+     return response.data;
+  }
+
+
+  Future sendCode(String email, String code) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    var body = {
+      "email": email, 
+      "code": code
+    };
+
+    var response = await dio.patch("http://164.90.224.111/addEmail/update", data: body);
+
+    return response.data;
+  }
+
   Future registerForGrade9(RegistrationGrade9 data) async {
     var body = {
       "fullName": data.fullName,
@@ -174,10 +249,10 @@ class Client {
       "phone": data.phone,
       "age": data.age,
       "country": data.country,
-      "whichClass": 9,
+      "grade": 9,
       "university": data.university,
-      "Unyshcool": data.school,
-      "proffession": data.proffession,
+      "study": data.study,
+      "academicProgram": data.proffession,
       "term": data.term,
       "planType": data.addmision,
       "aid": data.aid == "Yes" ? true : false,
@@ -189,7 +264,7 @@ class Client {
 
     var response = await dio.post("http://164.90.224.111/register", data: body);
 
-    print(response.data);
+    return response.data;
 
   }
 
@@ -201,9 +276,10 @@ class Client {
       "phone": data.phone,
       "age": data.age,
       "country": data.country,
-      "whichClass": 10,
+      "grade": 10,
       "university": data.university,
-      "proffession": data.profession,
+      "academicProgram": data.profession,
+      "study": data.study,
       "term": data.term,
       "planType": data.addmision,
       "aid": data.aid == "Yes" ? true : false,

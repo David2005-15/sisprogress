@@ -6,11 +6,16 @@ class CustomRadio extends StatefulWidget {
   final RadioButtonHandler handler;
   final VoidCallback methodParent;
   final List<String> groupValue;
+  final String? value;
 
-  const CustomRadio({
+  List<String>? errors;
+
+  CustomRadio({
     required this.methodParent,
     required this.handler, 
     required this.groupValue, 
+    this.value,
+    this.errors,
     super.key, 
   });
 
@@ -19,11 +24,34 @@ class CustomRadio extends StatefulWidget {
 }
 
 class CustomRadioState extends State<CustomRadio> {
-  bool selectedFirst = true;
+  bool selectedFirst = false;
   bool selectedSecond = false;
+  
+  
+  @override
+  void initState() {
+    super.initState();
+    print(widget.value);
+
+    if(widget.value != null) {
+      if(widget.groupValue[0] == widget.value) {
+        selectedFirst = true;
+        selectedSecond = false;
+      } else if(widget.groupValue[1] == widget.value){
+        selectedFirst = false;
+        selectedSecond = true;
+      } else {
+        selectedFirst = false;
+        selectedSecond = false;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+
+    print(selectedFirst);
+    print(selectedSecond);
     return Container(
       alignment: Alignment.centerLeft,
       margin: const EdgeInsets.fromLTRB(38, 10, 0, 0),
@@ -108,7 +136,27 @@ class CustomRadioState extends State<CustomRadio> {
                 ),
               )
             ],
-          )
+          ),
+
+          widget.errors != null ? Container(
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widget.errors!.map((e) {
+                return Text(
+                  e,
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 10,
+                    color: const Color(0xffE31F1F)
+                  ),
+                );
+              }).toList(),
+            ),
+          ): Container()
         ],
       ),
     );

@@ -58,7 +58,7 @@ class _DropDown extends State<DropDown> {
 
   @override
   Widget build(BuildContext context) {
-     List<DropdownMenuItem> items = ["9th Grade", "10th Grade"].map((e) {
+     List<DropdownMenuItem> items = ["Up to 9th grade", "10th grade or above"].map((e) {
      return DropdownMenuItem(
         value: e,
           child: Text(
@@ -124,7 +124,7 @@ class _DropDown extends State<DropDown> {
           },
         
           selectedItemBuilder: (context) {
-            return ["9th Grade", "10th Grade"].map<Widget>((e) {
+            return ["Up to 9th grade", "10th grade or above"].map<Widget>((e) {
               return DropdownMenuItem(
                 value: e,
                 child: Text(
@@ -179,7 +179,7 @@ class _CountryDropDown extends State<CountryDropDown> {
 
     return Container(
       margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
-      height: 150,
+      height: 100,
       child: Center(
         child: DropdownButtonFormField(
           // itemHeight: 60,r

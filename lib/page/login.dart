@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/forgot_password.dart';
+import 'package:sis_progress/page/home.dart';
 import 'package:sis_progress/page/registration.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
@@ -49,123 +50,130 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(buildLogoIcon(), List.empty()),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        // alignment: Alignment.center,
-        margin: const EdgeInsets.fromLTRB(17, 25, 17, 32),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: const Color(0xff3A3D4C)
-        ),
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget> [
-              buildTitle(),
-              // InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.fullName, isPassword: false, initialValue: "Full Name", errorText: fullNameErrorText, showValidationOrNot: showValidationOrNo,),
-              InputBox(textInputType: TextInputType.emailAddress, onChanged: (String val) {print(val);}, context: context, controller: widget.email, isPassword: false, initialValue: "Email", errorText: emailErrorText, showValidationOrNot: showEmailValidation,),
-              InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.password, isPassword: true, initialValue: "Password"),
-              Visibility(
-                visible: showErrorVisibility,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
-                  child: Text(
-                    "Email or password is invalid",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: Colors.red
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+
+        return Future.value(false);
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(buildLogoIcon(), List.empty()),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          // alignment: Alignment.center,
+          margin: const EdgeInsets.fromLTRB(17, 25, 17, 32),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: const Color(0xff3A3D4C)
+          ),
+          alignment: Alignment.center,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget> [
+                buildTitle(),
+                // InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.fullName, isPassword: false, initialValue: "Full Name", errorText: fullNameErrorText, showValidationOrNot: showValidationOrNo,),
+                InputBox(textInputType: TextInputType.emailAddress, onChanged: (String val) {print(val);}, context: context, controller: widget.email, isPassword: false, initialValue: "Email", errorText: emailErrorText, showValidationOrNot: showEmailValidation,),
+                InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.password, isPassword: true, initialValue: "Password"),
+                Visibility(
+                  visible: showErrorVisibility,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
+                    child: Text(
+                      "Email or password is invalid",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: Colors.red
+                      ),
+                    ),
+                  )
+                ),
+                buildLowerRow(isVisible, () {
+                  setState(() {
+                    isVisible = !isVisible;
+                    if(isVisible) {
+                      iconColor = const Color(0xff355CCA);
+                      borderColor = const Color(0xff355CCA);
+                    } else {
+                      iconColor = Colors.transparent;
+                      borderColor = const Color(0xffBFBFBF);
+                    }
+                  });
+                }, context, iconColor, borderColor),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                  child: Button(text: "Log In", onPressed: () async {
+    
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
+                    if(!emailMatch(widget.email.text)) {
+                      setState(() {
+                        showEmailValidation = true;
+                        emailErrorText = "Email must be in the correct format";
+                      });
+                    } else {
+                      setState(() {
+                        showEmailValidation = false;
+                      });
+                    }
+    
+                    try {
+                      var value = await httpClient.loginUser(widget.email.text, widget.password.text);
+                      print(value["success"]);
+                      if(value["success"]) {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
+                      }
+                    } catch(e) {
+                      setState(() {
+                        showErrorVisibility = true;
+                      });
+                    }
+                    // print(value["fullName"]);
+                    // print(value["fullName"]);
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
+                  }, height: 38, width: 280)
+                ),
+    
+    
+                Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.fromLTRB(35, 30, 35, 20),
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget> [
+                        Text(
+                          "I don't have an account?",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: Colors.white
+                          ),
+                        ),
+                                
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()));
+                          }, 
+                          child: Text(
+                            "Registration",
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14, 
+                              color: const Color(0xff355CCA)
+                            ),
+                          )
+                        )
+                      ],
                     ),
                   ),
                 )
-              ),
-              buildLowerRow(isVisible, () {
-                setState(() {
-                  isVisible = !isVisible;
-                  if(isVisible) {
-                    iconColor = const Color(0xff355CCA);
-                    borderColor = const Color(0xff355CCA);
-                  } else {
-                    iconColor = Colors.transparent;
-                    borderColor = const Color(0xffBFBFBF);
-                  }
-                });
-              }, context, iconColor, borderColor),
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                child: Button(text: "Log In", onPressed: () async {
-
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
-                  if(!emailMatch(widget.email.text)) {
-                    setState(() {
-                      showEmailValidation = true;
-                      emailErrorText = "Email must be in the correct format";
-                    });
-                  } else {
-                    setState(() {
-                      showEmailValidation = false;
-                    });
-                  }
-
-                  try {
-                    var value = await httpClient.loginUser(widget.email.text, widget.password.text);
-                    print(value["success"]);
-                    if(value["success"]) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
-                    }
-                  } catch(e) {
-                    setState(() {
-                      showErrorVisibility = true;
-                    });
-                  }
-                  // print(value["fullName"]);
-                  // print(value["fullName"]);
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
-                }, height: 38, width: 280)
-              ),
-
-
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.fromLTRB(35, 30, 35, 20),
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget> [
-                      Text(
-                        "I don't have an account?",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.white
-                        ),
-                      ),
-                              
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()));
-                        }, 
-                        child: Text(
-                          "Registration",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14, 
-                            color: const Color(0xff355CCA)
-                          ),
-                        )
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
+              ],
+            ),
           ),
         ),
       ),

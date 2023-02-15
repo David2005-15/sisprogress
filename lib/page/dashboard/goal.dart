@@ -37,7 +37,10 @@ class _GoalPage extends State<GoalPage> {
 
   List<String> value = [];
 
-  List<String> temp = [];
+  List<String> tempo = [];
+
+  var temporaryly = [];
+  var tempraryly = [];
 
   String filterText = "Activites";
   bool cantYouSee = false;
@@ -46,9 +49,19 @@ class _GoalPage extends State<GoalPage> {
 
   void getAllTasks() async {
     var temp = await client.getAllTaskAndFilter();
+    print(temp);
     // print(temp);
     setState(() {
       tasks = temp;
+      tasks.forEach((element) {
+        tempo.add(element["facultName"]);
+      },);
+
+      temporaryly = tasks;
+
+      tempo = tempo.toSet().toList();
+      tempraryly = tempo;
+      print(tempo);
     });
   }
 
@@ -72,237 +85,277 @@ class _GoalPage extends State<GoalPage> {
             .where((p0) => p0['status'] == true)
             .length);
         disableds.add(!(e["isFree"] == false));
+
       });
     });
   }
 
   @override
+  void dispose() {
+    _overlayEntry!.remove();
+    _overlayEntry = null;
+    super.dispose();
+  }
+
+  ScrollController scrollController = ScrollController();
+  
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onBackButtonPressed,
-      child: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              buildTitle(),
-              buildButton(widget.title, (p0) {}),
-              Container(
-                  margin: const EdgeInsets.fromLTRB(16, 10, 0, 0),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border:
-                      Border.all(width: 1, color: const Color(0xff355CCA))),
-                  width: filterText.length * 10 + 80,
-                  height: 40,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                          child: Text(
-                            filterText,
-                            style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 15,
-                                color: const Color(0xff355CCA)),
-                          ),
-                        ),
-                        IconButton(
-                          // splashColor: Colors.transparent,
-                            onPressed: () {
-                              setState(() {
-                                temp = value;
-                                showFilter = !showFilter;
-                                goals2 = goals2.toSet().toList();
-                              });
-                              if (showFilter) {
-                                _overlayEntry = OverlayEntry(builder: (context) {
-                                  return Align(
-                                    alignment: Alignment.topLeft,
-                                    child: StatefulBuilder(
-                                        builder: (context, state) {
-                                          return Container(
-                                            width: 174,
-                                            height: 200,
-                                            margin: const EdgeInsets.fromLTRB(15, 270, 0, 0),
-                                            padding: const EdgeInsets.all(5),
-                                            decoration: BoxDecoration(
-                                                color: const Color(0xffD2DAFF),
-                                                borderRadius:
-                                                BorderRadius.circular(5)),
-                                            child: SingleChildScrollView(
-                                              child: Column(
-                                                children: [
-                                                  Material(
-                                                    color: const Color(
-                                                        0xffD2DAFF),
-                                                    child: Container(
-                                                      alignment: Alignment.center,
-                                                      height: 40,
-                                                      padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          5, 4, 5, 4),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)),
-                                                      child: TextField(
-                                                        textAlign: TextAlign
-                                                            .left,
-                                                            textAlignVertical: TextAlignVertical.bottom,
-                                                        // controller: searchCtrl,
-                                                        keyboardType:
-                                                        TextInputType.text,
-                                                        onChanged: ((val) {
-                                                          setState(() {
-                                                            temp = value
-                                                                .where((
-                                                                element) =>
-                                                                element.contains(
-                                                                    val))
-                                                                .toList();
-    
-                                                            temp =
-                                                                temp.toSet()
-                                                                    .toList();
-    
-                                                            goals2 =
-                                                                goals2.toSet()
-                                                                    .toList();
-                                                          });
-                                                        }),
-                                                        decoration: InputDecoration(
-                                                          // contentPadding: EdgeInsets.all(5.0),
-                                                          hintText: 'Search',
-                                                          alignLabelWithHint: true,
-                                                          hintStyle: const TextStyle(
-                                                              fontSize: 16),
-                                                          border: OutlineInputBorder(
+      child: GestureDetector(
+        onTap: _onBackButtonPressed,
+        behavior: HitTestBehavior.translucent,
+        onVerticalDragDown: (details) {
+          _onBackButtonPressed();
+        },
+        child: Container(
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                buildTitle(),
+                buildButton(widget.title, (p0) {}),
+                InkWell(
+                  splashColor: Colors.transparent,
+                  
+                  onTap: () {
+                    scrollController.animateTo(
+                      0, 
+                      duration: const Duration(milliseconds: 500), 
+                      curve: Curves.fastOutSlowIn
+                    );
+                    setState(() {
+                                  // tempo = value;
+                                  showFilter = !showFilter;
+                                  // goals2 = goals2.toSet().toList();
+                                });
+                                if (showFilter) {
+                                  _overlayEntry = OverlayEntry(builder: (context) {
+                                    return Align(
+                                      alignment: Alignment.topLeft,
+                                      child: StatefulBuilder(
+                                          builder: (context, state) {
+                                            return Container(
+                                              width: 174,
+                                              height: 200,
+                                              margin: const EdgeInsets.fromLTRB(15, 260, 0, 0),
+                                              padding: const EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                  color: const Color(0xffD2DAFF),
+                                                  borderRadius:
+                                                  BorderRadius.circular(5)),
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  children: [
+                                                    Material(
+                                                      color: const Color(
+                                                          0xffD2DAFF),
+                                                      child: Container(
+                                                        alignment: Alignment.center,
+                                                        height: 40,
+                                                        padding:
+                                                        const EdgeInsets.fromLTRB(
+                                                            5, 4, 5, 4),
+                                                        decoration: BoxDecoration(
                                                             borderRadius:
                                                             BorderRadius.circular(
-                                                                25),
-                                                            borderSide:
-                                                            const BorderSide(
-                                                              width: 0,
-                                                              style: BorderStyle
-                                                                  .none,
+                                                                5)),
+                                                        child: TextField(
+                                                          textAlign: TextAlign
+                                                              .left,
+                                                              textAlignVertical: TextAlignVertical.bottom,
+                                                          // controller: searchCtrl,
+                                                          keyboardType:
+                                                          TextInputType.text,
+                                                          onChanged: ((val) {
+                                                            setState(() {
+                                                              // getAllTasks();
+                                                              tempraryly = tempo.where((element) => element.toLowerCase().contains(val.toLowerCase())).toList();
+                                                              if(filterText != "Activites") {
+                                                                temporaryly = tasks.where((element) => element["facultName"].toLowerCase() == filterText.toLowerCase()).toList();
+                                                              }
+                                                              // temp = value
+                                                              //     .where((
+                                                              //     element) =>
+                                                              //     element.contains(
+                                                              //         val))
+                                                              //     .toList();
+          
+                                                              // temp =
+                                                              //     temp.toSet()
+                                                              //         .toList();
+          
+                                                              // goals2 =
+                                                              //     goals2.toSet()
+                                                              //         .toList();
+                                                            });
+                                                          }),
+                                                          decoration: InputDecoration(
+                                                            // contentPadding: EdgeInsets.all(5.0),
+                                                            hintText: 'Search',
+                                                            alignLabelWithHint: true,
+                                                            hintStyle: const TextStyle(
+                                                                fontSize: 16),
+                                                            border: OutlineInputBorder(
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  25),
+                                                              borderSide:
+                                                              const BorderSide(
+                                                                width: 0,
+                                                                style: BorderStyle
+                                                                    .none,
+                                                              ),
                                                             ),
+                                                            filled: true,
+                                                            // contentPadding:
+                                                            // EdgeInsets.all(16),
+                                                            fillColor:
+                                                            const Color(0xffB1B2FF),
                                                           ),
-                                                          filled: true,
-                                                          // contentPadding:
-                                                          // EdgeInsets.all(16),
-                                                          fillColor:
-                                                          const Color(0xffB1B2FF),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                    children: temp.map((e) {
-                                                      return Material(
-                                                        color:
-                                                        const Color(0xffD2DAFF),
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              filterText = e;
-                                                              showFilter = false;
-                                                              _overlayEntry!
-                                                                  .remove();
-                                                              _overlayEntry =
-                                                              null;
-                                                              goals = [];
-    
-                                                              getAllTasks();
-    
-                                                              tasks = tasks.where((element) => element["status"] == e).toList();
-                                                            });
-                                                          },
-                                                          child: Container(
-                                                            height: 44,
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                BorderRadius
-                                                                    .circular(5)),
-                                                            alignment:
-                                                            Alignment.centerLeft,
-                                                            child: DefaultTextStyle(
-                                                              style: GoogleFonts
-                                                                  .poppins(
-                                                                  fontWeight:
-                                                                  FontWeight.w400,
-                                                                  fontSize: 11,
-                                                                  color: const Color(
-                                                                      0xff121623)),
-                                                              child: Text(
-                                                                e,
-                                                                textAlign:
-                                                                TextAlign.left,
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                      children: tempraryly.map((e) {
+                                                        return Material(
+                                                          color:
+                                                          const Color(0xffD2DAFF),
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                filterText = e;
+                                                                showFilter = false;
+                                                                _overlayEntry!
+                                                                    .remove();
+                                                                _overlayEntry = null;
+                                                                // goals = [];
+          
+                                                                // getAllTasks();
+                                                                if(filterText != "Activites") {
+                                                                  temporaryly = tasks.where((element) => element["facultName"].toLowerCase() == e.toLowerCase()).toList();
+                                                                }
+                                                                
+          
+                                                                // tasks = tasks.where((element) => element["status"] == e).toList();
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                              height: 44,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(5)),
+                                                              alignment:
+                                                              Alignment.centerLeft,
+                                                              child: DefaultTextStyle(
+                                                                style: GoogleFonts
+                                                                    .poppins(
+                                                                    fontWeight:
+                                                                    FontWeight.w400,
+                                                                    fontSize: 11,
+                                                                    color: const Color(
+                                                                        0xff121623)),
+                                                                child: Text(
+                                                                  e,
+                                                                  textAlign:
+                                                                  TextAlign.left,
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                  ),
-                                                ],
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        }),
-                                  );
-                                });
-                                Overlay.of(context)!.insert(_overlayEntry!);
-                              } else {
-                                _overlayEntry!.remove();
-                                _overlayEntry = null;
-                                setState(() {
-                                  goals2 = goals2.toSet().toList();
-                                });
-                              }
-                            },
-                            icon: const Icon(
-                              Icons.chevron_left_outlined,
-                              size: 24,
-                              color: Colors.white,
-                            ))
-                      ])),
-              Column(
-                children: tasks.map((e) {
-                  var value = 0;
-                  value +=1;
-    
-                  var disballed = !(e["isFree"] == false);
-    
-                  return ExploreTile(
-                    title: e["companyName"]
-                        .length >
-                        30
-                        ? "${e["companyName"].substring(0, 30)}..."
-                        : e
-                    [
-                    "companyName"],
-                    disabled: disballed,
-                    taskId: e["id"],
-                    taskCount:
-                    "${e["SubTasks"]
-              .where((p0) => p0['status'] == true)
-              .length}/${e["SubTasks"].length}",
-                    onClick:  () {
-                      updateValues();
-                      getAllTasks();
-                      // setState(() {
-                      //   disballed = true;
-                      // });
-                    },
-                    position: e["positionName"],
-                  );
-                }).toList(),
-              )
-            ],
+                                            );
+                                          }),
+                                    );
+                                  });
+                                  Overlay.of(context)!.insert(_overlayEntry!);
+                                } else {
+                                  _overlayEntry!.remove();
+                                  _overlayEntry = null;
+                                  setState(() {
+                                    goals2 = goals2.toSet().toList();
+                                  });
+                                }
+                                },
+                  child: Container(
+                      margin: const EdgeInsets.fromLTRB(16, 10, 0, 0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border:
+                          Border.all(width: 1, color: const Color(0xff355CCA))),
+                      width: filterText.length * 10 + 80,
+                      height: 40,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+                              child: Text(
+                                filterText,
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 15,
+                                    color: const Color(0xff355CCA)),
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              child: ImageIcon(
+                                                  AssetImage("assets/Vectorchevorn.png"),
+                                                  size: 14,
+                                                  color: Colors.grey,
+                                                ),
+                            )
+                          ])),
+                ),
+                Column(
+                  children: temporaryly.map((e) {
+                    var value = 0;
+                    value +=1;
+          
+                    var disballed = !(e["isFree"] == false);
+          
+                    return ExploreTile(
+                      title: e["companyName"]
+                          .length >
+                          30
+                          ? "${e["companyName"].substring(0, 30)}..."
+                          : e
+                      [
+                      "companyName"],
+                      disabled: disballed,
+                      taskId: e["id"],
+                      taskCount:
+                      "${e["SubTasks"]
+                .where((p0) => p0['status'] == true)
+                .length}/${e["SubTasks"].length}",
+                      onClick:  () {
+                        // updateValues();
+                        // getAllTasks();
+                        if(filterText != "Activites") {
+                          temporaryly = tasks.where((element) => element["facultName"].toLowerCase() == filterText.toLowerCase()).toList();
+                        }
+
+                        // setState(() {
+                        //   disballed = true;
+                        // });
+                      },
+                      position: e["positionName"],
+                    );
+                  }).toList(),
+                )
+              ],
+            ),
           ),
         ),
       ),

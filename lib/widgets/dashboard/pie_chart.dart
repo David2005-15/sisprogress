@@ -40,7 +40,7 @@ class PieChart extends StatelessWidget {
             BoxShadow(offset: Offset(0, 10), spreadRadius: 0, blurRadius: 30)
           ],
           gradient: const LinearGradient(
-            begin: Alignment.topLeft,
+            begin: Alignment.centerLeft,
             end: Alignment.bottomRight,
             colors: <Color> [
               Color(0xff272935),
@@ -139,6 +139,23 @@ class PieChart extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 36, 0),
+              decoration:  const BoxDecoration(
+                // borderRadius: BorderRadius.circular(100),
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                  colors: [
+                  Color(0xFF121623),
+                  Color(0xFF272935),
+                  ],
+                  stops: [
+                    0.0748,
+                    0.9006,
+                  ],
+                  transform: GradientRotation(318.06 * (3.141592 / 180))
+                )
+              ),
               child: Stack(
                 alignment: Alignment.center,
                 children: <Widget> [

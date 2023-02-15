@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/data%20class/registration_data_grade10.dart';
@@ -11,7 +10,6 @@ import 'package:sis_progress/widgets/input_box.dart';
 import 'package:sis_progress/widgets/radio_button.dart';
 import 'package:sis_progress/widgets/select_box.dart';
 import 'package:sis_progress/data%20class/radio_button_handler.dart';
-import '../../widgets/dashboard/registration_activities.dart';
 import '../../widgets/progress/progress_bar.dart';
 
 class Grade10thSecond extends StatefulWidget {
@@ -21,11 +19,11 @@ class Grade10thSecond extends StatefulWidget {
   final TextEditingController work = TextEditingController();
   final TextEditingController work2 = TextEditingController();
   final RegistrationGrade10 reg;
-  final RadioButtonHandler secondQuest = RadioButtonHandler(value: "Outside the US and Canada");
-  final RadioButtonHandler thirdQuest = RadioButtonHandler(value: "SAT");
-  final RadioButtonHandler fifthQuest = RadioButtonHandler(value: "Yes");
-  final RadioButtonHandler sixthQuest = RadioButtonHandler(value: "Yes");
-  final RadioButtonHandler ninthQuest = RadioButtonHandler(value: "No");
+  final RadioButtonHandler secondQuest = RadioButtonHandler(value: null);
+  final RadioButtonHandler thirdQuest = RadioButtonHandler(value: null);
+  final RadioButtonHandler fifthQuest = RadioButtonHandler(value: null);
+  final RadioButtonHandler sixthQuest = RadioButtonHandler(value: null);
+  final RadioButtonHandler ninthQuest = RadioButtonHandler(value: null);
 
   Grade10thSecond({
     required this.reg,
@@ -55,7 +53,15 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
   void changeIsVisible() {
     setState(() {
-      isVisible = !isVisible;
+      if(widget.ninthQuest.value == "No") {
+        isVisible = true;
+      } else if(widget.ninthQuest.value == "Yes") {
+        isVisible = false;
+      }
+      print("----------------------------");
+
+      print(isVisible);
+      print("----------------------------");
       // print()
     });
   }
@@ -63,6 +69,9 @@ class _Grade10thSecond extends State<Grade10thSecond> {
   void satOrAct() {
     setState(() {
       testScore = !testScore;
+      if(testScore == false) {
+        whichTest = [];
+      }
     });
   }
 
@@ -72,11 +81,12 @@ class _Grade10thSecond extends State<Grade10thSecond> {
   TextEditingController cont = TextEditingController();
 
   List<String> actions = [];
+  List<String> values = [];
+
+  List<String> whichTest = [];
 
 
   double getContainerWidth (String value) {
-
-
     if(value.length < 7) {
       return 60;
     }
@@ -85,8 +95,92 @@ class _Grade10thSecond extends State<Grade10thSecond> {
   }
 
   @override
+  void initState() {
+    if(widget.reg.place != null) {
+      widget.secondQuest.value = widget.reg.place;
+    } 
+
+    if(widget.reg.honors != null) {
+      widget.fifthQuest.value = widget.reg.honors;
+    }
+
+    if(widget.reg.addmisionTest != null) {
+      widget.sixthQuest.value = widget.reg.addmisionTest;  
+    }
+
+    if(widget.reg.essayWorkExp != null) {
+      widget.work.text = widget.reg.essayWorkExp!;
+    }
+
+    if(widget.reg.school != null) {
+      widget.controller.text = widget.reg.school!;
+    }
+
+    if(widget.reg.outActivity != null) {
+      actions = widget.reg.outActivity!;
+    }
+
+    // print(widget.wo);
+    print("---------------------------");
+    print(widget.reg.details);
+    print(widget.ninthQuest.value);
+    print("-------------------------");
+    if(widget.reg.details != null) {
+      if(widget.reg.details == "No") {
+        isVisible = false;
+        widget.ninthQuest.value = "No";
+      } else {
+        widget.ninthQuest.value = "Yes";
+        isVisible = true;
+        widget.work2.text = widget.reg.details ?? "";
+      }
+    } 
+
+
+
+    if(widget.reg.satAndAct != null) {
+      whichTest = widget.reg.satAndAct!;
+      // print(widget.reg.satAndAct);
+      if(widget.reg.satAndAct!.isEmpty) {
+        widget.thirdQuest.value = "No";
+        whichTest = [];
+      } else {
+        widget.thirdQuest.value = "Yes";
+
+        testScore = true;
+
+        if(widget.reg.satAndAct!.contains("SAT")) {
+          setState(() {
+            isSat = true; 
+          });
+        } else {
+          setState(() {
+            isSat = false;            
+          });
+
+        }
+
+        if(widget.reg.satAndAct!.contains("ACT")) {
+          setState(() {
+            isAct = true;
+          });
+        } else {
+          setState(() {
+            isAct = false;
+          });
+          
+        }
+      }
+    } else {
+      // widget.thirdQuest.value = "No";
+      whichTest = [];
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print(actions);
+    // print(actions);
 
     return Scaffold(
       appBar: CustomAppBar(buildLogoIcon(), List.empty()),
@@ -105,9 +199,9 @@ class _Grade10thSecond extends State<Grade10thSecond> {
               buildTitle(),
               buildQuestion("1. Are you applying from a school outside the US and Canada?"),
               // buildAnswer(getSeconeQuest, secondQuestion, secondQuest),
-              CustomRadio(handler: widget.secondQuest, groupValue: secondQuestion, methodParent: () => print("Hello")),
+              CustomRadio(handler: widget.secondQuest, groupValue: secondQuestion, methodParent: () => print("Hello"), value: widget.secondQuest.value,),
               buildQuestion("2. Do you wish to submit SAT or ACT test scores?"),
-              CustomRadio(handler: widget.thirdQuest, groupValue: noOrYes, methodParent: satOrAct),
+              CustomRadio(handler: widget.thirdQuest, groupValue: noOrYes, methodParent: satOrAct, value: widget.thirdQuest.value,),
 
               Visibility(
                 visible: testScore,
@@ -134,6 +228,14 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                               onTap: () {
                                 setState(() {
                                   isSat = !isSat;
+
+                                  if(isSat) {
+                                    whichTest.add("SAT");
+                                  } else {
+                                    whichTest.remove("SAT");
+                                  }
+
+                                  // print(whichTest);
                                 });
                               },
                               child: Icon(
@@ -173,6 +275,14 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                               onTap: () {
                                 setState(() {
                                   isAct = !isAct;
+
+                                  if(isAct) {
+                                    whichTest.add("ACT");
+                                  } else {
+                                    whichTest.remove("ACT");
+                                  }
+
+                                  // print(whichTest);
                                 });
                               },
                               child: Icon(
@@ -205,10 +315,10 @@ class _Grade10thSecond extends State<Grade10thSecond> {
               InputBox(textInputType: TextInputType.text, onChanged: (String val) {print("Hello World");}, context: context, controller: widget.controller, isPassword: false, initialValue: "School"),
               buildQuestion("4. Do you wish to report any honors related to your academic achievements?"),
               // buildAnswer(getFifthQuest, yesOrNo, fifthQuest),
-              CustomRadio(handler: widget.fifthQuest, groupValue: yesOrNo, methodParent: () => print("Hello")),
+              CustomRadio(handler: widget.fifthQuest, groupValue: yesOrNo, methodParent: () => print("Hello"), value: widget.fifthQuest.value,),
               buildQuestion("5. Did you take any admission tests?"),
               // buildAnswer(getSixthQuest, yesOrNo, sixthQuest),
-              CustomRadio(handler: widget.sixthQuest, groupValue: yesOrNo, methodParent: () => print("Hello")),
+              CustomRadio(handler: widget.sixthQuest, groupValue: yesOrNo, methodParent: () => print("Hello"), value: widget.sixthQuest.value,),
               buildQuestion("6. Please report up to 10 activities that can help colleges better understand your life outside of the classroom "),
               Container(
                 alignment: Alignment.centerLeft,
@@ -346,10 +456,10 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                               if(!isEnabled) {
                                                 actions.add(value); 
                                               } else {
-                                                print(actions);
+                                                // print(actions);
                                                 actions.removeWhere((e) => e.contains(value));
 
-                                                print(actions);
+                                                // print(actions);
                                               }
                                             }
                                           });
@@ -407,7 +517,50 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
 
                                           setState(() {
-                                            actions.remove(value);
+                                              for(int i = 0; i < actions.length; i++) {
+                                                
+                                                if(actions[i].contains(value)) {
+                                                
+                                                  try {
+                                                    var content = actions[i].split(" ");
+                                                    print(content[0]);
+                                                    var val = int.parse(content[1].replaceAll(RegExp(r'[\(\)]'), ''));
+                                                    // values.remove(actions[i]);
+                                                  // print("${content[0]} (${content.length - 1})");
+                                                    
+                                                    
+                                                      if(values.where((e) => e.contains(value)).length == 1) {
+                                                        actions[i] = "${content[0]}";
+                                                        values.removeAt(i);
+                                                      }else {
+                                                        if(values.where((e) => e.contains(value)).length != 1) {
+                                                          actions[i] = "${content[0]} (${val - 1})";
+                                                          values.removeAt(i);
+                                                        }                                                     
+                                                      }
+                                                    
+                                                  } catch(e) {
+                                                    // actions[i] = "${actions[i]} (${actions.where((element) => element.contains(value)).length + 1})";
+                                                    actions.remove(value);
+                                                  }
+                                              
+                                                // if(actions.where((element) => element.contains(value)).length > 1) {
+                                                //   var content = actions[i].split(" ");
+                                                //   print(content[0]);
+                                                //   print(content[1]);
+                                                //   print("${content[0]} (${content.length - 1})");
+                                                //   actions[i] = "${content[0]} (${content.length - 1})";
+
+                                                // } else {
+
+                                                // }
+                                                // var content = actions[i].split(" ");
+
+                                                
+                                                
+                                                
+                                                }
+                                              }
                                           });
 
                                           state(() {
@@ -431,7 +584,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                     ),
       
                                     Text(
-                                      isEnabled ? "${actions.where((e) => e.contains(value)).length}" : "1"
+                                      isEnabled ? "${values.where((e) => e.contains(value)).length + 1}" : "1"
                                     ),
                                     
                                     Container(
@@ -451,11 +604,45 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                           },);
 
                                           setState(() {
-                                            if(actions.length != 10) {
-                                              if(actions.where((element) => element.contains(value)).length > 0) {
-                                                actions.add("$value (${actions.where((element) => element.contains(value)).length + 1})");
+                                            // if(actions.length != 10) {
+                                            //   if(actions.where((element) => element.contains(value)).length > 0) {
+                                            //     actions.add("$value (${actions.where((element) => element.contains(value)).length + 1})");
+                                            //   }
+                                            // }    
+                                            for(int i = 0; i < actions.length; i++) {
+                                              if(actions[i].contains(value)) {
+                                                
+                                                try {
+                                                  var content = actions[i].split(" ");
+                                                  print(content[0]);
+                                                  var val = int.parse(content[1].replaceAll(RegExp(r'[\(\)]'), ''));
+                                                  // print("${content[0]} (${content.length - 1})");
+                                                  if(val < 10) {
+                                                    actions[i] = "${content[0]} (${val + 1})";
+                                                    values.add("${actions[i]} (${actions.where((element) => element.contains(value)).length + 1})");
+                                                  }
+                                                } catch(e) {
+                                                  values.add("${actions[i]} (${actions.where((element) => element.contains(value)).length + 1})");
+                                                  actions[i] = "${actions[i]} (${actions.where((element) => element.contains(value)).length + 1})";
+                                                }
+                                              
+                                                // if(actions.where((element) => element.contains(value)).length > 1) {
+                                                //   var content = actions[i].split(" ");
+                                                //   print(content[0]);
+                                                //   print(content[1]);
+                                                //   print("${content[0]} (${content.length - 1})");
+                                                //   actions[i] = "${content[0]} (${content.length - 1})";
+
+                                                // } else {
+
+                                                // }
+                                                // var content = actions[i].split(" ");
+
+                                                
+                                                
+                                                
                                               }
-                                            }                
+                                            }            
                                             // temp = actions;
                                           });
 
@@ -551,7 +738,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 ),
               ),
               buildQuestion("8. Do you wish to provide details of circumstances or qualifications not reflected in the registration form"),
-              CustomRadio(handler: widget.ninthQuest, groupValue: noOrYes, key: _key, methodParent: changeIsVisible,),
+              CustomRadio(handler: widget.ninthQuest, groupValue: noOrYes, key: _key, methodParent: changeIsVisible, value: widget.ninthQuest.value),
               Visibility(
                 visible: isVisible,
                 maintainSize: false,
@@ -614,7 +801,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
               buildNavigation(context, widget.activites, () async {
                 widget.reg.place = widget.secondQuest.value;
                 widget.reg.testScore = widget.thirdQuest.value;
-                // widget.reg.school = widget.controller.text;
+                widget.reg.school = widget.controller.text;
                 widget.reg.honors = widget.fifthQuest.value;
                 // widget.reg.test = sixthQuest;
                 widget.reg.addmisionTest = widget.sixthQuest.value;
@@ -629,6 +816,21 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 await httpClient.registerForGrade10(widget.reg);
 
                 Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.reg.email,)));
+              }, 
+              () {
+                widget.reg.place = widget.secondQuest.value;
+                widget.reg.testScore = widget.thirdQuest.value;
+                widget.reg.honors = widget.fifthQuest.value;
+                widget.reg.addmisionTest = widget.sixthQuest.value;
+                widget.reg.school = widget.controller.text;
+                widget.reg.outActivity = actions;
+                widget.reg.essayWorkExp = widget.work.text;
+                widget.reg.satAndAct = whichTest;
+                if (widget.ninthQuest.value == "Yes") {
+                  widget.reg.details = widget.work2.text;
+                } else {
+                  widget.reg.details = "No";
+                }
               }),
 
             ],
@@ -928,7 +1130,7 @@ Container buildButton(String value, List<String> activites, Color color) {
   );
 }
 
-Row buildNavigation(BuildContext context, List<String> printable, Function()? onPress) {
+Row buildNavigation(BuildContext context, List<String> printable, Function()? onPress, VoidCallback onPop) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     // crossAxisAlignment: CrossAxisAlignment.center,
@@ -937,6 +1139,7 @@ Row buildNavigation(BuildContext context, List<String> printable, Function()? on
         margin: const EdgeInsets.fromLTRB(20, 37, 0, 20),
         child: TextButton.icon(     // <-- TextButton
           onPressed: () {
+            onPop();
             Navigator.pop(context);
           },
         icon: const ImageIcon(

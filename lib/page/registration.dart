@@ -98,7 +98,7 @@ class _Registration extends State<Registration> {
   OverlayEntry? overlayEntry;
 
   final RegExp emailRegex = RegExp(
-      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   List<String> months = [
     "January",
@@ -162,6 +162,13 @@ class _Registration extends State<Registration> {
 
   String month = DateFormat("MMMM").format(DateTime.now());
   String year = DateTime.now().year.toString();
+  FocusNode ageFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    ageFocusNode.addListener(_dialogBuilder);
+    super.initState();
+  }
 
   
 
@@ -208,11 +215,12 @@ class _Registration extends State<Registration> {
                     isPassword: false,
                     initialValue: "Full Name",
                     onChanged: (String val) {
-                      print(val);
+                      // print(val);
                     },
                     textInputType: TextInputType.text,
                     errorText: fullNameErrorText,
                     showValidationOrNot: showFullNameErrorText,
+                    disabledSymbols: true,
                   ),
                   // InputBox(
                   //   controller: widget.email,
@@ -367,7 +375,7 @@ class _Registration extends State<Registration> {
                     isPassword: true,
                     initialValue: "Confirm Password",
                     onChanged: (String val) {
-                      print(val);
+                      // print(val);
                     },
                     textInputType: TextInputType.text,
                     errorText: confirmPasswordErrorText,
@@ -379,11 +387,11 @@ class _Registration extends State<Registration> {
                     child: InternationalPhoneNumberInput(
                       textAlign: TextAlign.start,
                       onInputChanged: (PhoneNumber number) {
-                        print(number.phoneNumber);
+                        // print(number.phoneNumber);
                         phoneValue = number.phoneNumber.toString();
                       },
                       onInputValidated: (bool value) {
-                        print(value);
+                        // print(value);
                       },
 
                       selectorConfig: const SelectorConfig(
@@ -463,11 +471,10 @@ class _Registration extends State<Registration> {
                       initialValue: number,
                       textFieldController: widget.phone,
                       formatInput: true,
-                      keyboardType: TextInputType.numberWithOptions(
-                          signed: true, decimal: true),
+                      keyboardType: TextInputType.phone,
                       // inputBorder: OutlineInputBorder(),
                       onSaved: (PhoneNumber number) {
-                        print('On Saved: $number');
+                        // print('On Saved: $number');
                       },
                     ),
                   ),
@@ -487,6 +494,7 @@ class _Registration extends State<Registration> {
                   Container(
                     margin: EdgeInsets.fromLTRB(23, 25, 23, 0),
                     child: TextFormField(
+                      // focusNode: ageFocusNode,
                       readOnly: true,
                       maxLines: 1,
                       autocorrect: false,
@@ -568,24 +576,8 @@ class _Registration extends State<Registration> {
                       height: 38,
                       width: double.infinity,
                       onPressed: () async {
-                        if (widget.dropDown.value == "9th Grade") {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
 
-                          prefs.setString("email", widget.email.text);
-                          prefs.setString("number", widget.phone.text);
-                          prefs.setString("full name", widget.fullName.text);
-
-                          widget.registration.fullName = widget.fullName.text;
-                          widget.registration.email = widget.email.text;
-                          widget.registration.password = widget.password.text;
-                          widget.registration.phone = widget.phone.text;
-                          widget.registration.country = widget.coutnry.value;
-                          widget.registration.age = DateTime.parse(widget.age.text).toIso8601String();
-                          widget.registration.grade = widget.dropDown.value;
-                          // print(widget.registration.grade);
-
-                          if (!emailMatch(widget.email.text)) {
+                        if (!emailMatch(widget.email.text)) {
                             setState(() {
                               showEmailValidation = true;
                               emailErrorText =
@@ -594,30 +586,45 @@ class _Registration extends State<Registration> {
                           } else {
                             setState(() {
                               showEmailValidation = false;
+                               emailErrorText = "";
                             });
                             // Navigator.push(context, MaterialPageRoute(builder: (context) => Grade9thFirst(registration: widget.registration,)));
                           }
 
+                          if(widget.fullName.text.length < 2) {
+                            setState(() {
+                              showFullNameErrorText = true;
+                              fullNameErrorText = "Please fill full name field";
+                            });
+                          } else {
+                            setState(() {
+                              showFullNameErrorText = false;
+                              fullNameErrorText = "";
+                            });
+                          }
+
                           if (widget.password.text.length < 8) {
                             setState(() {
-                              passwordErroText = "Please fill password field";
+                              passwordErroText = "Please fill valid password";
                               showpasswordErroText = true;
                             });
                           } else {
                             setState(() {
                               showpasswordErroText = false;
+                              passwordErroText = "";
                             });
                           }
 
-                          if (widget.confirmPassword.text.length < 8) {
+                          if (widget.confirmPassword.text != widget.password.text) {
                             setState(() {
                               confirmPasswordErrorText =
-                                  "Please fill confirm password field";
+                                  "Passwords do not match";
                               showconfirmPasswordErrorText = true;
                             });
                           } else {
                             setState(() {
                               showconfirmPasswordErrorText = false;
+                              confirmPasswordErrorText = "";
                             });
                           }
 
@@ -629,6 +636,7 @@ class _Registration extends State<Registration> {
                           } else {
                             setState(() {
                               showphoneErrorText = false;
+                              phoneErrorText = "";
                             });
                           }
 
@@ -640,29 +648,72 @@ class _Registration extends State<Registration> {
                           } else {
                             setState(() {
                               showageErroText = false;
+                              ageErroText = "";
                             });
                           }
 
-                          if (widget.country.text.length == 0) {
+                          if (widget.coutnry.value == null) {
                             setState(() {
-                              countryErrorText = "Please fill age field";
+                              countryErrorText = "Please fill country field";
                               showcountryErrorText = true;
                             });
                           } else {
                             setState(() {
                               showcountryErrorText = false;
+                              countryErrorText = "";
                             });
                           }
+
+
+                        if (widget.dropDown.value == null){
+                          setState(() {
+                            showGradeErrorText = true;
+                            gradeErrorText = "Please choose grade level";
+                          });
+                        }
+
+                        else if (widget.dropDown.value == "Up to 9th grade") {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+
+                          // prefs.setString("email", widget.email.text);
+                          // prefs.setString("number", widget.phone.text);
+                          // prefs.setString("full name", widget.fullName.text);
+
+                          // setState(() {
+                          //   widget.reg10.fullName = widget.fullName.text;
+                          //   widget.reg10.email = widget.email.text;
+                          //   widget.reg10.password = widget.password.text;
+                          //   widget.reg10.phone = phoneValue;
+                          //   widget.reg10.country = widget.coutnry.value;
+                          //   widget.reg10.age = DateFormat("MM/dd/yyyy").parse(widget.age.text).toIso8601String();
+                          //   widget.reg10.grade = 10;
+                          // });
+
+                          setState(() {
+                            widget.registration.fullName = widget.fullName.text;
+                            widget.registration.email = widget.email.text;
+                            widget.registration.password = widget.password.text;
+                            widget.registration.phone = widget.phone.text;
+                            widget.registration.country = widget.coutnry.value;
+                            widget.registration.age = DateFormat("MM/dd/yyyy").parse(widget.age.text).toIso8601String();
+                            widget.registration.grade = 9;
+                          });
+                          // print(widget.registration.grade);
 
                           if (!(showEmailValidation &&
                               showcountryErrorText &&
                               showageErroText &&
                               showpasswordErroText)) {
+                          
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Grade9thFirst(
                                           registration: widget.registration,
+                                          university: widget.registration.university,
+                                          study: widget.registration.study,
+                                          academicProgram: widget.registration.proffession,
                                         )));
                           }
 
@@ -676,96 +727,25 @@ class _Registration extends State<Registration> {
                           //               registration: widget.registration,
                           //             )));
                           // }
-                        } else if (widget.dropDown.value == "10th Grade") {
-                          print(widget.age.text);
+                        } else if (widget.dropDown.value == "10th grade or above") {
+                          widget.reg10.phone = phoneValue;
+                          widget.reg10.country = widget.coutnry.value;
+                          // print(widget.age.text);
                           setState(() {
-                            widget.reg10.fullName = widget.fullName.text;
-                            widget.reg10.email = widget.email.text;
-                            widget.reg10.password = widget.password.text;
-                            widget.reg10.phone = phoneValue;
-                            widget.reg10.country = widget.coutnry.value;
-                            widget.reg10.age = DateFormat("MM/dd/yyyy").parse(widget.age.text).toIso8601String();
-                            widget.reg10.grade = widget.dropDown.value;
+                            showGradeErrorText = false;
+                            // gradeErrorText = "Please choose grade level";
                           });
 
-                          print(widget.reg10.fullName);
-                          print(widget.reg10.email);
-                          print(widget.reg10.password);
-                          print(widget.reg10.phone);
-                          print(widget.reg10.age);
-                          print(widget.reg10.country);
-                          // print(widget.coutnry.value);
-                          print(widget.reg10.grade);
 
 
-                          if (!emailMatch(widget.email.text)) {
-                            setState(() {
-                              showEmailValidation = true;
-                              emailErrorText =
-                                  "Email must be in the correct format";
-                            });
-                          } else {
-                            setState(() {
-                              showEmailValidation = false;
-                            });
-                            // Navigator.push(context, MaterialPageRoute(builder: (context) => Grade9thFirst(registration: widget.registration,)));
-                          }
-
-                          if (widget.password.text.length < 8) {
-                            setState(() {
-                              passwordErroText = "Please fill password field";
-                              showpasswordErroText = true;
-                            });
-                          } else {
-                            setState(() {
-                              showpasswordErroText = false;
-                            });
-                          }
-
-                          if (widget.confirmPassword.text.length < 8) {
-                            setState(() {
-                              confirmPasswordErrorText =
-                                  "Please fill confirm password field";
-                              showconfirmPasswordErrorText = true;
-                            });
-                          } else {
-                            setState(() {
-                              showconfirmPasswordErrorText = false;
-                            });
-                          }
-
-                          if (widget.phone.text.length == 0) {
-                            setState(() {
-                              phoneErrorText = "Please fill phone field";
-                              showphoneErrorText = true;
-                            });
-                          } else {
-                            setState(() {
-                              showphoneErrorText = false;
-                            });
-                          }
-
-                          if (widget.age.text.length == 0) {
-                            setState(() {
-                              ageErroText = "Please fill age field";
-                              showageErroText = true;
-                            });
-                          } else {
-                            setState(() {
-                              showageErroText = false;
-                            });
-                          }
-
-                          if (widget.coutnry.value == 0) {
-                            setState(() {
-                              countryErrorText = "Please fill country field";
-                              showcountryErrorText = true;
-                            });
-                          } else {
-                            setState(() {
-                              showcountryErrorText = false;
-                            });
-                          }
+                          // print(widget.reg10.fullName);
+                          // print(widget.reg10.email);
+                          // print(widget.reg10.password);
+                          // print(widget.reg10.phone);
+                          // print(widget.reg10.age);
+                          // print(widget.reg10.country);
+                          // // print(widget.coutnry.value);
+                          // print(widget.reg10.grade);
 
                           // if(!(showEmailValidation && showcountryErrorText && showageErroText && showpasswordErroText)) {
                           // Navigator.push(
@@ -776,28 +756,35 @@ class _Registration extends State<Registration> {
                           //             )));
                           // // }
                           if ((showEmailValidation == false) && (showcountryErrorText == false) && (showageErroText == false) && (showpasswordErroText == false)) {
-                                print((showEmailValidation &&
-                              showcountryErrorText &&
-                              showageErroText &&
-                              showpasswordErroText));
+                    
+                              
+                          setState(() {
+                            widget.reg10.fullName = widget.fullName.text;
+                            widget.reg10.email = widget.email.text;
+                            widget.reg10.password = widget.password.text;
+                            widget.reg10.phone = phoneValue;
+                            widget.reg10.country = widget.coutnry.value;
+                            widget.reg10.age = DateFormat("MM/dd/yyyy").parse(widget.age.text).toIso8601String();
+                            widget.reg10.grade = 10;
+                          });
 
                               // print()
-                            Navigator.push(
+                           Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Grade10thFirst(
                                           registration: widget.reg10,
+                                          university: widget.reg10.university,
+                                          study: widget.reg10.study,
+                                          academicProgram: widget.reg10.profession,
                                         )));
                           }
+
+                           
 
                           // if(showValidationOrNo && showEmailValidation) {
                           // Navigator.push(context, MaterialPageRoute(builder: (context) => Grade10thFirst(registration: widget.reg10,)));
                           // }
-                        } else {
-                          setState(() {
-                            showGradeErrorText = true;
-                            gradeErrorText = "Please choose grade level";
-                          });
                         }
                       },
                     ),
@@ -839,7 +826,7 @@ class _Registration extends State<Registration> {
                                 widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
                                 // print(widget.age.text);
                                 // updateEvent();
-                                print(choosenDate);
+                                // print(choosenDate);
                               });
 
                               state(() {
@@ -940,8 +927,8 @@ class _Registration extends State<Registration> {
 
                               state(() {
                                 month = val;
-                                choosenDate = DateTime(choosenDate.year, months.indexOf(month), choosenDate.day);
-                                print(choosenDate);
+                                choosenDate = DateTime(choosenDate.year, months.indexOf(month) + 1, choosenDate.day);
+                                // print(choosenDate);
                                 widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
                               });
 
@@ -959,13 +946,14 @@ class _Registration extends State<Registration> {
                             itemBuilder: (BuildContext context) {
                               return months.map<PopupMenuItem<String>>((String value) {
                                 return PopupMenuItem(
-                                    height: 15,
+                                    height: 25,
+                                    
                                     value: value.toString(),
                                     child: Text(
                                       value.toString(),
                                       style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 8,
+                                          fontSize: 15,
                                           color: Colors.white),
                                     ));
                               }).toList();
@@ -998,7 +986,7 @@ class _Registration extends State<Registration> {
                               state(() {
                                 year = val;
                                 choosenDate = DateTime(int.parse(year), choosenDate.month, choosenDate.day);
-                                print(choosenDate);
+                                // print(choosenDate);
                                 widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
                                 setState(() {
                                   
@@ -1026,13 +1014,13 @@ class _Registration extends State<Registration> {
                             itemBuilder: (BuildContext context) {
                               return years.map<PopupMenuItem<String>>((String value) {
                                 return PopupMenuItem(
-                                    height: 15,
+                                    height: 25,
                                     value: value.toString(),
                                     child: Text(
                                       value.toString(),
                                       style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 8,
+                                          fontSize: 13,
                                           color: Colors.white),
                                     ));
                               }).toList();

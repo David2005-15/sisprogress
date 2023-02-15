@@ -5,7 +5,7 @@ class  RegistrationGrade9 {
   String? phone;
   String? age;
   String? country;
-  String? grade;
+  int? grade;
   String? term;
   String? addmision;
   String? aid;
@@ -14,6 +14,7 @@ class  RegistrationGrade9 {
   String? university;
   String? school;
   String? proffession;
+  String? study;
 
   RegistrationGrade9({
     this.fullName,
@@ -27,6 +28,7 @@ class  RegistrationGrade9 {
     this.addmision,
     this.aid,
     this.legacy,
+    this.study,
     this.workExp
   });
 }

@@ -5,7 +5,7 @@ class RegistrationGrade10 {
   String? phone;
   String? age;
   String? country;
-  String? grade;
+  int? grade;
   String? term;
   String? addmision;
   String? aid;
@@ -18,9 +18,12 @@ class RegistrationGrade10 {
   String? honors;
   String? university;
   String? profession;
+  String? study;
+  String? school;
   // String? test;
   String? addmisionTest;
   List<String>? outActivity;
+  List<String>? satAndAct;
   String? essayWorkExp;
   String? details;
 
@@ -43,6 +46,7 @@ class RegistrationGrade10 {
     this.honors,
     this.university,
     this.profession,
+    this.study,
     // this.test,
     this.addmisionTest,
     this.outActivity,

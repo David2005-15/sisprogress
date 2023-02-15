@@ -12,13 +12,23 @@ import 'grade_10th_second.dart';
 
 class Grade10thFirst extends StatefulWidget {
   final RegistrationGrade10 registration;
-  final RadioButtonHandler term = RadioButtonHandler(value: "Start term");
-  final RadioButtonHandler plan = RadioButtonHandler(value: "Early Desicion");
-  final RadioButtonHandler score = RadioButtonHandler(value: "Yes");
-  final RadioButtonHandler legacy = RadioButtonHandler(value: "Yes");
+  final String? university;
+  final String? academicProgram;
+  final String? study;
+  final RadioButtonHandler term = RadioButtonHandler(value: null);
+  final RadioButtonHandler plan = RadioButtonHandler(value: null);
+  final RadioButtonHandler score = RadioButtonHandler(value: null);
+  final RadioButtonHandler legacy = RadioButtonHandler(value: null);
+
+  final dynamic _controller1 = TextEditingController();
+  final dynamic _controller3 = TextEditingController();
+  final dynamic _controller4 = TextEditingController();
 
   Grade10thFirst({
     required this.registration,
+    this.university,
+    this.academicProgram,
+    this.study,
     super.key
   });
 
@@ -33,10 +43,7 @@ class _Grade10thFirst extends State<Grade10thFirst> {
   List<String> scores = ["Yes", "No"];
   List<String> legacys = ["Yes", "No"];
 
-  final dynamic _controller1 = TextEditingController();
-  final dynamic _controller2 = TextEditingController();
-  final dynamic _controller3 = TextEditingController();
-  final dynamic _controller4 = TextEditingController();
+
 
   String universityErrorText = "";
   String studyErrorText = "";
@@ -45,6 +52,42 @@ class _Grade10thFirst extends State<Grade10thFirst> {
   bool showuniversityErrorText = false;
   bool showstudyErrorText = false;
   bool showacademicErrorText = false;
+  List<String> planErrorMessage = [];
+  List<String> aidErrorMessage = [];
+  List<String> legacyErrorMessage = [];
+  List<String> termErrorMessage = [];
+
+  @override
+  void initState() {
+    if(widget.university != null) {
+      widget._controller1.text = widget.university;
+    }
+
+    if(widget.study != null) {
+      widget._controller3.text = widget.study;
+    }
+
+    if(widget.academicProgram != null) {
+      widget._controller4.text = widget.academicProgram;
+    }
+
+    if(widget.registration.legacy != null) {
+      widget.legacy.value = widget.registration.legacy;
+    }
+
+    if(widget.registration.addmision != null) {
+      widget.plan.value = widget.registration.addmision;
+    }
+
+    if(widget.registration.aid != null) {
+      widget.score.value = widget.registration.aid;
+    }
+
+    if(widget.registration.term != null) {
+      widget.term.value = widget.registration.term;
+    }
+    super.initState();
+  }
 
 
 
@@ -68,11 +111,11 @@ class _Grade10thFirst extends State<Grade10thFirst> {
               const ProgressBar(isPassed: [true, false, false]),
               buildTitle(),
               buildQuestion("1. Pick your dream university"),
-              buildMode(_controller1, Universities().universities, "University", showuniversityErrorText, universityErrorText),
+              buildMode(widget._controller1, Universities().universities, "University", showuniversityErrorText, universityErrorText),
               buildQuestion("2. What academic at college Choose the interests you?"),
-              buildMode(_controller3, Universities().academics, "Profession", showacademicErrorText, academicErrorText),
+              buildMode(widget._controller3, Universities().academics, "Profession", showacademicErrorText, academicErrorText),
               buildQuestion("3. Which field of study interests you?"),
-              buildMode(_controller4, Universities().subjects, "Study", showstudyErrorText, studyErrorText),
+              buildMode(widget._controller4, Universities().subjects, "Study", showstudyErrorText, studyErrorText),
               // CustomRadio(value: term, groupValue: terms),
               buildQuestion("4. Preferred Start term options."),
               // buildAnswer(changeTerms, terms, term),
@@ -80,16 +123,18 @@ class _Grade10thFirst extends State<Grade10thFirst> {
                 handler: widget.term,
                 groupValue: terms,
                 methodParent: () => print("Hello"),
+                value: widget.term.value,
+                errors: termErrorMessage,
               ),
               buildQuestion("5. Preferred admission plan."),
               // buildAnswer(changePlan, plans, plan),
-              CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => print("Hello")),
+              CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => print("Hello"), value: widget.plan.value, errors: planErrorMessage,),
               buildQuestion("6. Do you intend to pursue need-based Financial Aid?"),
               // buildAnswer(changeScore, scores, score),
-              CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => print("Hello")),
+              CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => print("Hello"), value: widget.score.value, errors: aidErrorMessage,),
               buildQuestion("7. Are you a legacy?"),
               // buildAnswer(changeLegacy, legacys, legacy),
-              CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => print("Hello")),
+              CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => print("Hello"), value: widget.legacy.value, errors: legacyErrorMessage,),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 27, 0, 0),
                 child: Row(
@@ -100,6 +145,14 @@ class _Grade10thFirst extends State<Grade10thFirst> {
                       margin: const EdgeInsets.fromLTRB(20, 0, 0, 20),
                       child: TextButton.icon(     // <-- TextButton
                         onPressed: () {
+                          widget.registration.term = widget.term.value;
+                          widget.registration.addmision = widget.plan.value;
+                          widget.registration.aid = widget.score.value;
+                          widget.registration.legacy = widget.legacy.value;
+                          widget.registration.university = widget._controller1.text;
+                          widget.registration.study = widget._controller4.text;
+                          widget.registration.profession = widget. _controller3.text;
+
                           Navigator.pop(context);
                         },
                         icon: const ImageIcon(
@@ -133,24 +186,61 @@ class _Grade10thFirst extends State<Grade10thFirst> {
                         onPressed: () async {
                           SharedPreferences prefs = await SharedPreferences.getInstance();
                           
-                          prefs.setString("university", _controller1.text);
+                          // prefs.setString("university", widget._controller1.text);
                           widget.registration.term = widget.term.value;
                           widget.registration.addmision = widget.plan.value;
                           widget.registration.aid = widget.score.value;
                           widget.registration.legacy = widget.legacy.value;
+                          widget.registration.university = widget._controller1.text;
+                          widget.registration.study = widget._controller4.text;
+                          widget.registration.profession = widget. _controller3.text;
+                          
 
-                          if(_controller1.text == "University") {
+
+                          setState(() {
+                            planErrorMessage = [];
+                            aidErrorMessage = [];
+                            legacyErrorMessage = [];
+                            termErrorMessage = [];
+                          });
+
+                          if(widget.plan.value == null) {
+                            setState(() {
+                              planErrorMessage.add("Please select your addmision plan");
+                            });
+                          }
+
+                          if(widget.term.value == null) {
+                            setState(() {
+                              termErrorMessage.add("Please select your start term");
+                            });
+                          }
+
+                          if(widget.score.value == null) {
+                            setState(() {
+                              aidErrorMessage.add("Please select your financial aid");
+                            });
+                          }
+
+                          if(widget.legacy.value == null) {
+                            setState(() {
+                              legacyErrorMessage.add("Please select your legacy");
+                            });
+                          }
+
+                          if(widget._controller1.text == "") {
                             setState(() {
                               showuniversityErrorText= true;
                               universityErrorText = "Please select your university";
                             });
                           } else {
                             setState(() {
+                              academicErrorText = "";
                               showuniversityErrorText= false;
                             });
                           }
 
-                          if(_controller3.text == "Profession") {
+                          if(widget._controller3.text == "") {
                             setState(() {
                               showacademicErrorText= true;
                               academicErrorText = "Please select your academic program";
@@ -158,10 +248,11 @@ class _Grade10thFirst extends State<Grade10thFirst> {
                           } else {
                             setState(() {
                               showacademicErrorText= false;
+                              academicErrorText = "";
                             });
                           }
 
-                          if(_controller4.text == "Study") {
+                          if(widget._controller4.text == "") {
                             setState(() {
                               showstudyErrorText = true;
                               studyErrorText = "Please select your study";
@@ -169,10 +260,11 @@ class _Grade10thFirst extends State<Grade10thFirst> {
                           } else {
                             setState(() {
                               showstudyErrorText = false;
+                              studyErrorText = "";
                             });
                           }
               
-                          if(!(showstudyErrorText && showacademicErrorText && showuniversityErrorText)) {
+                          if((showstudyErrorText == false) && (showacademicErrorText == false) && (showuniversityErrorText == false) && aidErrorMessage.isEmpty && legacyErrorMessage.isEmpty && termErrorMessage.isEmpty && planErrorMessage.isEmpty) {
                             await Navigator.push(context,  MaterialPageRoute(builder: (context) => Grade10thSecond(reg: widget.registration,)));
                           }
                         },
@@ -235,7 +327,7 @@ Container buildMode(
     TextEditingController controller,
     List<String> items,
     String lableText, bool? showValidationOrNo, String errorText) {
-  controller.text = lableText;
+  // controller.text = lableText;
   return Container(
     margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
     child: LayoutBuilder(
@@ -250,7 +342,7 @@ Container buildMode(
         controller: controller,
         decoration: InputDecoration(
           alignLabelWithHint: true,
-          // labelText: lableText,
+          labelText: lableText,
           // hintText: widget.hintText,
           errorText: showValidationOrNo ?? false ? errorText: null,
           errorStyle: GoogleFonts.poppins(

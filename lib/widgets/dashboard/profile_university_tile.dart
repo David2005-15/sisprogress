@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,223 +66,237 @@ class _UniversityTile extends State<UniversityTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // width: double.infinity,
-      // height: widget.mode ? 300: 112,
-      margin: const EdgeInsets.fromLTRB(16, 25, 16, 0),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: const <BoxShadow>[
-            BoxShadow(offset: Offset(0, 10), spreadRadius: 0, blurRadius: 30)
-          ],
-          gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: <Color>[
-                Color(0xff272935),
-                Color(0xff121623),
-              ])),
+    return InkWell(
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      onTap: () {
+        if(widget.mode == true) {
+          _controller1 = TextEditingController(text: widget.selectedUniversity);
+          _controller2 = TextEditingController(text: widget.academicProgram);
+          _controller3 = TextEditingController(text: widget.study);
+          widget.onSave();
 
-      child: Wrap(
-        children: [
-          Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(20, 13, 0, 0),
-                    child: Text(
-                      "University choice",
-                      style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: const Color(0xffD2DAFF)),
-                    ),
-                  ),
-                  widget.mode
-                      ? Container()
-                      : InkWell(
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          onTap: widget.onEdit,
-                          child: Container(
-                            margin: const EdgeInsets.fromLTRB(0, 13, 15, 0),
-                            child: Text(
-                              "Edit",
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 13,
-                                  color: Colors.grey),
-                            ),
-                          ),
-                        )
-                ],
-              ),
-              widget.mode
-                  ? buildMode(
-                      _controller1,
-                      widget.university,
-                      dreamPointCont,
-                      targetPointCont,
-                      safetyPointCont,
-                      widget.points,
-                      widget.selectedUniversity, widget.dreamPoint, widget.targetPoint, widget.safetyPoint)
-                  : Container(
-                      margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(20, 0, 15, 0),
-                            child: Text(
-                              "University",
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(0, 0, 18, 0),
-                            child: Text(
-                              widget.selectedUniversity,
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 12,
-                                  color: Colors.grey),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-              widget.mode
-                  ? buildMode2(_controller2, Universities().academics, dreamPointCont,
-                      targetPointCont, safetyPointCont, widget.points, widget.academicProgram, null, null, null)
-                  : Container(
-                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(20, 0, 30, 0),
-                            child: Text(
-                              "Academic Programm",
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(0, 0, 18, 0),
-                            child: Text(
-                              widget.academicProgram,
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 12,
-                                  color: Colors.grey),
-                            ),
-                          )
-                        ],
+          
+        }
+      },
+      child: Container(
+        // width: double.infinity,
+        // height: widget.mode ? 300: 112,
+        margin: const EdgeInsets.fromLTRB(16, 25, 16, 0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            boxShadow: const <BoxShadow>[
+              BoxShadow(offset: Offset(0, 10), spreadRadius: 0, blurRadius: 30)
+            ],
+            gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+                  Color(0xff272935),
+                  Color(0xff121623),
+                ])),
+    
+        child: Wrap(
+          children: [
+            Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(20, 13, 0, 0),
+                      child: Text(
+                        "University choice",
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: const Color(0xffD2DAFF)),
                       ),
                     ),
                     widget.mode
-                  ? buildMode2(_controller3, Universities().subjects, dreamPointCont,
-                      targetPointCont, safetyPointCont, widget.points, widget.study, null, null, null)
-                  : Container(
-                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(20, 0, 30, 15),
-                            child: Text(
-                              "Study",
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(0, 0, 18, 15),
-                            child: Text(
-                              widget.study,
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 12,
-                                  color: Colors.grey),
+                        ? Container()
+                        : InkWell(
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onTap: widget.onEdit,
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(0, 13, 15, 0),
+                              child: Text(
+                                "Edit",
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                    color: Colors.grey),
+                              ),
                             ),
                           )
-                        ],
+                  ],
+                ),
+                widget.mode
+                    ? buildMode(
+                        _controller1,
+                        widget.university,
+                        dreamPointCont,
+                        targetPointCont,
+                        safetyPointCont,
+                        widget.points,
+                        widget.selectedUniversity, widget.dreamPoint, widget.targetPoint, widget.safetyPoint)
+                    : Container(
+                        margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(20, 0, 15, 0),
+                              child: Text(
+                                "University",
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(0, 0, 18, 0),
+                              child: Text(
+                                widget.selectedUniversity,
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 12,
+                                    color: Colors.grey),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    
-              widget.mode
-                  ? InputBox(
-                      textInputType: TextInputType.number,
-                      onChanged: (val) {},
-                      context: context,
-                      controller: dreamPointCont,
-                      isPassword: false,
-                      enabled: true,
-                    )
-                  : Container(),
-              widget.mode
-                  ? InputBox(
-                      textInputType: TextInputType.number,
-                      onChanged: (val) {},
-                      context: context,
-                      controller: targetPointCont,
-                      isPassword: false,
-                      enabled: true,
-                    )
-                  : Container(),
-              widget.mode
-                  ? InputBox(
-                      textInputType: TextInputType.number,
-                      onChanged: (val) {},
-                      context: context,
-                      controller: safetyPointCont,
-                      isPassword: false,
-                      enabled: true,
-                    )
-                  : Container(),
-              widget.mode
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(),
-                        Button(
-                            text: "Change ",
-                            onPressed: () async {
-                              // _dialogBuilder(context, widget.onSave, {
-                              //   "uni": _controller1.text,
-                              //   "target": targetPointCont.text,
-                              //   "dream": dreamPointCont.text,
-                              //   "safety": safetyPointCont.text
-                              // });
-
-                              var body = {
-                                "university": _controller1.text,
-                                "academicProgram": _controller2.text,
-                                "study": _controller3.text
-                              };
-
-                              await httpClient.updateUniversityAndAcademic(body);
-                              
-                              widget.onSave();
-                            },
-                            height: 38,
-                            width: 128
-                          ),
-                      ],
-                    )
-                  : Container()
-            ],
-          )
-        ],
+                widget.mode
+                    ? buildMode2(_controller2, Universities().academics, dreamPointCont,
+                        targetPointCont, safetyPointCont, widget.points, widget.academicProgram, null, null, null)
+                    : Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(20, 0, 30, 0),
+                              child: Text(
+                                "Academic Programm",
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(0, 0, 18, 0),
+                              child: Text(
+                                widget.academicProgram,
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 12,
+                                    color: Colors.grey),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      widget.mode
+                    ? buildMode2(_controller3, Universities().subjects, dreamPointCont,
+                        targetPointCont, safetyPointCont, widget.points, widget.study, null, null, null)
+                    : Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(20, 0, 30, 15),
+                              child: Text(
+                                "Study",
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(0, 0, 18, 15),
+                              child: Text(
+                                widget.study,
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 12,
+                                    color: Colors.grey),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      
+                widget.mode
+                    ? InputBox(
+                        textInputType: TextInputType.number,
+                        onChanged: (val) {},
+                        context: context,
+                        controller: dreamPointCont,
+                        isPassword: false,
+                        enabled: true,
+                      )
+                    : Container(),
+                widget.mode                     
+                    ? InputBox(
+                        textInputType: TextInputType.number,
+                        onChanged: (val) {},
+                        context: context,
+                        controller: targetPointCont,
+                        isPassword: false,
+                        enabled: true,
+                      )
+                    : Container(),
+                widget.mode
+                    ? InputBox(
+                        textInputType: TextInputType.number,
+                        onChanged: (val) {},
+                        context: context,
+                        controller: safetyPointCont,
+                        isPassword: false,
+                        enabled: true,
+                      )
+                    : Container(),
+                widget.mode
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(),
+                          Button(
+                              text: "Change ",
+                              onPressed: () async {
+                                // _dialogBuilder(context, widget.onSave, {
+                                //   "uni": _controller1.text,
+                                //   "target": targetPointCont.text,
+                                //   "dream": dreamPointCont.text,
+                                //   "safety": safetyPointCont.text
+                                // });
+    
+                                var body = {
+                                  "university": _controller1.text,
+                                  "academicProgram": _controller2.text,
+                                  "study": _controller3.text
+                                };
+    
+                                await httpClient.updateUniversityAndAcademic(body);
+                                
+                                widget.onSave();
+                              },
+                              height: 38,
+                              width: 128
+                            ),
+                        ],
+                      )
+                    : Container()
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

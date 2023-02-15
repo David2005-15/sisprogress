@@ -6,11 +6,15 @@ class CustomRadioGroup extends StatefulWidget {
   final RadioButtonHandler handler;
   final VoidCallback methodParent;
   final List<String> groupValue;
+  final String? value;
+  List<String>? errors;
 
-  const CustomRadioGroup({
+  CustomRadioGroup({
     required this.methodParent,
     required this.handler, 
     required this.groupValue, 
+    this.errors,
+    this.value,
     super.key, 
   });
 
@@ -19,10 +23,36 @@ class CustomRadioGroup extends StatefulWidget {
 }
 
 class CustomRadioGroupState extends State<CustomRadioGroup> {
-  bool selectedFirst = true;
+  bool selectedFirst = false;
   bool selectedSecond = false;
   bool selectedThrid = false;
   bool selectedFourth = false;
+
+  @override
+  void initState() {
+    if(widget.groupValue[0] == widget.value) {
+      selectedFirst = true;
+      selectedSecond = false;
+      selectedThrid = false;
+      selectedFourth = false;
+    } else if(widget.groupValue[1] == widget.value) {
+      selectedFirst = false;
+      selectedSecond = true;
+      selectedThrid = false;
+      selectedFourth = false;
+    } else if(widget.groupValue[2] == widget.value) {
+      selectedFirst = false;
+      selectedSecond = false;
+      selectedThrid = true;
+      selectedFourth = false;
+    } else  {
+      selectedFirst = false;
+      selectedSecond = false;
+      selectedThrid = false;
+      selectedFourth = false;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +232,27 @@ class CustomRadioGroupState extends State<CustomRadioGroup> {
                 ),
               )
             ],
-          )
+          ),
+
+          widget.errors != null ? Container(
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widget.errors!.map((e) {
+                return Text(
+                  e,
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 10,
+                    color: const Color(0xffE31F1F)
+                  ),
+                );
+              }).toList(),
+            ),
+          ): Container()
         ],
       ),
     );

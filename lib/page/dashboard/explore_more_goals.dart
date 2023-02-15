@@ -39,7 +39,12 @@ class _ExploreMoreGoals extends State<ExploreMoreGoals> {
 
   @override
   Widget build(BuildContext context) {
-    return body;
+    return WillPopScope(
+      onWillPop: () {
+        return Future.value(false);
+      },
+      child: body
+    );
   }
 
 }
