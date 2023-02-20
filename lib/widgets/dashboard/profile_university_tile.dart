@@ -283,7 +283,9 @@ class _UniversityTile extends State<UniversityTile> {
                                   "study": _controller3.text
                                 };
     
-                                await httpClient.updateUniversityAndAcademic(body);
+                                await httpClient.updateUniversityAndAcademic(body).then((value) {
+                                  widget.onSave();
+                                });
                                 
                                 widget.onSave();
                               },

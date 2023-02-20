@@ -58,10 +58,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
       } else if(widget.ninthQuest.value == "Yes") {
         isVisible = false;
       }
-      print("----------------------------");
-
-      print(isVisible);
-      print("----------------------------");
       // print()
     });
   }
@@ -121,10 +117,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
     }
 
     // print(widget.wo);
-    print("---------------------------");
-    print(widget.reg.details);
-    print(widget.ninthQuest.value);
-    print("-------------------------");
     if(widget.reg.details != null) {
       if(widget.reg.details == "No") {
         isVisible = false;
@@ -178,6 +170,15 @@ class _Grade10thSecond extends State<Grade10thSecond> {
     super.initState();
   }
 
+  List<String> applyingFromErrors = [];
+  List<String> honorsErrorText = [];
+  List<String> addmisionTest = [];
+  List<String> satOrAcrErrorText = [];
+  String activityErrorText = "";
+  bool validSchool = false;
+  bool anyError = false;
+  bool canPass = true;
+ 
   @override
   Widget build(BuildContext context) {
     // print(actions);
@@ -197,11 +198,28 @@ class _Grade10thSecond extends State<Grade10thSecond> {
             children: <Widget> [
               const ProgressBar(isPassed: [true, true, false]),
               buildTitle(),
+
+              Visibility(
+                  visible: anyError,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    child: Text(
+                      "This email is already been used, please try again",
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11,
+                        color: const Color(0xffE31F1F)
+                      ),
+                    ),
+                  )
+                ),
               buildQuestion("1. Are you applying from a school outside the US and Canada?"),
               // buildAnswer(getSeconeQuest, secondQuestion, secondQuest),
-              CustomRadio(handler: widget.secondQuest, groupValue: secondQuestion, methodParent: () => print("Hello"), value: widget.secondQuest.value,),
+              CustomRadio(handler: widget.secondQuest, groupValue: secondQuestion, methodParent: () => print("Hello"), value: widget.secondQuest.value, errors: applyingFromErrors,),
               buildQuestion("2. Do you wish to submit SAT or ACT test scores?"),
-              CustomRadio(handler: widget.thirdQuest, groupValue: noOrYes, methodParent: satOrAct, value: widget.thirdQuest.value,),
+              CustomRadio(handler: widget.thirdQuest, groupValue: noOrYes, methodParent: satOrAct, value: widget.thirdQuest.value, errors: satOrAcrErrorText,),
 
               Visibility(
                 visible: testScore,
@@ -312,13 +330,13 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
               ),
               buildQuestion("3. What is your current high school?"),
-              InputBox(textInputType: TextInputType.text, onChanged: (String val) {print("Hello World");}, context: context, controller: widget.controller, isPassword: false, initialValue: "School"),
+              InputBox(textInputType: TextInputType.text, onChanged: (String val) {print("Hello World");}, context: context, controller: widget.controller, isPassword: false, initialValue: "School", showValidationOrNot: validSchool, errorText: "This field is required",),
               buildQuestion("4. Do you wish to report any honors related to your academic achievements?"),
               // buildAnswer(getFifthQuest, yesOrNo, fifthQuest),
-              CustomRadio(handler: widget.fifthQuest, groupValue: yesOrNo, methodParent: () => print("Hello"), value: widget.fifthQuest.value,),
+              CustomRadio(handler: widget.fifthQuest, groupValue: yesOrNo, methodParent: () => print("Hello"), value: widget.fifthQuest.value, errors: honorsErrorText,),
               buildQuestion("5. Did you take any admission tests?"),
               // buildAnswer(getSixthQuest, yesOrNo, sixthQuest),
-              CustomRadio(handler: widget.sixthQuest, groupValue: yesOrNo, methodParent: () => print("Hello"), value: widget.sixthQuest.value,),
+              CustomRadio(handler: widget.sixthQuest, groupValue: yesOrNo, methodParent: () => print("Hello"), value: widget.sixthQuest.value, errors: addmisionTest,),
               buildQuestion("6. Please report up to 10 activities that can help colleges better understand your life outside of the classroom "),
               Container(
                 alignment: Alignment.centerLeft,
@@ -684,6 +702,18 @@ class _Grade10thSecond extends State<Grade10thSecond> {
               // buildActivity([2, 1, 1], widget.activites2, ["Reading", "Sport", "Run"]),
               // buildActivity([1, 2, 1], widget.activites2, ["Games", "Writing", "Walk"]),
               // buildActivity([2, 1, 1], widget.activites2, ["Dancing", "TV", "Coding"]),
+              Container(
+                margin: const EdgeInsets.fromLTRB(23, 10, 23, 0),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  activityErrorText,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 10,
+                    color: const Color(0xffE31F1F)
+                  ),
+                ),
+              ),
               buildQuestion("7. Please briefly elaborate on your extracurricular activities or work experiences."),
               Container(
                 margin: const EdgeInsets.fromLTRB(23, 10, 23, 0),
@@ -698,12 +728,19 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   controller: widget.work,
                   expands: false,
                   maxLines: 8,
+                  maxLength: 160,
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w300,
                     fontSize: 12,
                     color: const Color(0xffD2DAFF)
                   ),
                   decoration: InputDecoration(
+                    counterStyle: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                      color: const Color(0xffD2DAFF)
+                    ),
+                    errorText: !canPass ? "Please fill required fields" : null,
                     hintText: "Type about your activites or work experiance",
                     hintStyle: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
@@ -725,18 +762,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 ),
               ),
         
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 7, 23, 0),
-                alignment: Alignment.centerRight,
-                child: Text(
-                  text,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12,
-                    color: const Color(0xffD2DAFF)
-                  )
-                ),
-              ),
+              
               buildQuestion("8. Do you wish to provide details of circumstances or qualifications not reflected in the registration form"),
               CustomRadio(handler: widget.ninthQuest, groupValue: noOrYes, key: _key, methodParent: changeIsVisible, value: widget.ninthQuest.value),
               Visibility(
@@ -756,6 +782,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   controller: widget.work2,
                   expands: false,
                   maxLines: 8,
+                  maxLength: 160,
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w300,
                     fontSize: 12,
@@ -763,6 +790,11 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   ),
                   decoration: InputDecoration(
                     hintText: "Type about your activites or work experiance",
+                    counterStyle: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    color: const Color(0xffD2DAFF)
+                  ),
                     hintStyle: GoogleFonts.poppins(
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
@@ -780,19 +812,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                       borderSide: BorderSide(color: Color(0xffD2DAFF))
                     ),
                   ),
-                ),
-              ),
-        
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 7, 23, 0),
-                alignment: Alignment.centerRight,
-                child: Text(
-                  text,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12,
-                    color: const Color(0xffD2DAFF)
-                  )
                 ),
               ),
                   ],
@@ -813,9 +832,85 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 } else {
                   widget.reg.details = "No";
                 }
-                await httpClient.registerForGrade10(widget.reg);
+                // await httpClient.registerForGrade10(widget.reg);
 
-                Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.reg.email,)));
+                setState(() {
+                  applyingFromErrors = [];
+                  honorsErrorText = [];
+                  addmisionTest = [];
+                  satOrAcrErrorText = [];
+                  validSchool = false;
+                  activityErrorText = "";
+                });
+
+                if(widget.secondQuest.value == null) {
+                  setState(() {
+                    applyingFromErrors.add("This field is required");
+                  });                
+                } 
+
+                if(widget.fifthQuest.value == null) {
+                  setState(() {
+                    // Do you wish to report any honors related to your academic achievements?
+                    honorsErrorText.add("This field is required");
+                  });                
+                } 
+
+                if(widget.sixthQuest.value == null) {
+                  setState(() {
+                    addmisionTest.add("This field is required");
+                  });
+                }
+
+                if(widget.controller.text.isEmpty) {
+                  setState(() {
+                    validSchool = true;
+                  });
+                }
+
+                if(widget.work.text.length == 0) {
+                  setState(() {
+                    canPass = false;
+                  });
+                } else {
+                  setState(() {
+                    canPass = true;
+                  });
+                }
+
+                if(widget.thirdQuest.value == null) {
+                  setState(() {
+                    satOrAcrErrorText.add("This field is required");
+                  });
+                }
+
+                if(widget.thirdQuest.value == "Yes") {
+                  setState(() {
+                    if(whichTest.isEmpty) {
+                      satOrAcrErrorText.add("This field is required");
+                    }
+                  });
+                }
+
+                if(actions.isEmpty) {
+                  setState(() {
+                    activityErrorText = "Please select at least 2 distinct activities";
+                  });
+                }
+
+                if((activityErrorText == "") && satOrAcrErrorText.isEmpty && !validSchool && addmisionTest.isEmpty && honorsErrorText.isEmpty && applyingFromErrors.isEmpty) {
+                   var value = await httpClient.registerForGrade10(widget.reg);
+                   if(value == "user alredy exit") {
+                    setState(() {
+                      anyError = true;
+                    });
+                  } else {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.reg.email,)));
+                  } 
+
+                  
+                }
+
               }, 
               () {
                 widget.reg.place = widget.secondQuest.value;

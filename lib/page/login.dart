@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
@@ -8,10 +6,9 @@ import 'package:sis_progress/page/home.dart';
 import 'package:sis_progress/page/registration.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
-import 'package:sis_progress/widgets/drawers/network_row.dart';
 import 'package:sis_progress/widgets/input_box.dart';
-
 import 'dashboard/scaffold_keeper.dart';
+
 
 class LoginPage extends StatefulWidget {
   final TextEditingController fullName = TextEditingController();
@@ -44,7 +41,6 @@ class _LoginPage extends State<LoginPage> {
   final RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
   bool emailMatch(String email) {
-    print(emailRegex.hasMatch(email));
     return emailRegex.hasMatch(email);
   }
 
@@ -75,8 +71,8 @@ class _LoginPage extends State<LoginPage> {
               children: <Widget> [
                 buildTitle(),
                 // InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.fullName, isPassword: false, initialValue: "Full Name", errorText: fullNameErrorText, showValidationOrNot: showValidationOrNo,),
-                InputBox(textInputType: TextInputType.emailAddress, onChanged: (String val) {print(val);}, context: context, controller: widget.email, isPassword: false, initialValue: "Email", errorText: emailErrorText, showValidationOrNot: showEmailValidation,),
-                InputBox(textInputType: TextInputType.text, onChanged: (String val) {print(val);}, context: context, controller: widget.password, isPassword: true, initialValue: "Password"),
+                InputBox(textInputType: TextInputType.emailAddress, onChanged: (String val) {}, context: context, controller: widget.email, isPassword: false, initialValue: "Email", errorText: emailErrorText, showValidationOrNot: showEmailValidation,),
+                InputBox(textInputType: TextInputType.text, onChanged: (String val) {}, context: context, controller: widget.password, isPassword: true, initialValue: "Password"),
                 Visibility(
                   visible: showErrorVisibility,
                   child: Container(
@@ -121,7 +117,6 @@ class _LoginPage extends State<LoginPage> {
     
                     try {
                       var value = await httpClient.loginUser(widget.email.text, widget.password.text);
-                      print(value["success"]);
                       if(value["success"]) {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
                       }
@@ -209,50 +204,48 @@ Container buildTitle() {
   );
 }
 
-Container buildLowerRow(bool isVisible, Function() onChange, BuildContext context, Color iconColor, Color borderColor) {
-  return Container(
-    child: FittedBox(
-      fit: BoxFit.contain,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget> [
-          Container(
-            margin: const EdgeInsets.fromLTRB(5, 5, 15, 0),
-            child: Row(
-              children: <Widget> [
-                buildCheckbox(iconColor: iconColor, borderColor: borderColor, onChange: onChange),
-                
-                Text(
-                  "Remember me",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13,
-                    color: const Color(0xff355CCA)
-                ),
-              )
-            ],
-            ),
-          ),
-    
-          Container(
-            margin: const EdgeInsets.fromLTRB(15, 5, 5, 0),
-            child: TextButton(
-              child: Text(
-                "Forget Password?",
+FittedBox buildLowerRow(bool isVisible, Function() onChange, BuildContext context, Color iconColor, Color borderColor) {
+  return FittedBox(
+    fit: BoxFit.contain,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget> [
+        Container(
+          margin: const EdgeInsets.fromLTRB(5, 5, 15, 0),
+          child: Row(
+            children: <Widget> [
+              buildCheckbox(iconColor: iconColor, borderColor: borderColor, onChange: onChange),
+
+              Text(
+                "Remember me",
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w400,
                   fontSize: 13,
                   color: const Color(0xff355CCA)
-                ),
               ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword()));
-              },
+            )
+          ],
+          ),
+        ),
+
+        Container(
+          margin: const EdgeInsets.fromLTRB(15, 5, 5, 0),
+          child: TextButton(
+            child: Text(
+              "Forget Password?",
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w400,
+                fontSize: 13,
+                color: const Color(0xff355CCA)
+              ),
             ),
-          )
-        ],
-      ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword()));
+            },
+          ),
+        )
+      ],
     ),
   );
 }

@@ -45,6 +45,11 @@ class _Registration extends State<Registration> {
   Color containSmall = const Color(0xffFE8F8F);
   Color cotain8charecters = const Color(0xffFE8F8F);
   Color containSpecial = const Color(0xffFE8F8F);
+  bool isCaptial = false;
+  bool isNumber = false;
+  bool isSmall = false;
+  bool isCharecter = false;
+  bool isSymbol = false;
 
   void changeColor() {
     capitalLetter = const Color(0xffFE8F8F);
@@ -53,23 +58,35 @@ class _Registration extends State<Registration> {
     cotain8charecters = const Color(0xffFE8F8F);
     containSpecial = const Color(0xffFE8F8F);
 
+    isCaptial = false;
+    isNumber = false;
+    isSmall = false;
+    isCharecter = false;
+    isSymbol = false;
+
     setState(() {
       if (widget.password.text.contains(RegExp(r'[0-9]'))) {
         containNumber = const Color(0xff94B49F);
+        isNumber = true;
       }
 
       if (widget.password.text.contains(RegExp(r'[A-Z]'))) {
         capitalLetter = const Color(0xff94B49F);
+        isCaptial = true;
       }
 
       if (widget.password.text.contains(RegExp(r'[a-z]'))) {
         containSmall = const Color(0xff94B49F);
+        isSmall = true;
       }
 
       if (widget.password.text.contains(RegExp(r'[^\w\s]+')) &&
           widget.password.text.length >= 8) {
         cotain8charecters = const Color(0xff94B49F);
         containSpecial = const Color(0xff94B49F);
+
+        isCharecter = true;
+        isSymbol = true;
       }
     });
   }
@@ -115,50 +132,11 @@ class _Registration extends State<Registration> {
     "December"
   ];
 
-  List<String> years = [
-    
-  ];
+  List<String> years = List.generate(74, (i) => (2023 - i).toString());
 
   bool emailMatch(String email) {
     return emailRegex.hasMatch(email);
   }
-
-  // void changeValidation() {
-  //   setState(() {
-  //     length8 = false;
-  //     hasNumber = false;
-  //     hasCapital = false;
-  //     hasSmall = false;
-
-  //     if(widget.password.text.length >= 8) {
-  //       length8 = true;
-  //     }
-
-  //     if(widget.password.text.contains(RegExp(r'[0-9]'))) {
-  //       hasNumber = true;
-  //     }
-
-  //     if(widget.password.text.contains(RegExp(r'[A-Z]'))) {
-  //       hasCapital = true;
-  //     }
-
-  //     if(widget.password.text.contains(RegExp(r'[a-z]'))) {
-  //       hasSmall = true;
-  //     }
-  //   });
-  // }
-
-  // void changeColor() {
-  //   setState(() {
-  //     color = const Color(0xffFE8F8F);
-
-  //     if(length8 == true && hasNumber == true && hasCapital == true && hasSmall == true) {
-  //       color = const Color(0xff94B49F);
-  //     } else {
-  //       color = const Color(0xffFE8F8F);
-  //     }
-  //   });
-  // }
 
   String month = DateFormat("MMMM").format(DateTime.now());
   String year = DateTime.now().year.toString();
@@ -174,9 +152,7 @@ class _Registration extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
-    for (int i = 2023; i >= 1950; i--) {
-      years.add(i.toString());
-    }
+
 
     String initialCountry = 'NG';
     PhoneNumber number = PhoneNumber(isoCode: 'AM');
@@ -222,18 +198,7 @@ class _Registration extends State<Registration> {
                     showValidationOrNot: showFullNameErrorText,
                     disabledSymbols: true,
                   ),
-                  // InputBox(
-                  //   controller: widget.email,
-                  //   context: context,
-                  //   isPassword: false,
-                  //   initialValue: "Email",
-                  //   onChanged: (String val) {
-                  //     print(val);
-                  //   },
-                  //   textInputType: TextInputType.emailAddress,
-                  //   errorText: emailErrorText,
-                  //   showValidationOrNot: showEmailValidation,
-                  // ),
+
                   Container(
                     margin: EdgeInsets.fromLTRB(23, 25, 23, 0),
                     child: TextFormField(
@@ -504,7 +469,7 @@ class _Registration extends State<Registration> {
                           errorText:
                               showageErroText ?? false ? ageErroText : null,
                           alignLabelWithHint: true,
-                          labelText: "Age",
+                          labelText: "Birth date",
                           errorStyle: GoogleFonts.poppins(
                               fontWeight: FontWeight.w400,
                               fontSize: 10,
@@ -603,7 +568,7 @@ class _Registration extends State<Registration> {
                             });
                           }
 
-                          if (widget.password.text.length < 8) {
+                          if (!isCharecter || !isSymbol || !isCaptial || !isSmall || !isNumber) {
                             setState(() {
                               passwordErroText = "Please fill valid password";
                               showpasswordErroText = true;
@@ -704,7 +669,8 @@ class _Registration extends State<Registration> {
                           if (!(showEmailValidation &&
                               showcountryErrorText &&
                               showageErroText &&
-                              showpasswordErroText)) {
+                              showpasswordErroText && 
+                              showconfirmPasswordErrorText)) {
                           
                             Navigator.push(
                                 context,
@@ -716,17 +682,6 @@ class _Registration extends State<Registration> {
                                           academicProgram: widget.registration.proffession,
                                         )));
                           }
-
-                          // print(emailErrorText);
-
-                          // if(showValidationOrNo && showEmailValidation) {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => Grade9thFirst(
-                          //               registration: widget.registration,
-                          //             )));
-                          // }
                         } else if (widget.dropDown.value == "10th grade or above") {
                           widget.reg10.phone = phoneValue;
                           widget.reg10.country = widget.coutnry.value;
@@ -736,27 +691,7 @@ class _Registration extends State<Registration> {
                             // gradeErrorText = "Please choose grade level";
                           });
 
-
-
-                          // print(widget.reg10.fullName);
-                          // print(widget.reg10.email);
-                          // print(widget.reg10.password);
-                          // print(widget.reg10.phone);
-                          // print(widget.reg10.age);
-                          // print(widget.reg10.country);
-                          // // print(widget.coutnry.value);
-                          // print(widget.reg10.grade);
-
-                          // if(!(showEmailValidation && showcountryErrorText && showageErroText && showpasswordErroText)) {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => Grade10thFirst(
-                          //               registration: widget.reg10,
-                          //             )));
-                          // // }
-                          if ((showEmailValidation == false) && (showcountryErrorText == false) && (showageErroText == false) && (showpasswordErroText == false)) {
-                    
+                          if ((showEmailValidation == false) && (showcountryErrorText == false) && (showageErroText == false) && (showpasswordErroText == false) && (showconfirmPasswordErrorText == false)) {
                               
                           setState(() {
                             widget.reg10.fullName = widget.fullName.text;
@@ -817,21 +752,17 @@ class _Registration extends State<Registration> {
                             rowHeight: 30,
                             selectedDayPredicate: (day) => isSameDay(day, choosenDate),
                             onDaySelected: (selectedDay, focusedDay) {
-                              state(() {
-                                
-                              });
+                              
 
                               state(() {
+                                DateFormat monthFormat = DateFormat.MMMM();
+                                DateTime monthr = monthFormat.parse(month);
                                 choosenDate = selectedDay;
+                                choosenDate = DateTime(choosenDate.year, monthr.month, choosenDate.day);
                                 widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
-                                // print(widget.age.text);
-                                // updateEvent();
-                                // print(choosenDate);
                               });
 
-                              state(() {
-                                
-                              });
+                              
                             },
                             calendarBuilders: CalendarBuilders(
                               selectedBuilder: (context, day, focusedDay) {
@@ -921,20 +852,33 @@ class _Registration extends State<Registration> {
                             onSelected: (val) {
                               // widget.onMonthSelect(
                               //     val.toString());
-                              setState(() {
-                                
-                              });
 
                               state(() {
-                                month = val;
-                                choosenDate = DateTime(choosenDate.year, months.indexOf(month) + 1, choosenDate.day);
+                                // month = val;
+                                // // print(month);
+                                
+                                // var formatter = DateFormat('MMMM');
+                                // var date = formatter.parse(month);
+                                // var monthNumber = date.month;
+                                // // var monthNumber = DateTime.parse('2022-$month-01').month;
+                                // choosenDate = DateTime(choosenDate.year, monthNumber, choosenDate.day);
+
+                                // print(choosenDate.month);
                                 // print(choosenDate);
-                                widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
+                                
+                                // // print(choosenDate);
+                                // widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
+                                month = val;
+                                print(month);
+                                DateFormat monthFormat = DateFormat.MMMM();
+                                DateTime monthr = monthFormat.parse(month);
+                                print(monthr.month);
+                                int monthIndex = monthr.month;
+                                choosenDate =
+                                    DateTime(choosenDate.year, monthIndex, choosenDate.day);
+                                print(choosenDate);
                               });
 
-                              setState(() {
-                                
-                              });
                             },
                             icon: const ImageIcon(
                               AssetImage("assets/Vectorchevorn.png"),
@@ -986,6 +930,9 @@ class _Registration extends State<Registration> {
                               state(() {
                                 year = val;
                                 choosenDate = DateTime(int.parse(year), choosenDate.month, choosenDate.day);
+
+                                print(choosenDate.month);
+                                print(choosenDate);
                                 // print(choosenDate);
                                 widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
                                 setState(() {

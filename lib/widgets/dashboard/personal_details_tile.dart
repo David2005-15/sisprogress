@@ -41,8 +41,12 @@ class PersonalDetails extends StatelessWidget {
   TextEditingController instagram = TextEditingController();
 
 
-  bool isSecondaryEmail = false;
-  String removeText = "Add secondary email";
+  // bool isSecondaryEmail = false;
+  // String removeText = "Add secondary email";
+
+  bool isFullNameEmpty = false;
+  bool isPhoneEmpty = false;
+
 
   List<String> months = [
     "January",
@@ -142,7 +146,7 @@ class PersonalDetails extends StatelessWidget {
                     )
                   ],
                 ),
-                  mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: fullName, isPassword: false, initialValue: "Full Name", disabledSymbols: true,) : Container(
+                  mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: fullName, isPassword: false, initialValue: "Full Name", disabledSymbols: true, showValidationOrNot: isFullNameEmpty, errorText: "Fill this field",) : Container(
                   margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,7 +179,7 @@ class PersonalDetails extends StatelessWidget {
                 ),
                 
         
-                mode ?  InputBox(textInputType: TextInputType.phone, onChanged: (val) {}, context: context, controller: number, isPassword: false, initialValue: "Phone", disabledSymbols: true,) : Container(
+                mode ?  InputBox(textInputType: TextInputType.phone, onChanged: (val) {}, context: context, controller: number, isPassword: false, initialValue: "Phone", disabledSymbols: true, showValidationOrNot: isPhoneEmpty, errorText: "Fill this field",) : Container(
                   margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -216,7 +220,7 @@ class PersonalDetails extends StatelessWidget {
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                               alignLabelWithHint: true,
-                              labelText: "Age",
+                              labelText: "Birth date",
                               errorStyle: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 10,
@@ -268,7 +272,7 @@ class PersonalDetails extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.fromLTRB(20, 0, 15, 0),
                         child: Text(
-                          "Age",
+                          "Birth date",
                           style: GoogleFonts.montserrat(
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
@@ -349,13 +353,26 @@ class PersonalDetails extends StatelessWidget {
         
                         // "greade": 9
                       };
+
+                      if(fullName.text.isNotEmpty && number.text.isNotEmpty) {
+                        await httpClient.updateUniversityAndAcademic(body).then((value) {
+                          onSave();
+                        });
+                      } else {
+                        state(() {
+                          if(fullName.text.isEmpty) {
+                            isFullNameEmpty = true;
+                          }
+
+                          if(number.text.isEmpty) {
+                            isPhoneEmpty = true;
+                          }
+                        });
+                      }
+                      
         
-                      await httpClient.updateUniversityAndAcademic(body).then((value) {
-                        onSave();
-                      });
         
-        
-                      onSave();
+                      // onSave();
                     }, height: 38, width: 128),
                   ],
                 ): Container()
@@ -389,21 +406,17 @@ class PersonalDetails extends StatelessWidget {
                             rowHeight: 30,
                             selectedDayPredicate: (day) => isSameDay(day, choosenDate),
                             onDaySelected: (selectedDay, focusedDay) {
-                              state(() {
-                                
-                              });
+                              
 
                               state(() {
                                 choosenDate = selectedDay;
                                 agecnt.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
                                 // print(widget.age.text);
                                 // updateEvent();
-                                print(choosenDate);
-                              });
-
-                              state(() {
                                 
                               });
+
+                              
                             },
                             calendarBuilders: CalendarBuilders(
                               selectedBuilder: (context, day, focusedDay) {

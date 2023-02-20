@@ -13,7 +13,6 @@ class Client {
 
     List<String> unis = values.map((e) => e["name"].toString()).toList();
 
-    Map<String, List<int>> returnValue = {};
 
     return unis;
   }
@@ -24,7 +23,7 @@ class Client {
     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
 
     Response response = await dio.get("http://164.90.224.111/dashboard");
-    print(await response.data);
+
     return response.data;
   }
 
@@ -38,10 +37,8 @@ class Client {
       "feedback": description
     };
 
-    print(body);
 
-    Response response = await dio.post('http://164.90.224.111/add/feedback', data: body);
-    print(response.data);
+    await dio.post('http://164.90.224.111/add/feedback', data: body);
   }
 
   Future<List<dynamic>> getAllFeedbacks(int taskId) async {
@@ -55,21 +52,48 @@ class Client {
     return response.data;
   }
 
+  Future<dynamic> getTimePoints(int taskId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+
+    Response response = await dio.get('http://164.90.224.111/getTasks/description', queryParameters: {"id": taskId});
+
+    return response.data;
+  }
+
+  Future<List<dynamic>> getRecommendations() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    var response = await dio.get("http://164.90.224.111/getTasks/Category1");
+
+    return response.data["recommendation"];
+  }
+
+  Future<Map<String, dynamic>> getAllFaculties() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    var response = await dio.get("http://164.90.224.111/getTasks/Category1");
+
+    return response.data["groupedTasks"];
+  }
+
   Future doneSubtask(int userId, bool status) async {
     var body = {
       "subTaskId": userId,
       "status": status
     };
 
-    print(body);
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    Response response = await dio.patch('http://164.90.224.111/change/subTaskStatus', data: body);
-
-    print(response.data);
+    await dio.patch('http://164.90.224.111/change/subTaskStatus', data: body);
   }
 
   Future<List<List<dynamic>>> getPoints() async {
@@ -97,8 +121,6 @@ class Client {
     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
 
     var allTasks = await dio.get("http://164.90.224.111/getTasks/my");
-
-    print(allTasks.data["newTasks"]);
 
     return allTasks.data["newTasks"];
   }
@@ -132,8 +154,6 @@ class Client {
 
     var allTasks = await dio.get("http://164.90.224.111/getTasks/rest");
 
-    print(allTasks.data["newTasks"]);
-
     return allTasks.data["item"];
   }
 
@@ -142,14 +162,12 @@ class Client {
 
     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    var result = await dio.patch("http://164.90.224.111/settings/", data: value);
-    print(result);
+    await dio.patch("http://164.90.224.111/settings/", data: value);
   } 
 
   Future<List<dynamic>> getCalendarEvents() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var userId = prefs.getString("user id");
     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
 
     var calendarTasks = await dio.get("http://164.90.224.111/getTasks/inCalendar");
@@ -183,32 +201,20 @@ class Client {
     prefs.setString("user id", userData.data["id"].toString());
     prefs.setString("university", userData.data["university"].toString());
 
-    print(prefs.getString("user id"));
-
-
     return userData.data;
   }
 
   Future addTask(int taskId, String date) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var userId = prefs.getString("user id");
-
     var body = {
       "taskId": taskId,
       "startDate": date,
     };
-    
-
-    print(body);
 
     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    var response = await dio.post('http://164.90.224.111/calendar/add', data: body);
-
-    if(response.statusCode == 200) {
-      print("Hello");
-    }
+    await dio.post('http://164.90.224.111/calendar/add', data: body);
   }
 
   Future sendUpdateEmail(String email) async {
@@ -260,8 +266,6 @@ class Client {
       "area": data.workExp,
     };
 
-    print(body);
-
     var response = await dio.post("http://164.90.224.111/register", data: body);
 
     return response.data;
@@ -295,11 +299,11 @@ class Client {
       "moreInfo": data.details
     };
 
-    print(body);
+    // print(body);
 
     var response = await dio.post("http://164.90.224.111/register", data: body);
 
-    print(response);
+    return response.data;
   }
 
 } 

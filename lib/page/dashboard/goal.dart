@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
@@ -15,54 +16,168 @@ class GoalPage extends StatefulWidget {
 class _GoalPage extends State<GoalPage> {
   Client client = Client();
 
-  List<Widget> goals = [];
-  List<Widget> goals2 = [];
 
   @override
   void initState() {
-    getAllTasks();
+    getAllRecommendations();
+    getFaculties();
 
     super.initState();
   }
 
-  List<dynamic> tasks = [];
-
-  List<int> items = [];
-
-  List<bool> disableds = [];
-
   bool showFilter = false;
-
-  // String activities = "Social Justice";
-
-  List<String> value = [];
-
-  List<String> tempo = [];
-
-  var temporaryly = [];
-  var tempraryly = [];
 
   String filterText = "Activites";
   bool cantYouSee = false;
 
   OverlayEntry? _overlayEntry;
 
-  void getAllTasks() async {
-    var temp = await client.getAllTaskAndFilter();
-    print(temp);
-    // print(temp);
+
+  var recommendation = [];
+  var recommendationWidget = StatefulBuilder(builder: ((context, setState) => Container()),);
+
+  var faculties = {};
+  var facultiesInFilter = [];
+  var filteredFaculties = [];
+
+  Map<String, Widget> facultiesWidget = <String, Widget> {};
+  Map<String, Widget> filteredFacultiesWidget = <String, Widget> {};
+
+  void getFaculties() async {
+    var temp = await client.getAllFaculties();
+
     setState(() {
-      tasks = temp;
-      tasks.forEach((element) {
-        tempo.add(element["facultName"]);
-      },);
+      temp.forEach((key, value) {
+        facultiesInFilter.add(key);
+      });
 
-      temporaryly = tasks;
-
-      tempo = tempo.toSet().toList();
-      tempraryly = tempo;
-      print(tempo);
+      filteredFaculties = [...facultiesInFilter];
+      filteredFaculties.insert(0, "Recommendation");
+      filteredFaculties.insert(1, "All");
     });
+  }
+
+  void getAllRecommendations() async {
+    var temp = await client.getRecommendations();
+    var temp2 = await client.getAllFaculties();
+
+    setState(() {
+      recommendation = temp;
+      faculties = temp2;
+    });
+
+    recommendationWidget = StatefulBuilder (
+      builder: (context, state) {
+        return ExpansionTile(
+          trailing: Container(
+            margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+            child: const ImageIcon(
+              AssetImage("assets/Vectorchevorn.png"),
+              size: 14,
+              color:Color(0xffB1B2FF),
+            ),
+          ),
+          title: Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                child: Text(
+                  "Recommendation",
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                    color: const Color(0xffB1B2FF)
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  height: 2,
+                  decoration: const BoxDecoration(
+                    color:  Color(0xffB1B2FF)
+                  ),
+                ),
+              )
+            ],
+          ),
+
+
+          children: recommendation.map((e) {
+            var disballed = !(e["isFree"] == false);
+            // print(disballed);
+
+            return ExploreTile(onClick: () {
+                setState(() {
+                  disballed = !disballed;
+                });
+              }, taskCount:
+                      "${e["SubTasks"]
+                .where((p0) => p0['status'] == true)
+                .length}/${e["SubTasks"].length}", taskId: e["id"], title: e["companyName"].length > 30 ? "${e['companyName'].substring(0, 30)}..." : e['companyName'], disabled: disballed, position: e["positionName"]);
+          }).toList(),
+        );
+      }
+    );
+
+    filteredFacultiesWidget['Recommendation'] = recommendationWidget;
+
+  
+    faculties.forEach((key, value) {
+        facultiesInFilter.add(key);
+
+        facultiesWidget[key] = 
+          ExpansionTile(
+            trailing: Container(
+              margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+              child: const ImageIcon(
+                AssetImage("assets/Vectorchevorn.png"),
+                size: 14,
+                color:Color(0xffB1B2FF),
+                ),
+              ),
+                title: Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: Text(
+                        "${key[0].toString().toUpperCase()}${key.substring(1).toLowerCase()}",
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                          color: const Color(0xffB1B2FF)
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 2,
+                        decoration: const BoxDecoration(
+                          color:  Color(0xffB1B2FF)
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                children: (value as List<dynamic>).map<Widget>((e) {
+                  var disballed = !(e["isFree"] == false);
+
+                  return ExploreTile(
+                    disabled: disballed,
+                    taskCount: "${e["SubTasks"]
+                      .where((p0) => p0['status'] == true)
+                      .length}/${e["SubTasks"].length}",
+                    taskId: e["id"],
+                    title: e["companyName"].length > 30 ? "${e['companyName'].substring(0, 30)}...": e["companyName"],
+                    position: e["positionName"],
+                    onClick: () {
+                      debugPrint("Hello World");
+                    },
+                  );
+                }).toList(),
+        );    
+    });
+
+    filteredFacultiesWidget.addAll(facultiesWidget);
   }
 
   Future<bool> _onBackButtonPressed() {
@@ -76,19 +191,8 @@ class _GoalPage extends State<GoalPage> {
     return Future.value(false);
   }
 
-  void updateValues() {
-    setState(() {
-      tasks.forEach((e) {
-        // print(e["SubTasks"].where((p0) => p0['status'] == true).length);
-        // print(e["SubTasks"].where((p0) => p0['status'] == true).length);
-        items.add(e["SubTasks"]
-            .where((p0) => p0['status'] == true)
-            .length);
-        disableds.add(!(e["isFree"] == false));
 
-      });
-    });
-  }
+
 
   @override
   void dispose() {
@@ -119,6 +223,7 @@ class _GoalPage extends State<GoalPage> {
                 buildButton(widget.title, (p0) {}),
                 InkWell(
                   splashColor: Colors.transparent,
+                  // highlightColor: Colors.red,
                   
                   onTap: () {
                     scrollController.animateTo(
@@ -171,25 +276,16 @@ class _GoalPage extends State<GoalPage> {
                                                           TextInputType.text,
                                                           onChanged: ((val) {
                                                             setState(() {
-                                                              // getAllTasks();
-                                                              tempraryly = tempo.where((element) => element.toLowerCase().contains(val.toLowerCase())).toList();
-                                                              if(filterText != "Activites") {
-                                                                temporaryly = tasks.where((element) => element["facultName"].toLowerCase() == filterText.toLowerCase()).toList();
+                                                              print("Hello");
+
+                                                              if(val.isNotEmpty) {
+                                                                filteredFaculties = facultiesInFilter.where((element) => element.toLowerCase().contains(val.toLowerCase())).toList();
+                                                              } if(val.isEmpty) {
+                                                                filteredFaculties = facultiesInFilter;
+                                                                filteredFaculties.insert(0, "Recommendation");
+                                                                filteredFaculties.insert(1, "All");
                                                               }
-                                                              // temp = value
-                                                              //     .where((
-                                                              //     element) =>
-                                                              //     element.contains(
-                                                              //         val))
-                                                              //     .toList();
-          
-                                                              // temp =
-                                                              //     temp.toSet()
-                                                              //         .toList();
-          
-                                                              // goals2 =
-                                                              //     goals2.toSet()
-                                                              //         .toList();
+                                                              
                                                             });
                                                           }),
                                                           decoration: InputDecoration(
@@ -221,11 +317,12 @@ class _GoalPage extends State<GoalPage> {
                                                     Column(
                                                       mainAxisAlignment:
                                                       MainAxisAlignment.start,
-                                                      children: tempraryly.map((e) {
+                                                      children: filteredFaculties.toSet().toList().map((e) {
                                                         return Material(
                                                           color:
                                                           const Color(0xffD2DAFF),
                                                           child: InkWell(
+                                                            highlightColor: const Color(0xffAAC4FF),
                                                             onTap: () {
                                                               setState(() {
                                                                 filterText = e;
@@ -234,11 +331,21 @@ class _GoalPage extends State<GoalPage> {
                                                                     .remove();
                                                                 _overlayEntry = null;
                                                                 // goals = [];
-          
+                                                                print(filteredFacultiesWidget.keys);
                                                                 // getAllTasks();
-                                                                if(filterText != "Activites") {
-                                                                  temporaryly = tasks.where((element) => element["facultName"].toLowerCase() == e.toLowerCase()).toList();
+                                                                if(filterText == "Recommendation") {
+                                                                  filteredFacultiesWidget = {};
+                                                                  filteredFacultiesWidget['Recommendation'] = recommendationWidget;
+                                                                } else if(filterText == "All") {
+                                                                  filteredFacultiesWidget = facultiesWidget;
+                                                                } else { 
+                                                                  filteredFacultiesWidget = facultiesWidget.filter((pair) {
+                                                                    return pair.key == filterText;
+                                                                  });
                                                                 }
+                                                              
+
+                                                               
                                                                 
           
                                                                 // tasks = tasks.where((element) => element["status"] == e).toList();
@@ -246,6 +353,7 @@ class _GoalPage extends State<GoalPage> {
                                                             },
                                                             child: Container(
                                                               height: 44,
+                                                              margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                                                               decoration: BoxDecoration(
                                                                   borderRadius:
                                                                   BorderRadius
@@ -257,7 +365,7 @@ class _GoalPage extends State<GoalPage> {
                                                                     .poppins(
                                                                     fontWeight:
                                                                     FontWeight.w400,
-                                                                    fontSize: 11,
+                                                                    fontSize: 15,
                                                                     color: const Color(
                                                                         0xff121623)),
                                                                 child: Text(
@@ -283,7 +391,7 @@ class _GoalPage extends State<GoalPage> {
                                   _overlayEntry!.remove();
                                   _overlayEntry = null;
                                   setState(() {
-                                    goals2 = goals2.toSet().toList();
+                                    // goals2 = goals2.toSet().toList();
                                   });
                                 }
                                 },
@@ -293,7 +401,7 @@ class _GoalPage extends State<GoalPage> {
                           borderRadius: BorderRadius.circular(5),
                           border:
                           Border.all(width: 1, color: const Color(0xff355CCA))),
-                      width: filterText.length * 10 + 80,
+                      width: filterText.length * 10 + 60,
                       height: 40,
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -318,42 +426,46 @@ class _GoalPage extends State<GoalPage> {
                             )
                           ])),
                 ),
+                // recommendationWidget,
                 Column(
-                  children: temporaryly.map((e) {
-                    var value = 0;
-                    value +=1;
+                  children: filteredFacultiesWidget.values.toList(),
+                )
+                // Column(
+                //   children: temporaryly.map((e) {
+                //     var value = 0;
+                //     value +=1;
           
-                    var disballed = !(e["isFree"] == false);
+                //     var disballed = !(e["isFree"] == false);
           
-                    return ExploreTile(
-                      title: e["companyName"]
-                          .length >
-                          30
-                          ? "${e["companyName"].substring(0, 30)}..."
-                          : e
-                      [
-                      "companyName"],
-                      disabled: disballed,
-                      taskId: e["id"],
-                      taskCount:
-                      "${e["SubTasks"]
-                .where((p0) => p0['status'] == true)
-                .length}/${e["SubTasks"].length}",
-                      onClick:  () {
-                        // updateValues();
-                        // getAllTasks();
-                        if(filterText != "Activites") {
-                          temporaryly = tasks.where((element) => element["facultName"].toLowerCase() == filterText.toLowerCase()).toList();
-                        }
+                //     return ExploreTile(
+                      // title: e["companyName"]
+                      //     .length >
+                      //     30
+                      //     ? "${e["companyName"].substring(0, 30)}..."
+                      //     : e
+                //       [
+                //       "companyName"],
+                //       disabled: disballed,
+                //       taskId: e["id"],
+                //       taskCount:
+                //       "${e["SubTasks"]
+                // .where((p0) => p0['status'] == true)
+                // .length}/${e["SubTasks"].length}",
+                //       onClick:  () {
+                //         // updateValues();
+                //         // getAllTasks();
+                //         if(filterText != "Activites") {
+                //           temporaryly = tasks.where((element) => element["facultName"].toLowerCase() == filterText.toLowerCase()).toList();
+                //         }
 
                         // setState(() {
                         //   disballed = true;
                         // });
-                      },
-                      position: e["positionName"],
-                    );
-                  }).toList(),
-                )
+                //       },
+                //       position: e["positionName"],
+                //     );
+                //   }).toList(),
+                // )
               ],
             ),
           ),

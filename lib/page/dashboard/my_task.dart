@@ -220,10 +220,10 @@ class _MyTask extends State<MyTask> {
                     temp3.add(p0["points"]);
                   });  
     
-                  print(e);
+                  print(e["id"]);
       
                   String substringValue = "${temp2.length}/${swap.length}";
-                  return MyTaskTile(proccess: getProccess(e["status"]), title: e["positionName"], description: "", subtasks: swap, points: temp, eventDate: "${DateTime.parse(e["deadline"]).day}/${DateTime.parse(e["deadline"]).month}/${DateTime.parse(e["deadline"]).year}", substringValue: substringValue, updateState: printAllTasks, position: e["companyName"], status: e["status"], facultyName: e["facultName"], companyName: e["companyName"], choosenDate: DateTime.parse(e["startDate"]), point: "${e["point"]} Points", taskId: e["id"], feedbacks: getAllFeedbacks(e["id"]),);
+                  return MyTaskTile(proccess: getProccess(e["status"]), title: e["positionName"], description: "", subtasks: swap, points: temp, eventDate: "${DateTime.parse(e["deadline"]).day}/${DateTime.parse(e["deadline"]).month}/${DateTime.parse(e["deadline"]).year}", substringValue: substringValue, updateState: printAllTasks, position: e["companyName"], status: e["status"], facultyName: e["facultyName"], companyName: e["companyName"], choosenDate: DateTime.parse(e["startDate"]), point: "${e["point"]} Points", taskId: e["id"], feedbacks: getAllFeedbacks(e["id"]),);
     
                 }).toList(),
               )

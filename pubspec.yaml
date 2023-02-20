@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.1+11
 
 environment:
   sdk: '>=2.18.4 <3.0.0'
@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
+  dartx: ^1.1.0
   google_fonts: ^3.0.1
   flutter_svg: ^1.1.6
   percent_indicator: ^4.0.1
@@ -25,10 +26,12 @@ dependencies:
   table_calendar: ^3.0.8
   image_picker: ^0.8.6
   intl_phone_number_input: ^0.7.0
+  slider_gradient: ^0.2.1
   dropdown_search: ^5.0.5
   just_the_tooltip: ^0.0.12
   intl: ^0.17.0
   csc_picker: ^0.2.7
+  another_xlider: ^1.1.2
   dio: ^4.0.6
 
 dev_dependencies:
@@ -49,7 +52,6 @@ flutter:
     - assets/Vector.svg
     - assets/Calendar.svg
     - assets/Calendar.png
-    - assets/svgviewer-output.svg
     - assets/Rocket (2).svg
     - assets/Test.svg
     - assets/yyy.png
@@ -65,5 +67,8 @@ flutter:
     - assets/AvatarAvatar.png
     - assets/Smile.png
     - assets/Happy.png
+    - assets/Good.png
+    - assets/Sad.png
+
     
   

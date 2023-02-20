@@ -112,7 +112,7 @@ class _Grade10thFirst extends State<Grade10thFirst> {
               buildTitle(),
               buildQuestion("1. Pick your dream university"),
               buildMode(widget._controller1, Universities().universities, "University", showuniversityErrorText, universityErrorText),
-              buildQuestion("2. What academic at college Choose the interests you?"),
+              buildQuestion("2. Choose the academic program."),
               buildMode(widget._controller3, Universities().academics, "Profession", showacademicErrorText, academicErrorText),
               buildQuestion("3. Which field of study interests you?"),
               buildMode(widget._controller4, Universities().subjects, "Study", showstudyErrorText, studyErrorText),

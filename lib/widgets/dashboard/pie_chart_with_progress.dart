@@ -156,7 +156,7 @@ class LinearProgressIndicator extends CustomPainter {
     List<double> linearCoord = getPointerSize(width);
     List<double> textPlace = getTextPlace(width);
 
-    drawProgressLine(canvas, 40, linearCoord[0], Colors.red);
+    drawProgressLine(canvas, value[0] != 0 ? value[0] * 5 : 25, linearCoord[0], Colors.red);
     drawProgressLine(canvas, 25, linearCoord[1], Colors.blue.withOpacity(0.3));
     drawProgressLine(canvas, 25, linearCoord[2], Colors.amber.withOpacity(0.3));
     drawProgressLine(canvas, 25, linearCoord[3], Colors.orange.withOpacity(0.3));

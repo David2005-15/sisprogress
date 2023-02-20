@@ -213,6 +213,7 @@ class _Grade9thSecond extends State<Grade9thSecond> {
                                   canPass = true;
                                 });
                               }
+                              
                               if(canPass) {
                                 var value = await httpClient.registerForGrade9(widget.registration);
                                 if(value == "user alredy exit") {

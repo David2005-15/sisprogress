@@ -47,7 +47,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
       const Dashboard(),
       page,
       const ExploreMoreGoals(),
-      MyTask(choosenDate: page.choosenDate),
+      MyTask(choosenDate: page.chosenDate),
       const Profile()
     ];
   }
@@ -92,7 +92,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     body = pages[0];
     Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
-        if (page.getChoosenDate().day < DateTime.now().day) {
+        if (page.getChosenDate().day < DateTime.now().day) {
           isFloatingButtonVisisble = false;
         } else {
           isFloatingButtonVisisble = true;
@@ -116,10 +116,10 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
   void changeFloatingButtonState() {
     setState(() {
-      var diff = page.getChoosenDate().compareTo(DateTime.now());
+      var diff = page.getChosenDate().compareTo(DateTime.now());
       // print(DateTime.now());
       // print(diff);
-      if(isSameDay(page.getChoosenDate(), DateTime.now())) {
+      if(isSameDay(page.getChosenDate(), DateTime.now())) {
         isFloatingButtonVisisble = true;
       }
       else if((diff < 0)) {

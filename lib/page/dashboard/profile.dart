@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
 import '../../http client/http_client.dart';
 import '../../widgets/dashboard/email_details.dart';
@@ -88,11 +87,13 @@ class _Profile extends State<Profile> {
     });
   }
 
-  void onSave() async {
+  void onSave() {
     setState(() {
       isEditable = false;
+      setEmail();
     });
 
+    setEmail();
     setEmail();
     setEmail();
     setEmail();
@@ -169,8 +170,7 @@ class _Profile extends State<Profile> {
       university = value["university"].toString();
       academicProgram = value["academicProgram"].toString();
       study = value["study"].toString();
-      secondaryMail = value["UserEmails"][1]["email"];
-      print(secondaryMail);
+      // secondaryMail = value["UserEmails"][1]["email"];
       // gradeLevel = "${value["grade"]!}th Grade";
     });
   }
