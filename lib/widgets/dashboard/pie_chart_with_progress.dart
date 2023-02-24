@@ -65,9 +65,9 @@ class _PieChart extends State<PieChartWithProgressBar> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [   
-                    Color(0xffE31F1F).withOpacity(0.69),
+                    const Color(0xffE31F1F).withOpacity(0.69),
                     // Color.fromRGBO(227, 31, 31, 0.69),
-                    Color(0xff355CCA),
+                    const Color(0xff355CCA),
                   ],
                 ),
               ),
@@ -156,11 +156,10 @@ class LinearProgressIndicator extends CustomPainter {
     List<double> linearCoord = getPointerSize(width);
     List<double> textPlace = getTextPlace(width);
 
-    drawProgressLine(canvas, value[0] != 0 ? value[0] * 5 : 25, linearCoord[0], Colors.red);
+    drawProgressLine(canvas, 15 + value[0], linearCoord[0], Colors.red);
     drawProgressLine(canvas, 25, linearCoord[1], Colors.blue.withOpacity(0.3));
     drawProgressLine(canvas, 25, linearCoord[2], Colors.amber.withOpacity(0.3));
     drawProgressLine(canvas, 25, linearCoord[3], Colors.orange.withOpacity(0.3));
-    // drawProgressLine(canvas, 32, linearCoord[4], Colors.purple);
 
     drawPointer(canvas, textPlace[0], "Extraculicular", Colors.white);
     drawPointer(canvas, textPlace[1], "Personal development", Colors.white.withOpacity(0.3));

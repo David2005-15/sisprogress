@@ -344,8 +344,7 @@ class _Dashboard extends State<Dashboard> {
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
                               fontSize: 16)),
-                      selectedDayPredicate: (day) =>
-                          isSameDay(chosenDate, day),
+                      selectedDayPredicate: (day) => isSameDay(chosenDate, day),
                       onDaySelected: (selectedDay, focusedDay) async {
                         var value = await httpClient.getAllTaskAndFilter();
                         List<List<String>> points = [];
@@ -464,8 +463,6 @@ class _Dashboard extends State<Dashboard> {
                           );
                         },
                         selectedBuilder: (context, day, focusedDay) {
-
-
                           String monthName =
                               DateFormat.E().format(day).substring(0, 3);
                           return Container(
@@ -531,7 +528,8 @@ class _Dashboard extends State<Dashboard> {
                   context: context,
                   title: "Overall Progress",
                   halfPerc: "${halfPercentage}pt",
-                  redLine: (overallDone / 100) == 0 ? 0.01 : overallDone / 100,
+                  redLine:
+                      (overallDone / 100) == 0 ? 0.01 : (overallDone / 100),
                   blueLine: (overallProgress / 100) == 0
                       ? 0.01
                       : overallProgress / 100,
@@ -805,14 +803,7 @@ Future<void> _dialogBuilder(
                       onPressed:
                           !cantYouSee.every((element) => element == false)
                               ? () async {
-                                  // httpClient.addTask(addedTasks[0]["id"], date.toIso8601String());
-                                  // addedTasks.forEach((element) async {
-                                  //   await httpClient.addTask(
-                                  //       element["id"], date.toIso8601String());
-                                  //   reload();
-                                  // });
-
-                                  for(var element in addedTasks) {
+                                  for (var element in addedTasks) {
                                     await httpClient.addTask(
                                         element["id"], date.toIso8601String());
                                     reload();

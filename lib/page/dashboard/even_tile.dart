@@ -19,9 +19,7 @@ class EventTile extends StatefulWidget {
   final VoidCallback updateState;
   final DateTime choosenDate;
 
-  // final List<bool> passed;
-
-  EventTile(
+  const EventTile(
       {required this.eventDate,
       required this.points,
       required this.subtasks,
@@ -67,9 +65,6 @@ class _EventTile extends State<EventTile> {
     updateTasks();
     getAllFeedbacks();
     getAllTasks();
-    // print(feedbacks);
-
-    // print(tasks);
   }
 
   void updateTasks() async {
@@ -94,7 +89,7 @@ class _EventTile extends State<EventTile> {
       onTap: () {
         widget.updateState();
         if (widget.choosenDate.day <= DateTime.now().day) {
-          _dialogBuiler(context, widget.title, feedbacks);
+          _dialogBuilder(context, widget.title, feedbacks);
         } else {
           _youCanStart(widget.title);
         }
@@ -244,7 +239,7 @@ class _EventTile extends State<EventTile> {
         });
   }
 
-  Future<void> _dialogBuiler(
+  Future<void> _dialogBuilder(
       BuildContext context, String title, List<dynamic> feedback) {
     // List<int> subTaskId = [];
     return showDialog<void>(
@@ -256,9 +251,6 @@ class _EventTile extends State<EventTile> {
             List<dynamic> enabledValues = [];
             List<bool> cantYouSee = [];
             List<Widget> taskContent = [];
-            bool isSubmitDisabled = cantYouSee.every((element) => element == true);
-
-            var swap = [];
 
             for (int i = 0; i < widget.subtasks.length; i++) {
               enabledValues.add(widget.subtasks[i][3]);
@@ -271,7 +263,7 @@ class _EventTile extends State<EventTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
+                    SizedBox(
                       width: 185,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -397,10 +389,10 @@ class _EventTile extends State<EventTile> {
                                   // color: Colors.black,
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: 150,
                                 child: Text(
-                                  widget.facultyName ?? "",
+                                  widget.facultyName,
                                   textAlign: TextAlign.left,
                                   style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w600,
@@ -433,7 +425,7 @@ class _EventTile extends State<EventTile> {
                                   // color: Colors.black,
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: 200,
                                 child: Text(
                                   widget.companyName,
@@ -465,7 +457,7 @@ class _EventTile extends State<EventTile> {
                                   // color: Colors.black,
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: 200,
                                 child: Text(
                                   title,
@@ -485,7 +477,7 @@ class _EventTile extends State<EventTile> {
                 ),
                 actions: <Widget>[
                   StatefulBuilder(builder: (context, state) {
-                    return Container(
+                    return SizedBox(
                       height: 200,
                       width: 350,
 
@@ -504,7 +496,7 @@ class _EventTile extends State<EventTile> {
                                           0, 0, 10, 0),
                                       child: const ImageIcon(
                                         AssetImage("assets/MyPoints.png"),
-                                        color: const Color(0xff3A3D4C),
+                                        color: Color(0xff3A3D4C),
                                         size: 15,
                                       ),
                                     ),
@@ -562,31 +554,25 @@ class _EventTile extends State<EventTile> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Container(
-                                                  // margin: const EdgeInsets.fromLTRB(0, 5, 30, 0),
-                                                  child: Text(
-                                                    "Duration",
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontSize: 15,
-                                                            color: const Color(
-                                                                0xff3A3D4C)),
-                                                  ),
+                                                Text(
+                                                  "Duration",
+                                                  style:
+                                                      GoogleFonts.montserrat(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15,
+                                                          color: const Color(
+                                                              0xff3A3D4C)),
                                                 ),
-                                                Container(
-                                                  // margin: const EdgeInsets.fromLTRB(30, 5, 0, 0),
-                                                  child: Text(
-                                                    "Points",
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontSize: 15,
-                                                            color: const Color(
-                                                                0xff3A3D4C)),
-                                                  ),
+                                                Text(
+                                                  "Points",
+                                                  style:
+                                                      GoogleFonts.montserrat(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15,
+                                                          color: const Color(
+                                                              0xff3A3D4C)),
                                                 )
                                               ],
                                             ),
@@ -665,7 +651,7 @@ class _EventTile extends State<EventTile> {
                                             )),
 
                                         child: Transform(
-                                          transform: Matrix4.translationValues(currentDay != null ? currentDay.toDouble() * 2: 0, 0, 0.0),
+                                          transform: Matrix4.translationValues(currentDay.toDouble() * 2, 0, 0.0),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Container(
@@ -689,7 +675,7 @@ class _EventTile extends State<EventTile> {
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Transform(
-                                            transform: Matrix4.translationValues(currentDay != null ? currentDay.toDouble() * 2: 0, 0, 0.0),
+                                            transform: Matrix4.translationValues(currentDay.toDouble(), 0, 0.0),
                                             child: Column(
                                               children: [
                                                 Text(
@@ -730,9 +716,9 @@ class _EventTile extends State<EventTile> {
                                     Container(
                                       margin: const EdgeInsets.fromLTRB(
                                           0, 0, 10, 0),
-                                      child: ImageIcon(
+                                      child: const ImageIcon(
                                         AssetImage("assets/Subtask.png"),
-                                        color: const Color(0xff3A3D4C),
+                                        color: Color(0xff3A3D4C),
                                         size: 20,
                                       ),
                                     ),
@@ -762,7 +748,7 @@ class _EventTile extends State<EventTile> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           width: 104,
                                           height: 36,
                                           child: OutlinedButton(
@@ -808,19 +794,14 @@ class _EventTile extends State<EventTile> {
                                             onPressed: !(cantYouSee.every(
                                                     (element) =>
                                                         element == true))
-                                                ? () {
-                                                    // print(subtaskId);
-
-                                                    subtaskId.forEach(
-                                                        (element) async {
-                                                      await httpClient
-                                                          .doneSubtask(
-                                                              element, true);
+                                                ? () async {
+                                                    for(var id in subtaskId) {
+                                                      await httpClient.doneSubtask(id, true);
                                                       widget.updateState();
-                                                    });
+                                                    }
                                                     widget.updateState();
-                                                    // widget.updateState();
 
+                                                    if(!context.mounted) return;
                                                     Navigator.pop(context);
                                                   }
                                                 : null,
@@ -896,7 +877,7 @@ class _EventTile extends State<EventTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 200,
                     child: Text(
                       "You can leave your feedback here!",
@@ -917,7 +898,7 @@ class _EventTile extends State<EventTile> {
                   )
                 ],
               ),
-              content: Container(
+              content: SizedBox(
                 height: 400,
                 child: Column(
                   children: [
@@ -936,7 +917,7 @@ class _EventTile extends State<EventTile> {
                                       color: const Color(0xff646464)),
                                 ),
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     height: 50,
                                     child: SingleChildScrollView(
                                       child: Column(
@@ -1021,7 +1002,7 @@ class _EventTile extends State<EventTile> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Container(
+                                SizedBox(
                                   width: 104,
                                   height: 36,
                                   child: OutlinedButton(
@@ -1049,7 +1030,7 @@ class _EventTile extends State<EventTile> {
                                     ),
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 104,
                                   height: 36,
                                   child: ElevatedButton(
@@ -1058,7 +1039,7 @@ class _EventTile extends State<EventTile> {
                                       shadowColor: Colors.transparent,
                                       foregroundColor: Colors.white,
                                     ),
-                                    onPressed: answer.text.length > 0
+                                    onPressed: answer.text.isNotEmpty
                                         ? () {
                                             var httpClient = Client();
 
@@ -1092,7 +1073,7 @@ class _EventTile extends State<EventTile> {
   }
 }
 
-_getCloseButton(context) {
+Padding getCloseButton(context) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
     child: GestureDetector(

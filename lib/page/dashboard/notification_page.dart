@@ -26,19 +26,17 @@ class _NotificationPage extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget> [
-            buildTitle(),
-            // widget.notifications.map((e) => null).toList()
-            Visibility(
-              visible: visibility,
-              child: NotificationTile(data: widget.notifications[0], onTap: removeNote)
-            )
-          ],
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget> [
+          buildTitle(),
+          // widget.notifications.map((e) => null).toList()
+          Visibility(
+            visible: visibility,
+            child: NotificationTile(data: widget.notifications[0], onTap: removeNote)
+          )
+        ],
       ),
     );
   }

@@ -16,15 +16,13 @@ class _ExploreMoreGoals extends State<ExploreMoreGoals> {
 
   @override
   void initState() {
-    body = Container(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget> [
-            buildTitle(),
-            buildButton("Extracurricular", getState),
-          ],
-        ),
+    body = SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget> [
+          buildTitle(),
+          buildButton("Extracurricular", getState),
+        ],
       ),
     );
 

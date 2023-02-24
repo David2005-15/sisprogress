@@ -6,6 +6,14 @@ import 'package:sis_progress/data%20class/registration_data_grade9.dart';
 class Client {
   final Dio dio = Dio();
 
+  Client._privateConstructor();
+
+  static final Client _instance = Client._privateConstructor();
+
+  factory Client() {
+    return _instance;
+  }
+
   Future<List<String>> getAllUniversities() async {
     Response response = await dio.get('http://164.90.224.111/get/AllUniversities');
 
@@ -15,6 +23,14 @@ class Client {
 
 
     return unis;
+  }
+
+  Future sendPasswordLink(String email) async {
+    var body = {
+      "email": email
+    };
+
+    await dio.post('http://164.90.224.111/resetPassword', data: body);
   }
 
   Future<Map<String, dynamic>> getDashboardData() async {

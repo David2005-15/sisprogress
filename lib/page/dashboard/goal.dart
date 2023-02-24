@@ -16,7 +16,6 @@ class GoalPage extends StatefulWidget {
 class _GoalPage extends State<GoalPage> {
   Client client = Client();
 
-
   @override
   void initState() {
     getAllRecommendations();
@@ -32,28 +31,28 @@ class _GoalPage extends State<GoalPage> {
 
   OverlayEntry? _overlayEntry;
 
-
   var recommendation = [];
-  var recommendationWidget = StatefulBuilder(builder: ((context, setState) => Container()),);
+  var recommendationWidget = StatefulBuilder(
+    builder: ((context, setState) => Container()),
+  );
 
   var faculties = {};
   var facultiesInFilter = [];
   var filteredFaculties = [];
 
-  Map<String, Widget> facultiesWidget = <String, Widget> {};
-  Map<String, Widget> filteredFacultiesWidget = <String, Widget> {};
+  Map<String, Widget> facultiesWidget = <String, Widget>{};
+  Map<String, Widget> filteredFacultiesWidget = <String, Widget>{};
 
   void getFaculties() async {
     var temp = await client.getAllFaculties();
 
     setState(() {
+
       temp.forEach((key, value) {
         facultiesInFilter.add(key);
       });
 
       filteredFaculties = [...facultiesInFilter];
-      filteredFaculties.insert(0, "Recommendation");
-      filteredFaculties.insert(1, "All");
     });
   }
 
@@ -66,15 +65,23 @@ class _GoalPage extends State<GoalPage> {
       faculties = temp2;
     });
 
-    recommendationWidget = StatefulBuilder (
-      builder: (context, state) {
+    if(recommendation.isNotEmpty) {
+      filteredFaculties.insert(0, "Recommendation");
+      debugPrint("Hello");
+      filteredFaculties.insert(1, "All");
+    } else {
+      filteredFaculties.insert(0, "All");
+    }
+
+    if(recommendation.isNotEmpty) {
+      recommendationWidget = StatefulBuilder(builder: (context, state) {
         return ExpansionTile(
           trailing: Container(
             margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
             child: const ImageIcon(
               AssetImage("assets/Vectorchevorn.png"),
               size: 14,
-              color:Color(0xffB1B2FF),
+              color: Color(0xffB1B2FF),
             ),
           ),
           title: Row(
@@ -84,97 +91,94 @@ class _GoalPage extends State<GoalPage> {
                 child: Text(
                   "Recommendation",
                   style: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                    color: const Color(0xffB1B2FF)
-                  ),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                      color: const Color(0xffB1B2FF)),
                 ),
               ),
               Expanded(
                 child: Container(
                   height: 2,
-                  decoration: const BoxDecoration(
-                    color:  Color(0xffB1B2FF)
-                  ),
+                  decoration: const BoxDecoration(color: Color(0xffB1B2FF)),
                 ),
               )
             ],
           ),
-
-
           children: recommendation.map((e) {
             var disballed = !(e["isFree"] == false);
-            // print(disballed);
 
-            return ExploreTile(onClick: () {
-                setState(() {
-                  disballed = !disballed;
-                });
-              }, taskCount:
-                      "${e["SubTasks"]
-                .where((p0) => p0['status'] == true)
-                .length}/${e["SubTasks"].length}", taskId: e["id"], title: e["companyName"].length > 30 ? "${e['companyName'].substring(0, 30)}..." : e['companyName'], disabled: disballed, position: e["positionName"]);
+            return ExploreTile(
+                onClick: () {
+                  setState(() {
+                    disballed = !disballed;
+                  });
+                },
+                taskCount:
+                "${e["SubTasks"].where((p0) => p0['status'] == true).length}/${e["SubTasks"].length}",
+                taskId: e["id"],
+                title: e["companyName"].length > 30
+                    ? "${e['companyName'].substring(0, 30)}..."
+                    : e['companyName'],
+                disabled: disballed,
+                position: e["positionName"]);
           }).toList(),
         );
-      }
-    );
+      });
 
-    filteredFacultiesWidget['Recommendation'] = recommendationWidget;
+      filteredFacultiesWidget['Recommendation'] = recommendationWidget;
+    }
 
-  
+
     faculties.forEach((key, value) {
-        facultiesInFilter.add(key);
+      facultiesInFilter.add(key);
 
-        facultiesWidget[key] = 
-          ExpansionTile(
-            trailing: Container(
-              margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-              child: const ImageIcon(
-                AssetImage("assets/Vectorchevorn.png"),
-                size: 14,
-                color:Color(0xffB1B2FF),
-                ),
+      facultiesWidget[key] = ExpansionTile(
+        trailing: Container(
+          margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+          child: const ImageIcon(
+            AssetImage("assets/Vectorchevorn.png"),
+            size: 14,
+            color: Color(0xffB1B2FF),
+          ),
+        ),
+        title: Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+              child: Text(
+                "${key[0].toString().toUpperCase()}${key.substring(1).toLowerCase()}",
+                style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                    color: const Color(0xffB1B2FF)),
               ),
-                title: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: Text(
-                        "${key[0].toString().toUpperCase()}${key.substring(1).toLowerCase()}",
-                        style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20,
-                          color: const Color(0xffB1B2FF)
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 2,
-                        decoration: const BoxDecoration(
-                          color:  Color(0xffB1B2FF)
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                children: (value as List<dynamic>).map<Widget>((e) {
-                  var disballed = !(e["isFree"] == false);
+            ),
+            Expanded(
+              child: Container(
+                height: 2,
+                decoration: const BoxDecoration(color: Color(0xffB1B2FF)),
+              ),
+            )
+          ],
+        ),
+        children: (value as List<dynamic>).map<Widget>((e) {
+          var disballed = !(e["isFree"] == false);
 
-                  return ExploreTile(
-                    disabled: disballed,
-                    taskCount: "${e["SubTasks"]
-                      .where((p0) => p0['status'] == true)
-                      .length}/${e["SubTasks"].length}",
-                    taskId: e["id"],
-                    title: e["companyName"].length > 30 ? "${e['companyName'].substring(0, 30)}...": e["companyName"],
-                    position: e["positionName"],
-                    onClick: () {
-                      debugPrint("Hello World");
-                    },
-                  );
-                }).toList(),
-        );    
+          return ExploreTile(
+            disabled: disballed,
+            taskCount:
+                "${e["SubTasks"].where((p0) => p0['status'] == true).length}/${e["SubTasks"].length}",
+            taskId: e["id"],
+            title: e["companyName"].length > 30
+                ? "${e['companyName'].substring(0, 30)}..."
+                : e["companyName"],
+            position: e["positionName"],
+            onClick: () {
+              debugPrint("Hello World");
+            },
+          );
+        }).toList(),
+      );
     });
 
     filteredFacultiesWidget.addAll(facultiesWidget);
@@ -184,25 +188,26 @@ class _GoalPage extends State<GoalPage> {
     setState(() {
       cantYouSee = false;
       // Navigator.of(context).pop();
-      _overlayEntry!.remove();
-      _overlayEntry = null;
+      if(!cantYouSee) {
+        _overlayEntry!.remove();
+        _overlayEntry = null;
+      }
     });
 
     return Future.value(false);
   }
 
-
-
-
   @override
   void dispose() {
-    _overlayEntry!.remove();
-    _overlayEntry = null;
+    if(!cantYouSee) {
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+    }
     super.dispose();
   }
 
   ScrollController scrollController = ScrollController();
-  
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -213,261 +218,220 @@ class _GoalPage extends State<GoalPage> {
         onVerticalDragDown: (details) {
           _onBackButtonPressed();
         },
-        child: Container(
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                buildTitle(),
-                buildButton(widget.title, (p0) {}),
-                InkWell(
-                  splashColor: Colors.transparent,
-                  // highlightColor: Colors.red,
-                  
-                  onTap: () {
-                    scrollController.animateTo(
-                      0, 
-                      duration: const Duration(milliseconds: 500), 
-                      curve: Curves.fastOutSlowIn
-                    );
-                    setState(() {
-                                  // tempo = value;
-                                  showFilter = !showFilter;
-                                  // goals2 = goals2.toSet().toList();
-                                });
-                                if (showFilter) {
-                                  _overlayEntry = OverlayEntry(builder: (context) {
-                                    return Align(
-                                      alignment: Alignment.topLeft,
-                                      child: StatefulBuilder(
-                                          builder: (context, state) {
-                                            return Container(
-                                              width: 174,
-                                              height: 200,
-                                              margin: const EdgeInsets.fromLTRB(15, 260, 0, 0),
-                                              padding: const EdgeInsets.all(5),
-                                              decoration: BoxDecoration(
-                                                  color: const Color(0xffD2DAFF),
-                                                  borderRadius:
-                                                  BorderRadius.circular(5)),
-                                              child: SingleChildScrollView(
-                                                child: Column(
-                                                  children: [
-                                                    Material(
-                                                      color: const Color(
-                                                          0xffD2DAFF),
-                                                      child: Container(
-                                                        alignment: Alignment.center,
-                                                        height: 40,
-                                                        padding:
-                                                        const EdgeInsets.fromLTRB(
-                                                            5, 4, 5, 4),
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                            BorderRadius.circular(
-                                                                5)),
-                                                        child: TextField(
-                                                          textAlign: TextAlign
-                                                              .left,
-                                                              textAlignVertical: TextAlignVertical.bottom,
-                                                          // controller: searchCtrl,
-                                                          keyboardType:
-                                                          TextInputType.text,
-                                                          onChanged: ((val) {
-                                                            setState(() {
-                                                              print("Hello");
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              buildTitle(),
+              buildButton(widget.title, (p0) {}),
+              InkWell(
+                splashColor: Colors.transparent,
+                // highlightColor: Colors.red,
 
-                                                              if(val.isNotEmpty) {
-                                                                filteredFaculties = facultiesInFilter.where((element) => element.toLowerCase().contains(val.toLowerCase())).toList();
-                                                              } if(val.isEmpty) {
-                                                                filteredFaculties = facultiesInFilter;
-                                                                filteredFaculties.insert(0, "Recommendation");
-                                                                filteredFaculties.insert(1, "All");
-                                                              }
-                                                              
-                                                            });
-                                                          }),
-                                                          decoration: InputDecoration(
-                                                            // contentPadding: EdgeInsets.all(5.0),
-                                                            hintText: 'Search',
-                                                            alignLabelWithHint: true,
-                                                            hintStyle: const TextStyle(
-                                                                fontSize: 16),
-                                                            border: OutlineInputBorder(
-                                                              borderRadius:
-                                                              BorderRadius.circular(
-                                                                  25),
-                                                              borderSide:
-                                                              const BorderSide(
-                                                                width: 0,
-                                                                style: BorderStyle
-                                                                    .none,
-                                                              ),
-                                                            ),
-                                                            filled: true,
-                                                            // contentPadding:
-                                                            // EdgeInsets.all(16),
-                                                            fillColor:
-                                                            const Color(0xffB1B2FF),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                      children: filteredFaculties.toSet().toList().map((e) {
-                                                        return Material(
-                                                          color:
-                                                          const Color(0xffD2DAFF),
-                                                          child: InkWell(
-                                                            highlightColor: const Color(0xffAAC4FF),
-                                                            onTap: () {
-                                                              setState(() {
-                                                                filterText = e;
-                                                                showFilter = false;
-                                                                _overlayEntry!
-                                                                    .remove();
-                                                                _overlayEntry = null;
-                                                                // goals = [];
-                                                                print(filteredFacultiesWidget.keys);
-                                                                // getAllTasks();
-                                                                if(filterText == "Recommendation") {
-                                                                  filteredFacultiesWidget = {};
-                                                                  filteredFacultiesWidget['Recommendation'] = recommendationWidget;
-                                                                } else if(filterText == "All") {
-                                                                  filteredFacultiesWidget = facultiesWidget;
-                                                                } else { 
-                                                                  filteredFacultiesWidget = facultiesWidget.filter((pair) {
-                                                                    return pair.key == filterText;
-                                                                  });
-                                                                }
-                                                              
+                onTap: () {
+                  scrollController.animateTo(0,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.fastOutSlowIn);
+                  setState(() {
+                    showFilter = !showFilter;
+                  });
+                  if (showFilter) {
+                    _overlayEntry = OverlayEntry(builder: (context) {
+                      return Align(
+                        alignment: Alignment.topLeft,
+                        child: StatefulBuilder(builder: (context, state) {
+                          return Container(
+                            width: 174,
+                            height: 200,
+                            margin: const EdgeInsets.fromLTRB(15, 260, 0, 0),
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: const Color(0xffD2DAFF),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Material(
+                                    color: const Color(0xffD2DAFF),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 40,
+                                      padding:
+                                          const EdgeInsets.fromLTRB(5, 4, 5, 4),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: TextField(
+                                        textAlign: TextAlign.left,
+                                        textAlignVertical:
+                                            TextAlignVertical.bottom,
+                                        // controller: searchCtrl,
+                                        keyboardType: TextInputType.text,
+                                        onChanged: ((val) {
+                                          setState(() {
+                                            if (val.isNotEmpty) {
+                                              filteredFaculties =
+                                                  facultiesInFilter
+                                                      .where((element) => element
+                                                          .toLowerCase()
+                                                          .contains(val
+                                                              .toLowerCase()))
+                                                      .toList();
+                                            }
+                                            if (val.isEmpty) {
+                                              filteredFaculties =
+                                                  facultiesInFilter;
+                                              if(recommendation.isNotEmpty) {
+                                                filteredFaculties.insert(
+                                                    0, "Recommendation");
+                                                filteredFaculties.insert(
+                                                    1, "All");
+                                              } else {
+                                                filteredFaculties.insert(
+                                                    0, "All");
+                                              }
+                                            }
+                                          });
+                                        }),
+                                        decoration: InputDecoration(
+                                          // contentPadding: EdgeInsets.all(5.0),
+                                          hintText: 'Search',
+                                          alignLabelWithHint: true,
+                                          hintStyle:
+                                              const TextStyle(fontSize: 16),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            borderSide: const BorderSide(
+                                              width: 0,
+                                              style: BorderStyle.none,
+                                            ),
+                                          ),
+                                          filled: true,
+                                          // contentPadding:
+                                          // EdgeInsets.all(16),
+                                          fillColor: const Color(0xffB1B2FF),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: filteredFaculties
+                                        .toSet()
+                                        .toList()
+                                        .map((e) {
+                                      return Material(
+                                        color: const Color(0xffD2DAFF),
+                                        child: InkWell(
+                                          highlightColor:
+                                              const Color(0xffAAC4FF),
+                                          onTap: () {
+                                            setState(() {
+                                              filterText = e;
+                                              showFilter = false;
+                                              _overlayEntry!.remove();
+                                              _overlayEntry = null;
+                                              // goals = [];
 
-                                                               
-                                                                
-          
-                                                                // tasks = tasks.where((element) => element["status"] == e).toList();
-                                                              });
-                                                            },
-                                                            child: Container(
-                                                              height: 44,
-                                                              margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                                              decoration: BoxDecoration(
-                                                                  borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(5)),
-                                                              alignment:
-                                                              Alignment.centerLeft,
-                                                              child: DefaultTextStyle(
-                                                                style: GoogleFonts
-                                                                    .poppins(
-                                                                    fontWeight:
-                                                                    FontWeight.w400,
-                                                                    fontSize: 15,
-                                                                    color: const Color(
-                                                                        0xff121623)),
-                                                                child: Text(
-                                                                  e,
-                                                                  textAlign:
-                                                                  TextAlign.left,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      }).toList(),
-                                                    ),
-                                                  ],
-                                                ),
+                                              // getAllTasks();
+                                              if (filterText ==
+                                                  "Recommendation") {
+                                                filteredFacultiesWidget = {};
+                                                filteredFacultiesWidget[
+                                                        'Recommendation'] =
+                                                    recommendationWidget;
+                                              } else if (filterText == "All") {
+                                                filteredFacultiesWidget =
+                                                    facultiesWidget;
+                                              } else {
+                                                filteredFacultiesWidget =
+                                                    facultiesWidget
+                                                        .filter((pair) {
+                                                  return pair.key == filterText;
+                                                });
+                                              }
+
+                                              // tasks = tasks.where((element) => element["status"] == e).toList();
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 44,
+                                            margin: const EdgeInsets.fromLTRB(
+                                                5, 0, 0, 0),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                            alignment: Alignment.centerLeft,
+                                            child: DefaultTextStyle(
+                                              style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15,
+                                                  color:
+                                                      const Color(0xff121623)),
+                                              child: Text(
+                                                e,
+                                                textAlign: TextAlign.left,
                                               ),
-                                            );
-                                          }),
-                                    );
-                                  });
-                                  Overlay.of(context)!.insert(_overlayEntry!);
-                                } else {
-                                  _overlayEntry!.remove();
-                                  _overlayEntry = null;
-                                  setState(() {
-                                    // goals2 = goals2.toSet().toList();
-                                  });
-                                }
-                                },
-                  child: Container(
-                      margin: const EdgeInsets.fromLTRB(16, 10, 0, 0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border:
-                          Border.all(width: 1, color: const Color(0xff355CCA))),
-                      width: filterText.length * 10 + 60,
-                      height: 40,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                              child: Text(
-                                filterText,
-                                style: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15,
-                                    color: const Color(0xff355CCA)),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
                               ),
                             ),
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                              child: ImageIcon(
-                                                  AssetImage("assets/Vectorchevorn.png"),
-                                                  size: 14,
-                                                  color: Colors.grey,
-                                                ),
-                            )
-                          ])),
-                ),
-                // recommendationWidget,
-                Column(
-                  children: filteredFacultiesWidget.values.toList(),
-                )
-                // Column(
-                //   children: temporaryly.map((e) {
-                //     var value = 0;
-                //     value +=1;
-          
-                //     var disballed = !(e["isFree"] == false);
-          
-                //     return ExploreTile(
-                      // title: e["companyName"]
-                      //     .length >
-                      //     30
-                      //     ? "${e["companyName"].substring(0, 30)}..."
-                      //     : e
-                //       [
-                //       "companyName"],
-                //       disabled: disballed,
-                //       taskId: e["id"],
-                //       taskCount:
-                //       "${e["SubTasks"]
-                // .where((p0) => p0['status'] == true)
-                // .length}/${e["SubTasks"].length}",
-                //       onClick:  () {
-                //         // updateValues();
-                //         // getAllTasks();
-                //         if(filterText != "Activites") {
-                //           temporaryly = tasks.where((element) => element["facultName"].toLowerCase() == filterText.toLowerCase()).toList();
-                //         }
-
-                        // setState(() {
-                        //   disballed = true;
-                        // });
-                //       },
-                //       position: e["positionName"],
-                //     );
-                //   }).toList(),
-                // )
-              ],
-            ),
+                          );
+                        }),
+                      );
+                    });
+                    Overlay.of(context).insert(_overlayEntry!);
+                  } else {
+                    _overlayEntry!.remove();
+                    _overlayEntry = null;
+                    setState(() {
+                      // goals2 = goals2.toSet().toList();
+                    });
+                  }
+                },
+                child: Container(
+                    margin: const EdgeInsets.fromLTRB(16, 10, 0, 0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                            width: 1, color: const Color(0xff355CCA))),
+                    width: filterText.length * 10 + 60,
+                    height: 40,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+                            child: Text(
+                              filterText,
+                              style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
+                                  color: const Color(0xff355CCA)),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: const ImageIcon(
+                              AssetImage("assets/Vectorchevorn.png"),
+                              size: 14,
+                              color: Colors.grey,
+                            ),
+                          )
+                        ])),
+              ),
+              // recommendationWidget,
+              Column(
+                children: filteredFacultiesWidget.values.toList(),
+              )
+            ],
           ),
         ),
       ),

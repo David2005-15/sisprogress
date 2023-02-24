@@ -111,7 +111,7 @@ class _ChangePassword extends State<ChangePassword> {
                     )
                   ),
               ),
-            InputBox(controller: widget.confirmPassword, context: context, isPassword: true, initialValue: "Confirm Password", onChanged: (String val) {print(val);}, textInputType: TextInputType.text),
+            InputBox(controller: widget.confirmPassword, context: context, isPassword: true, initialValue: "Confirm Password", onChanged: (String val) {debugPrint(val);}, textInputType: TextInputType.text),
             Button(text: "Change password", onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));}, height: 38, width: double.infinity, margin: const EdgeInsets.fromLTRB(22, 47, 22, 10),)
           ],
         ),

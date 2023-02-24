@@ -4,13 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:sis_progress/data%20class/event_process.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
-import 'package:sis_progress/widgets/custom_button.dart';
 
 class MyTaskTile extends StatefulWidget {
   final String title;
   final String position;
   final String status;
-  final EventProccess proccess;
+  final EventProccess process;
   final String eventDate;
   final String description;
   final List<List<dynamic>> subtasks;
@@ -19,28 +18,25 @@ class MyTaskTile extends StatefulWidget {
   final VoidCallback updateState;
   final String companyName;
   final String facultyName;
-  final DateTime choosenDate;
+  final DateTime chosenDate;
   final String point;
   final int taskId;
   final Future<List<dynamic>> feedbacks;
 
-
-  // final List<bool> passed;
-
-  MyTaskTile(
+  const MyTaskTile(
       {required this.eventDate,
       required this.position,
-      required this.status,    
+      required this.status,
       required this.points,
       required this.subtasks,
       required this.description,
-      required this.proccess,
+      required this.process,
       required this.title,
       required this.substringValue,
       required this.updateState,
       required this.companyName,
       required this.facultyName,
-      required this.choosenDate,
+      required this.chosenDate,
       required this.point,
       required this.taskId,
       required this.feedbacks,
@@ -107,320 +103,164 @@ class _MyTaskTile extends State<MyTaskTile> {
     // print(tasks.where((element) => element["positionName"] == widget.title));
 
     return InkWell(
-      onTap: () {
-        if(widget.choosenDate.day <= DateTime.now().day) {
-          _dialogBuiler(context, widget.title, feedback);
-        } else {
-          _youCanStart(widget.title);
-        }
-      },
-      highlightColor:  Colors.transparent,
-      splashColor: Colors.transparent,
-      child: Container(
-              margin: const EdgeInsets.fromLTRB(16, 25, 16, 0),
-              width: double.infinity,
-              height: 80,
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-                border: Border(
-                  bottom: BorderSide(width: 2.5, color: Color(0xffB1B2FF))
-                )
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 200,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            widget.title,
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                              color: const Color(0xffB1B2FF)
-                            ),
-                          ),
-                        ),
-                        FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            widget.position,
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                              color: const Color(0xffB1B2FF)
-                            ),
-                          ),
-                        ),
-                      ],
+        onTap: () {
+          if (widget.chosenDate.day <= DateTime.now().day) {
+            _dialogBuiler(context, widget.title, feedback);
+          } else {
+            _youCanStart(widget.title);
+          }
+        },
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(16, 25, 16, 0),
+          width: double.infinity,
+          height: 80,
+          decoration: const BoxDecoration(
+              color: Colors.transparent,
+              border: Border(
+                  bottom: BorderSide(width: 2.5, color: Color(0xffB1B2FF)))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.contain,
+                      child: Text(
+                        widget.title,
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            color: const Color(0xffB1B2FF)),
+                      ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(8, 5, 0, 5),
-                    alignment: Alignment.center,
-                    child: Row(
+                    FittedBox(
+                      fit: BoxFit.contain,
+                      child: Text(
+                        widget.position,
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            color: const Color(0xffB1B2FF)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(8, 5, 0, 5),
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
+                        Container(
                           margin: const EdgeInsets.fromLTRB(20, 0, 30, 0),
                           child: Text(
                             widget.point,
                             style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13,
-                              color: Colors.white
-                            ),
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13,
+                                color: Colors.white),
                           ),
                         ),
                         Container(
-                            margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                            child: Text(
-                              widget.status,
-                              style: GoogleFonts.poppins(
+                          margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          child: Text(
+                            widget.status,
+                            style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12,
                                 decoration: TextDecoration.underline,
-                                color: widget.proccess.eventColor
-                              ),
-                            ),
-                          ),
-                          ],
-                        ),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 60, 0),
-                          child: Text(
-                            widget.eventDate,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13,
-                              color: Colors.white
-                            ),
+                                color: widget.process.eventColor),
                           ),
                         ),
                       ],
                     ),
-                  )
-                ],
-              ),
-            )
-    );
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 60, 0),
+                      child: Text(
+                        widget.eventDate,
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
   }
 
   Future<void> _youCanStart(String title) {
     return showDialog(
-      context: context, 
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget> [
-                         Container(),
-                         Container(
-                          margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                          child: _getUpdateCloseButton(context, widget.updateState),
-                        )
-                      ],
-                    ),
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child:
+                            _getUpdateCloseButton(context, widget.updateState),
+                      )
+                    ],
                   ),
-                
-                  
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(40, 20, 18, 30),
-                    child: Text(
-                      "You can start this task from ${DateFormat.MMMM().format(DateTime.parse(widget.choosenDate.toIso8601String()))} ${widget.choosenDate.day}th ",
-                      style: GoogleFonts.montserrat(
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(40, 20, 18, 30),
+                  child: Text(
+                    "You can start this task from ${DateFormat.MMMM().format(DateTime.parse(widget.chosenDate.toIso8601String()))} ${widget.chosenDate.day}th ",
+                    style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w400,
                         fontSize: 20,
-                        color: const Color(0xff3A3D4C)
-                      ),
-                    ),
+                        color: const Color(0xff3A3D4C)),
                   ),
-
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await httpClient.removeTask(widget.taskId);
-                        Navigator.pop(context);
-                        widget.updateState();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xffff5c58),
-                      
-                      ),
-                      child: Text(
-                        "Delete",
-                        style: GoogleFonts.poppins(
+                ),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await httpClient.removeTask(widget.taskId);
+                      if (!mounted) return;
+                      Navigator.pop(context);
+                      widget.updateState();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xffff5c58),
+                    ),
+                    child: Text(
+                      "Delete",
+                      style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           fontSize: 16,
-                          color: Colors.white
-                        ),
-                      ),
+                          color: Colors.white),
                     ),
-                  )
-                ],
-              ),
-        );
-      }
-    );
-  }
-
-  Future<void> _showEssay(BuildContext context, String subtaskTitle,
-      String taskName, int taskId, String? description) {
-    var essayController = TextEditingController();
-
-    print(description);
-
-    if (description != null) {
-      essayController.text = description;
-    }
-
-    return showDialog<void>(
-      // barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          title: Container(
-            child: Column(
-              children: [
-                _getCloseButton(context),
-                RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(
-                      text: taskName,
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: const Color(0xff2E2323)),
-                      children: [
-                        TextSpan(
-                          text: "\n$subtaskTitle",
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: const Color(0xff2E2323)),
-                        )
-                      ]),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            Column(
-              children: [
-                StatefulBuilder(builder: ((context, setState) {
-                  return Container(
-                    margin: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                    height: 160,
-                    child: TextFormField(
-                      onChanged: ((value) {
-                        setState(() {
-                          description = essayController.text;
-                        });
-                      }),
-                      controller: essayController,
-                      expands: false,
-                      maxLines: 8,
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 12,
-                          color: const Color(0xff646464)),
-                      // initialValue: "Type about your activites or work experiance",
-                      decoration: InputDecoration(
-                        hintText:
-                            "Type about your activites or work experiance",
-                        hintStyle: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            fontStyle: FontStyle.normal,
-                            color: const Color(0xff646464)),
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color(0xffD2DAFF), width: 1)),
-                        border: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color(0xffD2DAFF), width: 1)),
-                        focusColor: const Color(0xffD2DAFF),
-                        focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xffD2DAFF))),
-                      ),
-                    ),
-                  );
-                })),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Button(
-                    //   text: "Cancel",
-                    //   onPressed: () async {
-                    //     // await httpClient.sendEssay(essayController.text, taskId);
-                    //     Navigator.pop(context);
-                    //   },
-                    //   height: 34,
-                    //   width: 101
-                    // ),
-                    Container(
-                      height: 34,
-                      width: 101,
-                      margin: const EdgeInsets.fromLTRB(18, 10, 0, 0),
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          foregroundColor: const Color(0xff355CCA),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          side: const BorderSide(
-                              color: Color(0xff355CCA), width: 1),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          "Cancel",
-                          style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: const Color(0xff355CCA)),
-                        ),
-                      ),
-                    ),
-                    Button(
-                        text: "Add",
-                        onPressed: () async {
-                          await httpClient.sendEssay(
-                              essayController.text, taskId);
-                          widget.updateState();
-                          Navigator.pop(context);
-                        },
-                        height: 34,
-                        width: 86),
-                  ],
+                  ),
                 )
               ],
-            )
-          ],
-        );
-      },
-    );
+            ),
+          );
+        });
   }
 
   Future<void> _dialogBuiler(
@@ -435,10 +275,6 @@ class _MyTaskTile extends State<MyTaskTile> {
             List<dynamic> enabledValues = [];
             List<bool> cantYouSee = [];
             List<Widget> taskContent = [];
-            bool isSubmitDisabled =
-                cantYouSee.every((element) => element == true);
-
-            var swap = [];
 
             for (int i = 0; i < widget.subtasks.length; i++) {
               enabledValues.add(widget.subtasks[i][3]);
@@ -451,7 +287,7 @@ class _MyTaskTile extends State<MyTaskTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
+                    SizedBox(
                       width: 185,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -484,64 +320,61 @@ class _MyTaskTile extends State<MyTaskTile> {
                           width: 24,
                           child: StatefulBuilder(builder: (context, state) {
                             return InkWell(
-                                onTap: () {
-                                  state(
-                                      () {
-                                        // if(enabledValues[i] == false) {
-                                        if (cantYouSee[i] == false) {
-                                          enabledValues[i] = !enabledValues[i];
-                                        }
-                                        // }
+                              onTap: () {
+                                state(
+                                  () {
+                                    // if(enabledValues[i] == false) {
+                                    if (cantYouSee[i] == false) {
+                                      enabledValues[i] = !enabledValues[i];
+                                    }
+                                    // }
 
-                                        widget.subtasks[i][3] =
-                                            enabledValues[i];
+                                    widget.subtasks[i][3] = enabledValues[i];
 
-                                        // print(val!);
-                                        // p0[3] = val!;
-                                        // print(p0[3]);
+                                    // print(val!);
+                                    // p0[3] = val!;
+                                    // print(p0[3]);
 
-                                        if (enabledValues[i]) {
-                                          subtaskId.add(widget.subtasks[i][1]);
-                                        } else {
-                                          subtaskId
-                                              .remove(widget.subtasks[i][1]);
-                                        }
+                                    if (enabledValues[i]) {
+                                      subtaskId.add(widget.subtasks[i][1]);
+                                    } else {
+                                      subtaskId.remove(widget.subtasks[i][1]);
+                                    }
 
-                                        // print(subtaskId);
+                                    // print(subtaskId);
 
-                                        // _showEssay(context, p0[0], title, p0[1], p0[2]);
-                                      },
-                                    );
-                                    // await httpClient.doneSubtask(p0[1], p0[3]);
-
-                                    widget.updateState();
+                                    // _showEssay(context, p0[0], title, p0[1], p0[2]);
                                   },
-                                child: Container(
+                                );
+                                // await httpClient.doneSubtask(p0[1], p0[3]);
+
+                                widget.updateState();
+                              },
+                              child: Container(
                                   width: 18,
                                   height: 18,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: !cantYouSee[i] == false
-                                      ? Colors.transparent
-                                      : enabledValues[i]
-                                    ? const Color(0xff355CCA)
-                                    : Colors.transparent,
-                                    border: Border.all(width: 1,
+                                      borderRadius: BorderRadius.circular(5),
                                       color: !cantYouSee[i] == false
-                                          ? const Color(0xffAAC4FF)
-                                          : const Color(0xffAAC4FF))
-                                  ),
+                                          ? Colors.transparent
+                                          : enabledValues[i]
+                                              ? const Color(0xff355CCA)
+                                              : Colors.transparent,
+                                      border: Border.all(
+                                          width: 1,
+                                          color: !cantYouSee[i] == false
+                                              ? const Color(0xffAAC4FF)
+                                              : const Color(0xffAAC4FF))),
                                   child: Icon(
                                     Icons.check,
                                     size: 18,
-                                    color: !cantYouSee[i] == false ? const Color(0xffAAC4FF) : enabledValues[i]
-                                      ? Colors.white
-                                      : Colors.transparent,
-                                  )
-                                ),
-                              );
-
-                            
+                                    color: !cantYouSee[i] == false
+                                        ? const Color(0xffAAC4FF)
+                                        : enabledValues[i]
+                                            ? Colors.white
+                                            : Colors.transparent,
+                                  )),
+                            );
                           }),
                         ),
                       ],
@@ -577,10 +410,10 @@ class _MyTaskTile extends State<MyTaskTile> {
                                   // color: Colors.black,
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: 150,
                                 child: Text(
-                                  widget.facultyName ?? "",
+                                  widget.facultyName,
                                   textAlign: TextAlign.left,
                                   style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w600,
@@ -613,7 +446,7 @@ class _MyTaskTile extends State<MyTaskTile> {
                                   // color: Colors.black,
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: 200,
                                 child: Text(
                                   widget.companyName,
@@ -645,7 +478,7 @@ class _MyTaskTile extends State<MyTaskTile> {
                                   // color: Colors.black,
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: 200,
                                 child: Text(
                                   title,
@@ -665,10 +498,9 @@ class _MyTaskTile extends State<MyTaskTile> {
                 ),
                 actions: <Widget>[
                   StatefulBuilder(builder: (context, state) {
-                    return Container(
+                    return SizedBox(
                       height: 200,
                       width: 350,
-
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -684,7 +516,7 @@ class _MyTaskTile extends State<MyTaskTile> {
                                           0, 0, 10, 0),
                                       child: const ImageIcon(
                                         AssetImage("assets/MyPoints.png"),
-                                        color: const Color(0xff3A3D4C),
+                                        color: Color(0xff3A3D4C),
                                         size: 15,
                                       ),
                                     ),
@@ -695,14 +527,12 @@ class _MyTaskTile extends State<MyTaskTile> {
                                           fontSize: 18,
                                           color: const Color(0xff3A3D4C)),
                                     ),
-
                                     Text(
                                       "       ${currentPoint.toString()} points",
                                       style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 15,
-                                        color: const Color(0xff3a3d4c)
-                                      ),
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 15,
+                                          color: const Color(0xff3a3d4c)),
                                     )
                                   ],
                                 ),
@@ -740,38 +570,30 @@ class _MyTaskTile extends State<MyTaskTile> {
                                                 30, 10, 30, 0),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Container(
-                                                  // margin: const EdgeInsets.fromLTRB(0, 5, 30, 0),
-                                                  child: Text(
-                                                    "Duration",
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontSize: 15,
-                                                            color: const Color(
-                                                                0xff3A3D4C)),
-                                                  ),
+                                                Text(
+                                                  "Duration",
+                                                  style: GoogleFonts.montserrat(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 15,
+                                                      color: const Color(
+                                                          0xff3A3D4C)),
                                                 ),
-                                                Container(
-                                                  // margin: const EdgeInsets.fromLTRB(30, 5, 0, 0),
-                                                  child: Text(
-                                                    "Points",
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontSize: 15,
-                                                            color: const Color(
-                                                                0xff3A3D4C)),
-                                                  ),
+                                                Text(
+                                                  "Points",
+                                                  style: GoogleFonts.montserrat(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 15,
+                                                      color: const Color(
+                                                          0xff3A3D4C)),
                                                 )
                                               ],
                                             ),
                                           ),
-
                                           Column(
                                             children: points.map<Widget>((e) {
                                               return Container(
@@ -784,7 +606,8 @@ class _MyTaskTile extends State<MyTaskTile> {
                                                           .spaceBetween,
                                                   children: [
                                                     Text(
-                                                      e["taskSpentWeek"] ?? "Hello",
+                                                      e["taskSpentWeek"] ??
+                                                          "Hello",
                                                       style: GoogleFonts
                                                           .montserrat(
                                                               fontWeight:
@@ -815,7 +638,8 @@ class _MyTaskTile extends State<MyTaskTile> {
                                       Container(
                                         height: 10,
                                         width: double.infinity,
-                                        margin: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+                                        margin: const EdgeInsets.fromLTRB(
+                                            15, 15, 15, 5),
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -844,48 +668,51 @@ class _MyTaskTile extends State<MyTaskTile> {
                                               ],
                                             )),
                                         child: Transform(
-                                          transform: Matrix4.translationValues(currentDay != null ? currentDay.toDouble(): 0, 0, 0.0),
+                                          transform: Matrix4.translationValues(
+                                              currentDay.toDouble(), 0, 0.0),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Container(
                                               width: 16,
                                               height: 16,
                                               decoration: BoxDecoration(
-                                                color: Colors.purple.shade200,
-                                                shape: BoxShape.circle
-                                              ),
+                                                  color: Colors.purple.shade200,
+                                                  shape: BoxShape.circle),
                                             ),
                                           ),
                                         ),
                                       ),
-
                                       Container(
                                         width: double.infinity,
-                                        margin: const EdgeInsets.fromLTRB(15, 0, 15, 5),
+                                        margin: const EdgeInsets.fromLTRB(
+                                            15, 0, 15, 5),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Transform(
-                                            transform: Matrix4.translationValues(currentDay != null ? currentDay.toDouble(): 0, 0, 0.0),
+                                            transform:
+                                                Matrix4.translationValues(
+                                                    currentDay.toDouble(),
+                                                    0,
+                                                    0.0),
                                             child: Column(
                                               children: [
                                                 Text(
-                                                  "${currentPoint.toString()} point" ,
+                                                  "${currentPoint.toString()} point",
                                                   style: GoogleFonts.montserrat(
-                                                              fontWeight:
-                                                                  FontWeight.w500,
-                                                              fontSize: 12,
-                                                              color: const Color(
-                                                                  0xff3A3D4C)),
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 12,
+                                                      color: const Color(
+                                                          0xff3A3D4C)),
                                                 ),
-
                                                 Text(
                                                   "${currentDay.toString()} days",
                                                   style: GoogleFonts.montserrat(
-                                                              fontWeight:
-                                                                  FontWeight.w500,
-                                                              fontSize: 12,
-                                                              color: const Color(
-                                                                  0xff3A3D4C)),
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 12,
+                                                      color: const Color(
+                                                          0xff3A3D4C)),
                                                 )
                                               ],
                                             ),
@@ -906,9 +733,9 @@ class _MyTaskTile extends State<MyTaskTile> {
                                     Container(
                                       margin: const EdgeInsets.fromLTRB(
                                           0, 0, 10, 0),
-                                      child: ImageIcon(
+                                      child: const ImageIcon(
                                         AssetImage("assets/Subtask.png"),
-                                        color: const Color(0xff3A3D4C),
+                                        color: Color(0xff3A3D4C),
                                         size: 20,
                                       ),
                                     ),
@@ -938,7 +765,7 @@ class _MyTaskTile extends State<MyTaskTile> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           width: 104,
                                           height: 36,
                                           child: OutlinedButton(
@@ -984,18 +811,23 @@ class _MyTaskTile extends State<MyTaskTile> {
                                             onPressed: !(cantYouSee.every(
                                                     (element) =>
                                                         element == true))
-                                                ? () {
+                                                ? () async {
                                                     // print(subtaskId);
 
-                                                    subtaskId.forEach(
-                                                        (element) async {
-                                                      await httpClient
-                                                          .doneSubtask(
-                                                              element, true);
-                                                      widget.updateState();
-                                                    });
+                                              // subtaskId.forEach(
+                                              //           (element) async {
+                                              //         await httpClient
+                                              //             .doneSubtask(
+                                              //                 element, true);
+                                              //         widget.updateState();
+                                              //       });
+                                                    for(var id in subtaskId) {
+                                                      await httpClient.doneSubtask(id, true);
+                                                    }
+
                                                     widget.updateState();
                                                     // widget.updateState();
+                                                    if(!mounted) return;
 
                                                     Navigator.pop(context);
                                                   }
@@ -1072,7 +904,7 @@ class _MyTaskTile extends State<MyTaskTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 200,
                     child: Text(
                       "You can leave your feedback here!",
@@ -1093,7 +925,7 @@ class _MyTaskTile extends State<MyTaskTile> {
                   )
                 ],
               ),
-              content: Container(
+              content: SizedBox(
                 height: 400,
                 child: Column(
                   children: [
@@ -1112,35 +944,39 @@ class _MyTaskTile extends State<MyTaskTile> {
                                       color: const Color(0xff646464)),
                                 ),
                                 children: [
-                                  Container(
-                                    height: 50,
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        children: feed.map<Widget>((e) {
-                                  return Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(
-                                            width: 1.5,
-                                            color: const Color(0xff3A3D4C))),
-                                    margin: const EdgeInsets.fromLTRB(13, 2, 13, 2),
-                                    padding: const EdgeInsets.fromLTRB(5, 7, 5, 7),
-                                    child: Text(
-                                      e["feedback"],
-                                      style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 12,
-                                          fontStyle: FontStyle.italic,
-                                          color: const Color(0xff3A3D4C)),
-                                    ),
-                                  );
-                                }).toList(),
-                                      ),
-                                    )
-                                  )
-                                ]
-                              ),
+                                  SizedBox(
+                                      height: 50,
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          children: feed.map<Widget>((e) {
+                                            return Container(
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  border: Border.all(
+                                                      width: 1.5,
+                                                      color: const Color(
+                                                          0xff3A3D4C))),
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  13, 2, 13, 2),
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      5, 7, 5, 7),
+                                              child: Text(
+                                                e["feedback"],
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 12,
+                                                    fontStyle: FontStyle.italic,
+                                                    color: const Color(
+                                                        0xff3A3D4C)),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ))
+                                ]),
                           ),
                           Container(
                             margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
@@ -1188,77 +1024,75 @@ class _MyTaskTile extends State<MyTaskTile> {
                                     fontSize: 12,
                                     color: const Color(0xffAAC4FF))),
                           ),
-                          
                         ],
                       ),
                     ),
                     Container(
-                            margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Container(
-                                  width: 104,
-                                  height: 36,
-                                  child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      backgroundColor: Colors.transparent,
-                                      shadowColor: Colors.transparent,
-                                      foregroundColor: const Color(0xff355CCA),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5.0),
-                                      ),
-                                      side: const BorderSide(
-                                          color: Color(0xff355CCA), width: 1),
-                                    ),
-                                    onPressed: () {
-                                      getAllFeedbacks();
-                                      widget.updateState();
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      "Cancel",
-                                      style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15,
-                                          color: const Color(0xff355CCA)),
-                                    ),
-                                  ),
+                      margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 104,
+                            height: 36,
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                foregroundColor: const Color(0xff355CCA),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
                                 ),
-                                Container(
-                                  width: 104,
-                                  height: 36,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xff355CCA),
-                                      shadowColor: Colors.transparent,
-                                      foregroundColor: Colors.white,
-                                    ),
-                                    onPressed: answer.text.length > 0
-                                        ? () {
-                                            var httpClient = Client();
+                                side: const BorderSide(
+                                    color: Color(0xff355CCA), width: 1),
+                              ),
+                              onPressed: () {
+                                getAllFeedbacks();
+                                widget.updateState();
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "Cancel",
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                    color: const Color(0xff355CCA)),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 104,
+                            height: 36,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xff355CCA),
+                                shadowColor: Colors.transparent,
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: answer.text.isNotEmpty
+                                  ? () {
+                                      var httpClient = Client();
 
-                                            httpClient.sendEssay(
-                                                answer.text, taskId);
-                                            widget.updateState();
-                                            getAllFeedbacks();
+                                      httpClient.sendEssay(answer.text, taskId);
+                                      widget.updateState();
+                                      getAllFeedbacks();
 
-                                            Navigator.pop(context);
-                                            // widget.updateState();
-                                          }
-                                        : null,
-                                    child: Text(
-                                      "Submit",
-                                      style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15,
-                                          color: Colors.white),
-                                    ),
-                                  ),
-                                )
-                              ],
+                                      Navigator.pop(context);
+                                      // widget.updateState();
+                                    }
+                                  : null,
+                              child: Text(
+                                "Submit",
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                    color: Colors.white),
+                              ),
                             ),
                           )
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -1266,27 +1100,6 @@ class _MyTaskTile extends State<MyTaskTile> {
           });
         });
   }
-}
-
-_getCloseButton(context) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-    child: GestureDetector(
-      child: Container(
-        alignment: FractionalOffset.topRight,
-        child: GestureDetector(
-          child: const Icon(
-            Icons.clear,
-            color: Colors.grey,
-            size: 18.5,
-          ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-    ),
-  );
 }
 
 _getUpdateCloseButton(context, VoidCallback updateState) {

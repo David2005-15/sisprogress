@@ -221,6 +221,7 @@ class _Grade9thSecond extends State<Grade9thSecond> {
                                     anyError = true;
                                   });
                                 } else {
+                                  if(!mounted) return;
                                   Navigator.push(context,  MaterialPageRoute(builder: (context) => VerifyEmail(email: widget.registration.email,)));
                                 }                               
                               } 

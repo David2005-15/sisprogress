@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/dropdown.dart';
 import 'package:sis_progress/data%20class/registration_data_grade10.dart';
 import 'package:sis_progress/data%20class/registration_data_grade9.dart';
@@ -152,9 +151,6 @@ class _Registration extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
-
-
-    String initialCountry = 'NG';
     PhoneNumber number = PhoneNumber(isoCode: 'AM');
 
     double height = MediaQuery.of(context).size.height - 141;
@@ -200,7 +196,7 @@ class _Registration extends State<Registration> {
                   ),
 
                   Container(
-                    margin: EdgeInsets.fromLTRB(23, 25, 23, 0),
+                    margin: const EdgeInsets.fromLTRB(23, 25, 23, 0),
                     child: TextFormField(
                       // readOnly: true,
                       maxLines: 1,
@@ -209,7 +205,7 @@ class _Registration extends State<Registration> {
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
                           errorText:
-                              showEmailValidation ?? false ? emailErrorText : null,
+                              showEmailValidation ? emailErrorText : null,
                           alignLabelWithHint: true,
                           labelText: "Email",
                           errorStyle: GoogleFonts.poppins(
@@ -457,7 +453,7 @@ class _Registration extends State<Registration> {
 
                   // ),
                   Container(
-                    margin: EdgeInsets.fromLTRB(23, 25, 23, 0),
+                    margin: const EdgeInsets.fromLTRB(23, 25, 23, 0),
                     child: TextFormField(
                       // focusNode: ageFocusNode,
                       readOnly: true,
@@ -467,7 +463,7 @@ class _Registration extends State<Registration> {
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
                           errorText:
-                              showageErroText ?? false ? ageErroText : null,
+                              showageErroText ? ageErroText : null,
                           alignLabelWithHint: true,
                           labelText: "Birth date",
                           errorStyle: GoogleFonts.poppins(
@@ -498,7 +494,7 @@ class _Registration extends State<Registration> {
                               // choosenDate = DateTime.now();
                               _dialogBuilder();
                             },
-                            child: Icon(
+                            child: const Icon(
                               Icons.calendar_month_outlined,
                               color: Colors.white,
                               size: 20,
@@ -593,7 +589,7 @@ class _Registration extends State<Registration> {
                             });
                           }
 
-                          if (widget.phone.text.length == 0) {
+                          if (widget.phone.text.isEmpty) {
                             setState(() {
                               phoneErrorText = "Please fill phone field";
                               showphoneErrorText = true;
@@ -605,7 +601,7 @@ class _Registration extends State<Registration> {
                             });
                           }
 
-                          if (widget.age.text.length == 0) {
+                          if (widget.age.text.isEmpty) {
                             setState(() {
                               ageErroText = "Please fill age field";
                               showageErroText = true;
@@ -638,8 +634,6 @@ class _Registration extends State<Registration> {
                         }
 
                         else if (widget.dropDown.value == "Up to 9th grade") {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
 
                           // prefs.setString("email", widget.email.text);
                           // prefs.setString("number", widget.phone.text);
@@ -743,7 +737,7 @@ class _Registration extends State<Registration> {
             builder: (context, state) {
               return AlertDialog(
                 backgroundColor: const Color(0xff121623),
-                content: Container(
+                content: SizedBox(
                       width: 100,
                       height: 220,
                       child: TableCalendar(
@@ -815,7 +809,7 @@ class _Registration extends State<Registration> {
                                 fontSize: 12,
                                 color: Colors.white,
                               ),
-                              todayDecoration: BoxDecoration(color: Colors.transparent),
+                              todayDecoration: const BoxDecoration(color: Colors.transparent),
                               holidayTextStyle: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12,
@@ -869,14 +863,13 @@ class _Registration extends State<Registration> {
                                 // // print(choosenDate);
                                 // widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
                                 month = val;
-                                print(month);
+
                                 DateFormat monthFormat = DateFormat.MMMM();
                                 DateTime monthr = monthFormat.parse(month);
-                                print(monthr.month);
+
                                 int monthIndex = monthr.month;
                                 choosenDate =
                                     DateTime(choosenDate.year, monthIndex, choosenDate.day);
-                                print(choosenDate);
                               });
 
                             },
@@ -931,25 +924,11 @@ class _Registration extends State<Registration> {
                                 year = val;
                                 choosenDate = DateTime(int.parse(year), choosenDate.month, choosenDate.day);
 
-                                print(choosenDate.month);
-                                print(choosenDate);
-                                // print(choosenDate);
                                 widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
                                 setState(() {
                                   
                                 });
                               });
-
-                              // setState(() {
-                              //   year = val;
-                              //   choosenDate = DateTime(int.parse(year), choosenDate.month, choosenDate.day);
-                              //   print(choosenDate);
-                              //   widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
-                              // });
-
-                              // setState(() {
-                              //   // choosenDate = DateTime(int.parse(year), choosenDate.month, choosenDate.day);
-                              // });
                             },
                             icon: const ImageIcon(
                               AssetImage("assets/Vectorchevorn.png"),

@@ -22,15 +22,6 @@ class CalendarTile extends StatelessWidget {
     super.key
   });
 
-  // bool getIsToday() {
-  //   DateTime date = DateTime.now();
-
-  //   if(weekDay == DateFormat('EEEE').format(date)) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
   Color getTextColor() {
     if(color == const Color(0xffFF5C58)) {
       return Colors.white;

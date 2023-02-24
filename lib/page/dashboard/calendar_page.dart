@@ -9,27 +9,25 @@ import 'package:sis_progress/page/dashboard/even_tile.dart';
 import 'package:sis_progress/widgets/dashboard/calendar_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+
 class CalendarPage extends StatefulWidget {
   CalendarPage({
     super.key
   });
 
+
+
+
   @override
   State<StatefulWidget> createState() => _CalendarPage();
-
-  var date = DateTime.now();
-  var chosenDate = DateTime.now();
-
-  DateTime getChosenDate() {
-    return chosenDate;
-  }
-
 }
 
 class _CalendarPage extends State<CalendarPage> {
   List<int> years = [2023, 2024, 2025, 2026, 2027];
   late String year;
 
+  var date = DateTime.now();
+  var chosenDate = DateTime.now();
 
   List<String> months = [
     "January",
@@ -63,14 +61,23 @@ class _CalendarPage extends State<CalendarPage> {
     setState(() {
       event.clear();
 
-      temp.forEach((element) {
-        DateTime date = DateTime.parse(element["startDate"]);
+      // temp.forEach((element) {
+      //   DateTime date = DateTime.parse(element["startDate"]);
+      //
+      //   if ((date.day == widget.chosenDate.day) &&
+      //       (date.month == widget.chosenDate.month)) {
+      //     event.add(element);
+      //   }
+      // });
 
-        if ((date.day == widget.chosenDate.day) &&
-            (date.month == widget.chosenDate.month)) {
-          event.add(element);
+      for(var elem in temp) {
+        var date = DateTime.parse(elem["startDate"]);
+
+        if((date.day == chosenDate.day) &&
+            (date.month == chosenDate.month)) {
+          event.add(elem);
         }
-      });
+      }
     });
   }
 
@@ -95,7 +102,7 @@ class _CalendarPage extends State<CalendarPage> {
     super.initState();
   }
 
-  EventProccess getProccess(String name) {
+  EventProccess getProcess(String name) {
     switch (name) {
       case "In Progress":
         return EventProccess.progress;
@@ -115,22 +122,22 @@ class _CalendarPage extends State<CalendarPage> {
   PopupMenuStatus status = PopupMenuStatus.closed;
 
   bool isDescriptionVisible = false;
-  bool isFloatingButtonVisisble = true;
+  bool isFloatingButtonVisible = true;
 
   void changeFloatingButtonState() {
     setState(() {
-      var diff = widget.chosenDate.compareTo(DateTime.now());
+      var diff = chosenDate.compareTo(DateTime.now());
       if (calendarType != "Week") {
-        if (isSameDay(widget.chosenDate, DateTime.now())) {
-          isFloatingButtonVisisble = true;
+        if (isSameDay(chosenDate, DateTime.now())) {
+          isFloatingButtonVisible = true;
         }
         else if ((diff < 0)) {
-          isFloatingButtonVisisble = false;
+          isFloatingButtonVisible = false;
         } else {
-          isFloatingButtonVisisble = true;
+          isFloatingButtonVisible = true;
         }
       } else {
-        isFloatingButtonVisisble = true;
+        isFloatingButtonVisible = true;
       }
     });
   }
@@ -150,19 +157,18 @@ class _CalendarPage extends State<CalendarPage> {
   Widget build(BuildContext context) {
     changeFloatingButtonState();
 
-
     return WillPopScope(
       onWillPop: () {
         return Future.value(false);
       },
       child: Scaffold(
         floatingActionButton: Visibility(
-          visible: isFloatingButtonVisisble,
+          visible: isFloatingButtonVisible,
           child: SizedBox(
               width: 45,
               height: 45,
               child: Visibility(
-                visible: isFloatingButtonVisisble,
+                visible: isFloatingButtonVisible,
                 child: FloatingActionButton(
                   onPressed: () async {
     
@@ -171,14 +177,16 @@ class _CalendarPage extends State<CalendarPage> {
                     List<List<String>> points = [];
     
                     List<dynamic> tasks = [];
-    
+
+                    if(!mounted) return;
+                    
                     _dialogBuilder(
                         context,
                         value,
                         points,
                         tasks,
                         httpClient,
-                        widget.chosenDate, () {
+                        chosenDate, () {
                       updateEvent();
                     });
                   },
@@ -213,10 +221,11 @@ class _CalendarPage extends State<CalendarPage> {
                     year = val;
                     status = PopupMenuStatus.opened;
                     DateFormat monthFormat = DateFormat.MMMM();
-                    DateTime monthr = monthFormat.parse(month);
-                    int monthIndex = monthr.month;
-                    widget.chosenDate = DateTime(
-                        int.parse(year), monthIndex, widget.date.day);
+                    DateTime parsedMonth = monthFormat.parse(month);
+                    int monthIndex = parsedMonth.month;
+                    chosenDate = DateTime(
+                        int.parse(year), monthIndex, date.day);
+                    updateEvent();
                   });
                 },
 
@@ -224,10 +233,11 @@ class _CalendarPage extends State<CalendarPage> {
                   setState(() {
                     month = val;
                     DateFormat monthFormat = DateFormat.MMMM();
-                    DateTime monthr = monthFormat.parse(month);
-                    int monthIndex = monthr.month;
-                    widget.chosenDate =
-                        DateTime(widget.date.year, monthIndex, widget.date.day);
+                    DateTime parsedMonth = monthFormat.parse(month);
+                    int monthIndex = parsedMonth.month;
+                    chosenDate =
+                        DateTime(date.year, monthIndex, date.day);
+                    updateEvent();
                   });
                 },
                 value: year,
@@ -243,10 +253,10 @@ class _CalendarPage extends State<CalendarPage> {
                   daysOfWeekHeight: 50,
                   rowHeight: 40,
                   selectedDayPredicate: (day) =>
-                      isSameDay(day, widget.chosenDate),
+                      isSameDay(day, chosenDate),
                   onDaySelected: (selectedDay, focusedDay) {
                     setState(() {
-                      widget.chosenDate = selectedDay;
+                      chosenDate = selectedDay;
                       updateEvent();
                     });
                   },
@@ -289,7 +299,7 @@ class _CalendarPage extends State<CalendarPage> {
                   ),
                   firstDay: DateTime.utc(2010, 10, 16),
                   lastDay: DateTime.utc(2030, 3, 14),
-                  focusedDay: widget.chosenDate,
+                  focusedDay: chosenDate,
                   headerVisible: false,
                   headerStyle: const HeaderStyle(
                     formatButtonVisible: false,
@@ -320,7 +330,7 @@ class _CalendarPage extends State<CalendarPage> {
               Container(
                 margin: const EdgeInsets.fromLTRB(16, 0, 0, 10),
                 child: Text(
-                  "${DateFormat('EEEE').format(widget.chosenDate)} ${widget.chosenDate.day}",
+                  "${DateFormat('EEEE').format(chosenDate)} ${chosenDate.day}",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w500,
                     fontSize: 20,
@@ -356,7 +366,7 @@ class _CalendarPage extends State<CalendarPage> {
                   String substringValue = "${temp2.length}/${swap.length}";
 
                   return EventTile(
-                    proccess: getProccess(e["status"]),
+                    proccess: getProcess(e["status"]),
                     title: e["positionName"],
                     description: "Hello World",
                     subtasks: swap,
@@ -367,7 +377,7 @@ class _CalendarPage extends State<CalendarPage> {
                     facultyName: e["facultyName"],
                     companyName: e["companyName"],
                     taskId: e["id"],
-                    choosenDate: widget.chosenDate,);
+                    choosenDate: chosenDate,);
                 }).toList(),
               )
             ],
@@ -387,13 +397,12 @@ class _CalendarPage extends State<CalendarPage> {
     List<Widget> taskContent = [];
     // bool isVisible = false;
 
-    List<bool> boolan = [];
-    List<List<Widget>> subtaskNames = [];
+    List<bool> boolean = [];
     List<bool> cantYouSee = [];
 
 
     for (int i = 0; i < tasks.length; i++) {
-      boolan.add(false);
+      boolean.add(false);
       cantYouSee.add(tasks[i]["isFree"]);
 
       // print(tasks[i]);
@@ -425,8 +434,8 @@ class _CalendarPage extends State<CalendarPage> {
                           onTap: () {
                             state(() {
                               if (tasks[i]["isFree"] == true) {
-                                boolan[i] = !boolan[i];
-                                boolan[i]
+                                boolean[i] = !boolean[i];
+                                boolean[i]
                                     ? addedTasks.add(tasks[i])
                                     : addedTasks.remove(tasks[i]);
                               }
@@ -438,7 +447,7 @@ class _CalendarPage extends State<CalendarPage> {
                               decoration: BoxDecoration(
                                   color: tasks[i]["isFree"] == false
                                       ? Colors.transparent
-                                      : boolan[i]
+                                      : boolean[i]
                                     ? const Color(0xff355CCA)
                                     : Colors.transparent,
                                   borderRadius: BorderRadius.circular(5),
@@ -450,31 +459,12 @@ class _CalendarPage extends State<CalendarPage> {
                               child: Icon(
                                 Icons.check,
                                 size: 18,
-                                color: tasks[i]["isFree"] == false ? const Color(0xffAAC4FF) : boolan[i]
+                                color: tasks[i]["isFree"] == false ? const Color(0xffAAC4FF) : boolean[i]
                                     ? Colors.white
                                     : Colors.transparent,
                               )
                           ),
                         );
-
-                        //   child: Checkbox(
-                        //       fillColor:
-                        //           MaterialStateProperty.resolveWith(getColor),
-                        //       value: (tasks[i]["isFree"] == false)
-                        //           ? true
-                        //           : boolan[i],
-                        //       onChanged: (tasks[i]["isFree"] == false)
-                        //           ? null
-                        //           : ((value) {
-                        //               setState(() {
-                        //                 boolan[i] = value!;
-                        //                 value
-                        //                     ? addedTasks.add(tasks[i])
-                        //                     : addedTasks.remove(tasks[i]);
-                        //                 print(addedTasks);
-                        //               });
-                        //             })),
-                        // );
                       }))
                     ],
                   ),
@@ -571,19 +561,25 @@ class _CalendarPage extends State<CalendarPage> {
                         height: 34,
                         child: ElevatedButton(
                             onPressed: !cantYouSee.every((element) =>
-                              element == false) ? () {
+                              element == false) ? () async {
                                 state(() {
 
                                 });
                               // httpClient.addTask(addedTasks[0]["id"], date.toIso8601String());
-                              addedTasks.forEach((element) async {
-                                await httpClient.addTask(
-                                    element["id"], date.toIso8601String());
-                                reload();
-                              });
+                              // addedTasks.forEach((element) async {
+                              //   await httpClient.addTask(
+                              //       element["id"], date.toIso8601String());
+                              //   reload();
+                              // });
+                                for(var taskId in addedTasks) {
+                                  await httpClient.addTask(taskId["id"], date.toIso8601String());
+                                  reload();
+                                }
 
-                              Navigator.pop(context);
-                              reload();
+                                if(!mounted) return;
+
+                                Navigator.pop(context);
+                                reload();
                             } : null,
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xff355CCA),
@@ -639,7 +635,7 @@ Container buildTitle() {
 }
 
 
-Widget buildDayCalendar(var choosenDate,
+Widget buildDayCalendar(var chosenDate,
     Function(DateTime, DateTime) onDaySelect) {
   return Container(
     width: double.infinity,
@@ -649,7 +645,7 @@ Widget buildDayCalendar(var choosenDate,
       availableGestures: AvailableGestures.all,
       daysOfWeekHeight: 50,
       rowHeight: 40,
-      selectedDayPredicate: (day) => isSameDay(day, choosenDate),
+      selectedDayPredicate: (day) => isSameDay(day, chosenDate),
       onDaySelected: onDaySelect,
       calendarBuilders: CalendarBuilders(
         selectedBuilder: (context, day, focusedDay) {
@@ -689,7 +685,7 @@ Widget buildDayCalendar(var choosenDate,
       ),
       firstDay: DateTime.utc(2010, 10, 16),
       lastDay: DateTime.utc(2030, 3, 14),
-      focusedDay: choosenDate,
+      focusedDay: chosenDate,
       headerVisible: false,
       headerStyle: const HeaderStyle(
         formatButtonVisible: false,

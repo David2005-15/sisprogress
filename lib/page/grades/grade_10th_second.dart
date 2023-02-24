@@ -13,8 +13,7 @@ import 'package:sis_progress/data%20class/radio_button_handler.dart';
 import '../../widgets/progress/progress_bar.dart';
 
 class Grade10thSecond extends StatefulWidget {
-  final List<String> activites = [];
-  final List<String> activites2 = [];
+  final List<String> activities = [];
   final TextEditingController controller = TextEditingController();
   final TextEditingController work = TextEditingController();
   final TextEditingController work2 = TextEditingController();
@@ -817,7 +816,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   ],
                 ),
               ),
-              buildNavigation(context, widget.activites, () async {
+              buildNavigation(context, widget.activities, () async {
                 widget.reg.place = widget.secondQuest.value;
                 widget.reg.testScore = widget.thirdQuest.value;
                 widget.reg.school = widget.controller.text;

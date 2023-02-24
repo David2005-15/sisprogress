@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/page/home.dart';
 import 'package:sis_progress/page/login.dart';
-import 'package:sis_progress/widgets/countdown.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/progress/progress_bar.dart';
@@ -41,20 +40,10 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
   String time = "0:30";
 
   void startTimer () {
-    // _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-    //   setState(() {
-    //     if (_seconds > 0) {
-    //       _seconds--;
-    //     } else {
-    //       _timer.cancel();
-    //     }
-    //   });
-    // });
-
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         if(timer != 0) {
-                  timer--;
+          timer--;
         }
         time = "0:$timer";
       });
@@ -118,9 +107,6 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
                     isDisabled = false;
 
                   });
-
-
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                 } : null, height: 35, width: double.infinity),
     
                 Visibility(
@@ -145,6 +131,13 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
                       ),
                     ),
                   ),
+                ),
+
+                Visibility(
+                  visible: sendAgain,
+                  child: Button(text: "Back to login", onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                  }, height: 36, width: double.infinity),
                 )
               ],
             ),

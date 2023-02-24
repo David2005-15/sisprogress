@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/forgot_password.dart';
 import 'package:sis_progress/page/home.dart';
@@ -45,6 +46,11 @@ class _LoginPage extends State<LoginPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -87,23 +93,10 @@ class _LoginPage extends State<LoginPage> {
                     ),
                   )
                 ),
-                buildLowerRow(isVisible, () {
-                  setState(() {
-                    isVisible = !isVisible;
-                    if(isVisible) {
-                      iconColor = const Color(0xff355CCA);
-                      borderColor = const Color(0xff355CCA);
-                    } else {
-                      iconColor = Colors.transparent;
-                      borderColor = const Color(0xffBFBFBF);
-                    }
-                  });
-                }, context, iconColor, borderColor),
+                buildLowerRow(isVisible, () => null, context, iconColor, borderColor),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                   child: Button(text: "Log In", onPressed: () async {
-    
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
                     if(!emailMatch(widget.email.text)) {
                       setState(() {
                         showEmailValidation = true;
@@ -118,6 +111,10 @@ class _LoginPage extends State<LoginPage> {
                     try {
                       var value = await httpClient.loginUser(widget.email.text, widget.password.text);
                       if(value["success"]) {
+                        SharedPreferences.getInstance().then((value) {
+                          value.setBool("auth", true);
+                        });
+                        if(!mounted) return;
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
                       }
                     } catch(e) {
@@ -125,9 +122,6 @@ class _LoginPage extends State<LoginPage> {
                         showErrorVisibility = true;
                       });
                     }
-                    // print(value["fullName"]);
-                    // print(value["fullName"]);
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
                   }, height: 38, width: 280)
                 ),
     
@@ -208,26 +202,10 @@ FittedBox buildLowerRow(bool isVisible, Function() onChange, BuildContext contex
   return FittedBox(
     fit: BoxFit.contain,
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget> [
-        Container(
-          margin: const EdgeInsets.fromLTRB(5, 5, 15, 0),
-          child: Row(
-            children: <Widget> [
-              buildCheckbox(iconColor: iconColor, borderColor: borderColor, onChange: onChange),
-
-              Text(
-                "Remember me",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 13,
-                  color: const Color(0xff355CCA)
-              ),
-            )
-          ],
-          ),
-        ),
+        Container(),
 
         Container(
           margin: const EdgeInsets.fromLTRB(15, 5, 5, 0),

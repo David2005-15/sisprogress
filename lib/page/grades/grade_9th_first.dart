@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/radio_button_handler.dart';
 import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/page/grades/grade_9th_second.dart';
@@ -9,7 +8,6 @@ import '../../data class/registration_data_grade9.dart';
 import '../../widgets/drawers/app_bar.dart';
 import '../../widgets/progress/progress_bar.dart';
 import '../../widgets/progress/radio_button_group.dart';
-import 'grade_10th_second.dart';
 
 class Grade9thFirst extends StatefulWidget {
   final RegistrationGrade9 registration;
@@ -123,19 +121,19 @@ class _Grade9thFirst extends State<Grade9thFirst> {
               CustomRadioGroup(
                 handler: widget.term,
                 groupValue: terms,
-                methodParent: () => print("Hello"),
+                methodParent: () => debugPrint("Hello"),
                 value: widget.term.value,
                 errors: termErrorMessage,
               ),
               buildQuestion("5. Preferred admission plan."),
               // buildAnswer(changePlan, plans, plan),
-              CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => print("Hello"), value: widget.plan.value, errors: planErrorMessage,),
+              CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => debugPrint("Hello"), value: widget.plan.value, errors: planErrorMessage,),
               buildQuestion("6. Do you intend to pursue need-based Financial Aid?"),
               // buildAnswer(changeScore, scores, score),
-              CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => print("Hello"), value: widget.score.value, errors: aidErrorMessage,),
+              CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => debugPrint("Hello"), value: widget.score.value, errors: aidErrorMessage,),
               buildQuestion("7. Are you a legacy?"),
               // buildAnswer(changeLegacy, legacys, legacy),
-              CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => print("Hello"), value: widget.legacy.value, errors: legacyErrorMessage,),
+              CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => debugPrint("Hello"), value: widget.legacy.value, errors: legacyErrorMessage,),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 27, 0, 0),
                 child: Row(
@@ -185,9 +183,6 @@ class _Grade9thFirst extends State<Grade9thFirst> {
                           ),
                         ),
                         onPressed: () async {
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          
-                          // prefs.setString("university", widget._controller1.text);
                           widget.registration.term = widget.term.value;
                           widget.registration.addmision = widget.plan.value;
                           widget.registration.aid = widget.score.value;

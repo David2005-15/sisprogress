@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/radio_button_handler.dart';
 import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/widgets/radio_button.dart';
@@ -39,7 +38,7 @@ class Grade10thFirst extends StatefulWidget {
 
 class _Grade10thFirst extends State<Grade10thFirst> {
   List<String> terms = ["Fall 2023", "Fall 2024", "Fall 2025", "Fall 2026"];
-  List<String> plans = ["Early Desicion", "Regular Desicion"];
+  List<String> plans = ["Early Decision", "Regular Decision"];
   List<String> scores = ["Yes", "No"];
   List<String> legacys = ["Yes", "No"];
 
@@ -122,19 +121,19 @@ class _Grade10thFirst extends State<Grade10thFirst> {
               CustomRadioGroup(
                 handler: widget.term,
                 groupValue: terms,
-                methodParent: () => print("Hello"),
+                methodParent: () => debugPrint("Hello"),
                 value: widget.term.value,
                 errors: termErrorMessage,
               ),
               buildQuestion("5. Preferred admission plan."),
               // buildAnswer(changePlan, plans, plan),
-              CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => print("Hello"), value: widget.plan.value, errors: planErrorMessage,),
+              CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => debugPrint("Hello"), value: widget.plan.value, errors: planErrorMessage,),
               buildQuestion("6. Do you intend to pursue need-based Financial Aid?"),
               // buildAnswer(changeScore, scores, score),
-              CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => print("Hello"), value: widget.score.value, errors: aidErrorMessage,),
+              CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => debugPrint("Hello"), value: widget.score.value, errors: aidErrorMessage,),
               buildQuestion("7. Are you a legacy?"),
               // buildAnswer(changeLegacy, legacys, legacy),
-              CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => print("Hello"), value: widget.legacy.value, errors: legacyErrorMessage,),
+              CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => debugPrint("Hello"), value: widget.legacy.value, errors: legacyErrorMessage,),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 27, 0, 0),
                 child: Row(
@@ -184,9 +183,6 @@ class _Grade10thFirst extends State<Grade10thFirst> {
                           ),
                         ),
                         onPressed: () async {
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          
-                          // prefs.setString("university", widget._controller1.text);
                           widget.registration.term = widget.term.value;
                           widget.registration.addmision = widget.plan.value;
                           widget.registration.aid = widget.score.value;
@@ -194,8 +190,6 @@ class _Grade10thFirst extends State<Grade10thFirst> {
                           widget.registration.university = widget._controller1.text;
                           widget.registration.study = widget._controller4.text;
                           widget.registration.profession = widget. _controller3.text;
-                          
-
 
                           setState(() {
                             planErrorMessage = [];
@@ -265,7 +259,8 @@ class _Grade10thFirst extends State<Grade10thFirst> {
                           }
               
                           if((showstudyErrorText == false) && (showacademicErrorText == false) && (showuniversityErrorText == false) && aidErrorMessage.isEmpty && legacyErrorMessage.isEmpty && termErrorMessage.isEmpty && planErrorMessage.isEmpty) {
-                            await Navigator.push(context,  MaterialPageRoute(builder: (context) => Grade10thSecond(reg: widget.registration,)));
+                            if(!mounted) return;
+                            Navigator.push(context,  MaterialPageRoute(builder: (context) => Grade10thSecond(reg: widget.registration,)));
                           }
                         },
                       ),

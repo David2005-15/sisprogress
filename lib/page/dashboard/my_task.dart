@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/widgets/dashboard/my_task_tile.dart';
 
 import '../../data class/event_process.dart';
 
 class MyTask extends StatefulWidget {
-  final DateTime choosenDate;
   const MyTask({
-    required this.choosenDate,
     super.key
   });
 
@@ -64,18 +61,16 @@ class _MyTask extends State<MyTask> {
     }
   }
 
-  GlobalKey _menuKey = GlobalKey();
+  final GlobalKey _menuKey = GlobalKey();
 
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        print("Hello");
-
         return Future.value(false);
       },
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         child: SingleChildScrollView(
           child: Column(
@@ -203,9 +198,6 @@ class _MyTask extends State<MyTask> {
     
               Column(
                 children: tasks.map((e) {
-                  String monthName = DateFormat.MMMM().format(DateTime.parse(e["deadline"])).substring(0, 3);
-                  print(monthName);
-    
                   List<List<dynamic>> swap = []; 
                   List<String> temp = [];
                   List<bool> temp2 = [];
@@ -218,12 +210,11 @@ class _MyTask extends State<MyTask> {
                     }
                     temp.add("${p0["points"]} Points");
                     temp3.add(p0["points"]);
-                  });  
-    
-                  print(e["id"]);
+                  });
       
                   String substringValue = "${temp2.length}/${swap.length}";
-                  return MyTaskTile(proccess: getProccess(e["status"]), title: e["positionName"], description: "", subtasks: swap, points: temp, eventDate: "${DateTime.parse(e["deadline"]).day}/${DateTime.parse(e["deadline"]).month}/${DateTime.parse(e["deadline"]).year}", substringValue: substringValue, updateState: printAllTasks, position: e["companyName"], status: e["status"], facultyName: e["facultyName"], companyName: e["companyName"], choosenDate: DateTime.parse(e["startDate"]), point: "${e["point"]} Points", taskId: e["id"], feedbacks: getAllFeedbacks(e["id"]),);
+
+                  return MyTaskTile(process: getProccess(e["status"]), title: e["positionName"], description: "", subtasks: swap, points: temp, eventDate: "${DateTime.parse(e["deadline"]).day}/${DateTime.parse(e["deadline"]).month}/${DateTime.parse(e["deadline"]).year}", substringValue: substringValue, updateState: printAllTasks, position: e["companyName"], status: e["status"], facultyName: e["facultyName"], companyName: e["companyName"], chosenDate: DateTime.parse(e["startDate"]), point: "${e["point"]} Points", taskId: e["id"], feedbacks: getAllFeedbacks(e["id"]),);
     
                 }).toList(),
               )
@@ -274,7 +265,7 @@ Container buildTile(String title, String status, String position, String date, C
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 200,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
