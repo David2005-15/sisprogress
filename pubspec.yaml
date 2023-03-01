@@ -1,9 +1,9 @@
 name: sis_progress
-description: A new Flutter project.
+description: Ankap Project.
 
 publish_to: 'none'
 
-version: 1.0.1+19
+version: 1.0.1+25
 
 environment:
   sdk: '>=2.18.4 <3.0.0'
@@ -65,3 +65,12 @@ flutter:
     - assets/Happy.png
     - assets/Good.png
     - assets/Sad.png
+    - assets/VectorChevron.svg
+    - assets/Home.png
+    - assets/NavCal.png
+    - assets/Tasks.png
+    - assets/Checklist.png
+    - assets/Profile.png
+    - assets/List.svg
+    - assets/Connection.svg
+    - assets/Group 2218.png

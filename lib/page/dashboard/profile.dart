@@ -54,7 +54,6 @@ class _Profile extends State<Profile> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var value = await httpClient.getUserData();
     setState(() {
-
       fullName = value["fullName"];
       prefs.setString("country", value["country"]);    
     });
@@ -118,10 +117,12 @@ class _Profile extends State<Profile> {
   void initState() {
     getUniver();
     getPoint();
-    // setUniversity();
     setEmail();
     setUsername();
     printValue();
+
+    debugPrint("111111111111111111111111111");
+    debugPrint(secondaryMail);
     
     super.initState();
   }
@@ -144,19 +145,20 @@ class _Profile extends State<Profile> {
 
   void setEmail() async {
     var value = await httpClient.getUserData();
-    
+
     setState(() {
-      // mail = prefs.getString("email").toString();
       mail = value["firstEmail"]["email"];
-      
       phone = value["phone"].toString();
       country = value["country"].toString();
       age = value["age"].toString();
       university = value["university"].toString();
       academicProgram = value["academicProgram"].toString();
       study = value["study"].toString();
-      secondaryMail = value["secondaryEmail"]["email"];
-      // gradeLevel = "${value["grade"]!}th Grade";
+      if(value["secondaryEmail"] != null) {
+        secondaryMail = value["secondaryEmail"]["email"];
+      } else {
+        secondaryMail = "empty";
+      }
     });
   }
 
@@ -164,7 +166,6 @@ class _Profile extends State<Profile> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // Navigator.pop(context);
         return Future.value(false);
       },
       child: SingleChildScrollView(
@@ -264,7 +265,7 @@ class _Profile extends State<Profile> {
               targetPoint: targetPoints,
               safetyPoint: safetyPoints),
             PersonalDetails(mode: editPersonal, onEdit: onPersonalEdit, onSave: onPersonalSave, phone: phone, email: mail, age: age != "" ? DateFormat('dd/MM/yyyy').format(DateTime.parse(age)): "", country: country, name: fullName,),
-            Emaildetails(mode: false, email: mail, secondaryEmail: secondaryMail,),
+            Emaildetails(mode: false, email: mail, secondaryEmail: secondaryMail, updateStates: setEmail,),
             InkWell(
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,

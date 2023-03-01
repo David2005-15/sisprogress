@@ -218,6 +218,7 @@ class _EventTile extends State<EventTile> {
                   child: ElevatedButton(
                     onPressed: () async {
                       await httpClient.removeTask(widget.taskId);
+                      if(!mounted) return;
                       Navigator.pop(context);
                       widget.updateState();
                     },
@@ -801,7 +802,7 @@ class _EventTile extends State<EventTile> {
                                                     }
                                                     widget.updateState();
 
-                                                    if(!context.mounted) return;
+                                                    if(!mounted) return;
                                                     Navigator.pop(context);
                                                   }
                                                 : null,

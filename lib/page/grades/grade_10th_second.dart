@@ -6,10 +6,11 @@ import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/verify_email.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
-import 'package:sis_progress/widgets/input_box.dart';
+import 'package:sis_progress/widgets/drop_down.dart';
 import 'package:sis_progress/widgets/radio_button.dart';
 import 'package:sis_progress/widgets/select_box.dart';
 import 'package:sis_progress/data%20class/radio_button_handler.dart';
+import '../../data class/dropdown.dart';
 import '../../widgets/progress/progress_bar.dart';
 
 class Grade10thSecond extends StatefulWidget {
@@ -17,6 +18,7 @@ class Grade10thSecond extends StatefulWidget {
   final TextEditingController controller = TextEditingController();
   final TextEditingController work = TextEditingController();
   final TextEditingController work2 = TextEditingController();
+  final DropDownDataClass schoolDataclass = DropDownDataClass();
   final RegistrationGrade10 reg;
   final RadioButtonHandler secondQuest = RadioButtonHandler(value: null);
   final RadioButtonHandler thirdQuest = RadioButtonHandler(value: null);
@@ -108,7 +110,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
     }
 
     if(widget.reg.school != null) {
-      widget.controller.text = widget.reg.school!;
+      widget.schoolDataclass.value = widget.reg.school!;
     }
 
     if(widget.reg.outActivity != null) {
@@ -205,7 +207,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                     alignment: Alignment.center,
                     width: double.infinity,
                     child: Text(
-                      "This email is already been used, please try again",
+                      "Something went wring try again",
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w400,
                         fontSize: 11,
@@ -329,7 +331,18 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
               ),
               buildQuestion("3. What is your current high school?"),
-              InputBox(textInputType: TextInputType.text, onChanged: (String val) {print("Hello World");}, context: context, controller: widget.controller, isPassword: false, initialValue: "School", showValidationOrNot: validSchool, errorText: "This field is required",),
+              // InputBox(textInputType: TextInputType.text, onChanged: (String val) {print("Hello World");}, context: context, controller: widget.controller, isPassword: false, initialValue: "School", showValidationOrNot: validSchool, errorText: "This field is required",),
+              SchoolDropDown(
+                dropDownDataClass: widget.schoolDataclass,
+                context: context,
+                onChange: (val) {
+                  setState(() {
+                    widget.schoolDataclass.value = val;
+                  });
+                },
+                showValidationOrNot: validSchool,
+                errorText: "Select your school",
+              ),
               buildQuestion("4. Do you wish to report any honors related to your academic achievements?"),
               // buildAnswer(getFifthQuest, yesOrNo, fifthQuest),
               CustomRadio(handler: widget.fifthQuest, groupValue: yesOrNo, methodParent: () => print("Hello"), value: widget.fifthQuest.value, errors: honorsErrorText,),
@@ -819,7 +832,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
               buildNavigation(context, widget.activities, () async {
                 widget.reg.place = widget.secondQuest.value;
                 widget.reg.testScore = widget.thirdQuest.value;
-                widget.reg.school = widget.controller.text;
+                widget.reg.school = widget.schoolDataclass.value;
                 widget.reg.honors = widget.fifthQuest.value;
                 // widget.reg.test = sixthQuest;
                 widget.reg.addmisionTest = widget.sixthQuest.value;
@@ -861,7 +874,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   });
                 }
 
-                if(widget.controller.text.isEmpty) {
+                if(widget.schoolDataclass.value == null) {
                   setState(() {
                     validSchool = true;
                   });
@@ -916,7 +929,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 widget.reg.testScore = widget.thirdQuest.value;
                 widget.reg.honors = widget.fifthQuest.value;
                 widget.reg.addmisionTest = widget.sixthQuest.value;
-                widget.reg.school = widget.controller.text;
+                widget.reg.school = widget.schoolDataclass.value;
                 widget.reg.outActivity = actions;
                 widget.reg.essayWorkExp = widget.work.text;
                 widget.reg.satAndAct = whichTest;

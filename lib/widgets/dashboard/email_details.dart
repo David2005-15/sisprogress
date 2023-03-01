@@ -4,18 +4,19 @@ import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
-
 import '../input_box.dart';
 
 class Emaildetails extends StatefulWidget {
   bool mode;
   final String email;
-  final String? secondaryEmail;
+  final VoidCallback updateStates;
+  String? secondaryEmail;
 
   Emaildetails(
       {required this.mode,
       required this.email,
       required this.secondaryEmail,
+      required this.updateStates,
       super.key});
 
   @override
@@ -23,7 +24,7 @@ class Emaildetails extends StatefulWidget {
 }
 
 class _Emaildetails extends State<Emaildetails> {
-  var primaryEmail = TextEditingController();
+  late TextEditingController primaryEmail;
   var secondaryEmail = TextEditingController();
   late bool isSecondaryEmail;
 
@@ -31,20 +32,37 @@ class _Emaildetails extends State<Emaildetails> {
 
   bool selectedFirst = false;
   bool selectedSecond = false;
+  bool flag = false;
+  int value = 0;
 
   @override
   void initState() {
-    isSecondaryEmail = widget.secondaryEmail != "";
+    value = 0;
+    primaryEmail = TextEditingController(text: widget.email);
+
+    isSecondaryEmail = (widget.secondaryEmail != "empty") || (widget.secondaryEmail != null);
+    primaryEmail.text = widget.email;
+    secondaryEmail.text = widget.secondaryEmail!;
+
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    // if(value == 0) {
+    //   primaryEmail = TextEditingController(text: widget.email);
+    //   value += 1;
+    // }
+
+    flag = widget.secondaryEmail != "empty";
+
     return StatefulBuilder(builder: (context, state) {
       state(() {
-        primaryEmail.text = widget.email;
-        secondaryEmail.text = widget.secondaryEmail!;
+        if(value == 0) {
+          primaryEmail.text = widget.email;
+          secondaryEmail.text = widget.secondaryEmail!;
+        }
       });
 
       return InkWell(
@@ -156,8 +174,8 @@ class _Emaildetails extends State<Emaildetails> {
                                     text: "Update",
                                     onPressed: () {
                                       httpClient
-                                          .sendUpdateEmail(primaryEmail.text);
-                                      changeEmail(primaryEmail.text, "Primary");
+                                          .sendUpdateEmail(primaryEmail.text, "First");
+                                      successMessage(primaryEmail.text);
                                     },
                                     height: 38,
                                     width: 116)
@@ -194,7 +212,7 @@ class _Emaildetails extends State<Emaildetails> {
                           ),
                         ),
                   widget.mode
-                      ? isSecondaryEmail
+                      ? secondaryEmail.text != "empty"
                           ? Column(
                               children: [
                                 InputBox(
@@ -239,8 +257,8 @@ class _Emaildetails extends State<Emaildetails> {
                                     Button(
                                         text: "Update",
                                         onPressed: () {
-                                          changeEmail(
-                                              secondaryEmail.text, "Secondary");
+                                          httpClient.sendUpdateEmail(secondaryEmail.text, "Secondary");
+                                          successMessage(secondaryEmail.text);
                                         },
                                         height: 38,
                                         width: 116)
@@ -252,7 +270,7 @@ class _Emaildetails extends State<Emaildetails> {
                       : Container(),
                   widget.mode
                       ? Container()
-                      : widget.secondaryEmail != ""
+                      : secondaryEmail.text != "empty"
                           ? Container(
                               margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                               child: Row(
@@ -286,11 +304,13 @@ class _Emaildetails extends State<Emaildetails> {
                             )
                           : Container(),
                   widget.mode
-                      ? isSecondaryEmail
+                      ? secondaryEmail.text != "empty"
                           ? InkWell(
                               onTap: () {
                                 state(() {
-                                  isSecondaryEmail = false;
+                                  httpClient.removeSecondaryMail();
+                                  secondaryEmail.text = "empty";
+                                  widget.updateStates();
                                 });
                               },
                               child: Container(
@@ -322,7 +342,7 @@ class _Emaildetails extends State<Emaildetails> {
                           : InkWell(
                               onTap: () {
                                 state(() {
-                                  isSecondaryEmail = true;
+                                  secondaryEmail.text = "Secondary Mail";
                                 });
                               },
                               child: Container(
@@ -393,14 +413,14 @@ class _Emaildetails extends State<Emaildetails> {
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        text: 'Yeah! ',
+                        text: '',
                         style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w600,
                             fontSize: 15,
                             color: const Color(0xff355CCA)),
                         children: <TextSpan>[
                           TextSpan(
-                              text: 'The $which email has been\nchanged.',
+                              text: 'Verification link sent to this $email email',
                               style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15,

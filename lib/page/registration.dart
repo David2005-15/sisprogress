@@ -6,6 +6,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sis_progress/data%20class/dropdown.dart';
 import 'package:sis_progress/data%20class/registration_data_grade10.dart';
 import 'package:sis_progress/data%20class/registration_data_grade9.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/grades/grade_9th_first.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
@@ -140,6 +141,7 @@ class _Registration extends State<Registration> {
   String month = DateFormat("MMMM").format(DateTime.now());
   String year = DateTime.now().year.toString();
   FocusNode ageFocusNode = FocusNode();
+  bool anyError = false;
 
   @override
   void initState() {
@@ -181,6 +183,22 @@ class _Registration extends State<Registration> {
                 children: <Widget>[
                   const ProgressBar(isPassed: [false, false, false]),
                   buildTitle(),
+                  Visibility(
+                      visible: anyError,
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        child: Text(
+                          "This email is already been used, please try again",
+                          style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 11,
+                              color: const Color(0xffE31F1F)
+                          ),
+                        ),
+                      )
+                  ),
                   InputBox(
                     controller: widget.fullName,
                     context: context,
@@ -439,19 +457,6 @@ class _Registration extends State<Registration> {
                       },
                     ),
                   ),
-                  // InputBox(
-                  //   controller: widget.age,
-                  //   context: context,
-                  //   isPassword: false,
-                  //   initialValue: "Age",
-                  //   onChanged: (String val) {
-                  //     print(val);
-                  //   },
-                  //   textInputType: TextInputType.number,
-                  //   errorText: ageErroText,
-                  //   showValidationOrNot: showageErroText,
-
-                  // ),
                   Container(
                     margin: const EdgeInsets.fromLTRB(23, 25, 23, 0),
                     child: TextFormField(
@@ -509,10 +514,6 @@ class _Registration extends State<Registration> {
                           color: Colors.white),
                     ),
                   ),
-
-                  // InputBox(controller: widget.country, context: context, isPassword: false, initialValue: "Country", onChanged: (String val) {print(val);}, textInputType: TextInputType.text, errorText: countryErrorText, showValidationOrNot: showcountryErrorText,),
-                  // buildMode(widget.country, Universities().countryList, "Country", showcountryErrorText, countryErrorText),
-                  // InputBox(controller: widget.grade, context: context, isPassword: false, initialValue: "Grade",),
                   CountryDropDown(
                     dropDownDataClass: widget.coutnry,
                     context: context,
@@ -537,6 +538,21 @@ class _Registration extends State<Registration> {
                       height: 38,
                       width: double.infinity,
                       onPressed: () async {
+
+                        Client client = Client();
+                        var value = await client.checkIfEmailExists(widget.email.text);
+
+                        if(value == "existing email address") {
+                          setState(() {
+                            anyError = true;
+                          });
+                        } else {
+                          setState(() {
+                            anyError = false;
+                          });
+                        }
+
+                        // debugPrint(value.toString());
 
                         if (!emailMatch(widget.email.text)) {
                             setState(() {
@@ -664,8 +680,8 @@ class _Registration extends State<Registration> {
                               showcountryErrorText &&
                               showageErroText &&
                               showpasswordErroText && 
-                              showconfirmPasswordErrorText)) {
-                          
+                              showconfirmPasswordErrorText) && !anyError ) {
+                            if(!mounted) return;
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -685,7 +701,7 @@ class _Registration extends State<Registration> {
                             // gradeErrorText = "Please choose grade level";
                           });
 
-                          if ((showEmailValidation == false) && (showcountryErrorText == false) && (showageErroText == false) && (showpasswordErroText == false) && (showconfirmPasswordErrorText == false)) {
+                          if ((showEmailValidation == false) && (showcountryErrorText == false) && (showageErroText == false) && (showpasswordErroText == false) && (showconfirmPasswordErrorText == false) && (anyError == false)) {
                               
                           setState(() {
                             widget.reg10.fullName = widget.fullName.text;

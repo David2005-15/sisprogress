@@ -50,12 +50,31 @@ class CountryDropDown extends StatefulWidget {
   State<StatefulWidget> createState() => _CountryDropDown();
 }
 
+class SchoolDropDown extends StatefulWidget {
+  final BuildContext context;
+  final DropDownDataClass dropDownDataClass;
+  final dynamic Function(dynamic)? onChange;
+  String? initialValue;
+  String? errorText;
+  bool? enabled;
+  bool? showValidationOrNot;
+
+  SchoolDropDown({
+    required this.dropDownDataClass,
+    required this.context,
+    required this.onChange,
+    this.initialValue,
+    this.errorText,
+    this.enabled,
+    this.showValidationOrNot,
+    super.key
+  });
+
+  @override
+  State<StatefulWidget> createState() => _SchoolDropdown();
+}
+
 class _DropDown extends State<DropDown> {
-  // String? dropDownItem;
-  // Color selectedColor = const Color(0xff121623);
-  
-
-
   @override
   Widget build(BuildContext context) {
      List<DropdownMenuItem> items = ["Up to 9th grade", "10th grade or above"].map((e) {
@@ -156,11 +175,6 @@ double getTopMargin(BuildContext context) {
 
 
 class _CountryDropDown extends State<CountryDropDown> {
-  // String? dropDownItem;
-  // Color selectedColor = const Color(0xff121623);
-  
-
-
   @override
   Widget build(BuildContext context) {
      List<DropdownMenuItem> items = Universities().countryList.map((e) {
@@ -238,6 +252,94 @@ class _CountryDropDown extends State<CountryDropDown> {
                     fontSize: 15,
                     color: Colors.white,
                   ),                  
+                ),
+              );
+            }).toList();
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _SchoolDropdown extends State<SchoolDropDown> {
+  @override
+  Widget build(BuildContext context) {
+    List<DropdownMenuItem> items = Universities().schools.map((e) {
+      return DropdownMenuItem(
+        value: e,
+        child: Text(
+          e,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w400,
+            fontSize: 15,
+            color: const Color(0xff121623),
+          ),
+        ),
+      );
+    }).toList();
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
+      height: 100,
+      child: Center(
+        child: DropdownButtonFormField(
+          // itemHeight: 60,r
+          menuMaxHeight: 150,
+          // isExpanded: true,
+          hint: Text(
+            "School",
+            style:  GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: 15,
+              color: const Color(0xffD2DAFF),
+            ),
+          ),
+          dropdownColor: const Color(0xffD2DAFF),
+          decoration: InputDecoration(
+              errorText: widget.showValidationOrNot ?? false ? widget.errorText: null,
+              alignLabelWithHint: true,
+              labelText: widget.initialValue,
+              errorStyle: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 10,
+                  color: const Color(0xffE31F1F)
+              ),
+              enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
+              ),
+
+              focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
+              ),
+
+              focusColor: const Color(0xffD2DAFF)
+          ),
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w400,
+            fontSize: 15,
+            color: const Color(0xff121623),
+          ),
+          value: widget.dropDownDataClass.value,
+          onSaved: (value) {
+            setState(() {
+              widget.dropDownDataClass.value = value;
+            });
+          },
+          items: items,
+          onChanged: widget.onChange,
+
+          selectedItemBuilder: (context) {
+            return Universities().schools.map<Widget>((e) {
+              return DropdownMenuItem(
+                value: e,
+                child: Text(
+                  e,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
                 ),
               );
             }).toList();

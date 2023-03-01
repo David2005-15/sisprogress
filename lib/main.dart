@@ -6,7 +6,7 @@ void main(List<String> args) {
   runApp(MaterialApp(
     initialRoute: "/",
     routes: {
-      '/forgotPassword': (context) => ForgotPassword()
+      '/forgetPassword': (context) => ForgotPassword()
     },
     debugShowCheckedModeBanner: false,
     theme: ThemeData(

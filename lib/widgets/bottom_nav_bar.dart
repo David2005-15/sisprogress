@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
@@ -23,7 +24,7 @@ class NavBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),     
         color: Colors.transparent
       ),
-      height: Platform.isIOS ? 86 : 60,
+      height: Platform.isIOS ? 86 : 67,
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         child: BottomNavigationBar(
@@ -41,23 +42,23 @@ class NavBar extends StatelessWidget {
 
           items: const <BottomNavigationBarItem> [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined, size: 24,),
-              label: "Home"
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month_outlined, size: 24,),
-              label: "Calendar"
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.rocket_outlined, size: 24),
+              icon: ImageIcon(AssetImage("assets/Home.png"), size: 24,),
               label: "Dashboard"
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.note_add_outlined, size: 24,),
-              label: "My Task"
+              icon: ImageIcon(AssetImage("assets/NavCal.png"), size: 24,),
+              label: "Extraculicular\n    calendar",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.people_outlined, size: 24,),
+              icon: ImageIcon(AssetImage("assets/Tasks.png"), size: 24,),
+              label: "Goals"
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage("assets/Checklist.png"), size: 24,),
+              label: "My tasks"
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage("assets/Profile.png"), size: 24,),
                 label: "Profile"
               ),
             ],

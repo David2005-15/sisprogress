@@ -61,14 +61,6 @@ class _CalendarPage extends State<CalendarPage> {
     setState(() {
       event.clear();
 
-      // temp.forEach((element) {
-      //   DateTime date = DateTime.parse(element["startDate"]);
-      //
-      //   if ((date.day == widget.chosenDate.day) &&
-      //       (date.month == widget.chosenDate.month)) {
-      //     event.add(element);
-      //   }
-      // });
 
       for(var elem in temp) {
         var date = DateTime.parse(elem["startDate"]);
@@ -565,12 +557,7 @@ class _CalendarPage extends State<CalendarPage> {
                                 state(() {
 
                                 });
-                              // httpClient.addTask(addedTasks[0]["id"], date.toIso8601String());
-                              // addedTasks.forEach((element) async {
-                              //   await httpClient.addTask(
-                              //       element["id"], date.toIso8601String());
-                              //   reload();
-                              // });
+
                                 for(var taskId in addedTasks) {
                                   await httpClient.addTask(taskId["id"], date.toIso8601String());
                                   reload();

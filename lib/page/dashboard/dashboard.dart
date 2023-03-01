@@ -147,6 +147,8 @@ class _Dashboard extends State<Dashboard> {
       greeting = value["RandomGreetingMessages"]["text"];
       statusMessage = value["successMesange"]["status"];
       successMessage = value["successMesange"]["textPart1"];
+
+      debugPrint(overallDone.toString());
     });
   }
 

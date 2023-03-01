@@ -18,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePage extends State<HomePage> {
   bool isRemember = false;
   bool haveInternet = false;
+  bool haveToken = false;
 
   void checkInternetConnection() async {
     try {
@@ -27,9 +28,7 @@ class _HomePage extends State<HomePage> {
           haveInternet = true;
         });
       }
-    } on SocketException catch (e) {
-      debugPrint(e.message);
-
+    } on SocketException catch (_, e) {
       setState(() {
         haveInternet = false;
       });
@@ -142,7 +141,6 @@ class _HomePage extends State<HomePage> {
                           ),
                         ),
                       ),
-
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
@@ -222,5 +220,4 @@ class _HomePage extends State<HomePage> {
         )
     );
   }
-
 }

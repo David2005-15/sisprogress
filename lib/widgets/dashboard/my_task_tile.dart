@@ -379,7 +379,6 @@ class _MyTaskTile extends State<MyTaskTile> {
                         ),
                       ],
                     )
-                    // buildCheckbox(iconColor: Colors.blue, onChange: onChange, borderColor: borderColor, backgroundColor: backgroundColor)
                   ],
                 ),
               ));
@@ -812,21 +811,13 @@ class _MyTaskTile extends State<MyTaskTile> {
                                                     (element) =>
                                                         element == true))
                                                 ? () async {
-                                                    // print(subtaskId);
-
-                                              // subtaskId.forEach(
-                                              //           (element) async {
-                                              //         await httpClient
-                                              //             .doneSubtask(
-                                              //                 element, true);
-                                              //         widget.updateState();
-                                              //       });
                                                     for(var id in subtaskId) {
                                                       await httpClient.doneSubtask(id, true);
+                                                      widget.updateState();
                                                     }
 
                                                     widget.updateState();
-                                                    // widget.updateState();
+
                                                     if(!mounted) return;
 
                                                     Navigator.pop(context);

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/registration_data_grade10.dart';
 import 'package:sis_progress/data%20class/registration_data_grade9.dart';
@@ -14,10 +15,21 @@ class Client {
     return _instance;
   }
 
-  Future<List<String>> getAllUniversities() async {
-    Response response = await dio.get('http://164.90.224.111/get/AllUniversities');
+  Future removeSecondaryMail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    List<Map<String, dynamic>> values = List<Map<String, dynamic>>.from(response.data);
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    dio.delete("https://sisprogress.online/addEmail/delete");
+  }
+
+  Future<List<String>> getAllUniversities() async {
+    Response response = await dio.get(
+        'https://sisprogress.online/get/AllUniversities');
+
+    List<Map<String, dynamic>> values = List<Map<String, dynamic>>.from(
+        response.data);
 
     List<String> unis = values.map((e) => e["name"].toString()).toList();
 
@@ -30,15 +42,16 @@ class Client {
       "email": email
     };
 
-    await dio.post('http://164.90.224.111/resetPassword', data: body);
+    await dio.post('https://sisprogress.online/resetPassword', data: body);
   }
 
   Future<Map<String, dynamic>> getDashboardData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    Response response = await dio.get("http://164.90.224.111/dashboard");
+    Response response = await dio.get("https://sisprogress.online/dashboard");
 
     return response.data;
   }
@@ -46,7 +59,8 @@ class Client {
   Future sendEssay(String description, int taskId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
     var body = {
       "taskId": taskId,
@@ -54,27 +68,32 @@ class Client {
     };
 
 
-    await dio.post('http://164.90.224.111/add/feedback', data: body);
+    await dio.post('https://sisprogress.online/add/feedback', data: body);
   }
 
   Future<List<dynamic>> getAllFeedbacks(int taskId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
 
-    Response response = await dio.get('http://164.90.224.111/add/feedback', queryParameters: {"taskId": taskId});
-    
+    Response response = await dio.get('https://sisprogress.online/add/feedback',
+        queryParameters: {"taskId": taskId});
+
     return response.data;
   }
 
   Future<dynamic> getTimePoints(int taskId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
 
-    Response response = await dio.get('http://164.90.224.111/getTasks/description', queryParameters: {"id": taskId});
+    Response response = await dio.get(
+        'https://sisprogress.online/getTasks/description',
+        queryParameters: {"id": taskId});
 
     return response.data;
   }
@@ -82,9 +101,10 @@ class Client {
   Future<List<dynamic>> getRecommendations() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    var response = await dio.get("http://164.90.224.111/getTasks/Category1");
+    var response = await dio.get("https://sisprogress.online/getTasks/Category1");
 
     return response.data["recommendation"];
   }
@@ -92,9 +112,10 @@ class Client {
   Future<Map<String, dynamic>> getAllFaculties() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    var response = await dio.get("http://164.90.224.111/getTasks/Category1");
+    var response = await dio.get("https://sisprogress.online/getTasks/Category1");
 
     return response.data["groupedTasks"];
   }
@@ -107,18 +128,21 @@ class Client {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    await dio.patch('http://164.90.224.111/change/subTaskStatus', data: body);
+    await dio.patch('https://sisprogress.online/change/subTaskStatus', data: body);
   }
 
   Future<List<List<dynamic>>> getPoints() async {
-    Response response = await dio.get('http://164.90.224.111/get/AllUniversities');
+    Response response = await dio.get(
+        'https://sisprogress.online/get/AllUniversities');
 
-    List<Map<String, dynamic>> values = List<Map<String, dynamic>>.from(response.data);
+    List<Map<String, dynamic>> values = List<Map<String, dynamic>>.from(
+        response.data);
     // print(values);
     List<List<dynamic>> value = [];
-    
+
     List<dynamic> dreamPoint = values.map((e) => e["dreamPointMin"]).toList();
     List<dynamic> targetPoint = values.map((e) => e["targetPointMin"]).toList();
     List<dynamic> safetyPoint = values.map((e) => e["sefetyPointMin"]).toList();
@@ -131,12 +155,12 @@ class Client {
   }
 
   Future<List<dynamic>> getAllTaskAndFilter() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    var allTasks = await dio.get("http://164.90.224.111/getTasks/my");
+    var allTasks = await dio.get("https://sisprogress.online/getTasks/my");
 
     return allTasks.data["newTasks"];
   }
@@ -144,31 +168,34 @@ class Client {
   Future sendTask(int taskId, String description) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
     var body = {
       "id": taskId,
       "description": description
     };
 
-    await dio.patch("http://164.90.224.111/change/taskDescription", data: body);
+    await dio.patch("https://sisprogress.online/change/taskDescription", data: body);
   }
 
   Future removeTask(int taskId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    await dio.delete("http://164.90.224.111/getTasks/delete", queryParameters: {"taskId": taskId});
+    await dio.delete("https://sisprogress.online/getTasks/delete",
+        queryParameters: {"taskId": taskId});
   }
 
   Future<List<dynamic>> getAllTasks() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    var allTasks = await dio.get("http://164.90.224.111/getTasks/rest");
+    var allTasks = await dio.get("https://sisprogress.online/getTasks/rest");
 
     return allTasks.data["item"];
   }
@@ -176,17 +203,20 @@ class Client {
   Future updateUniversityAndAcademic(Map<String, dynamic> value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    await dio.patch("http://164.90.224.111/settings/", data: value);
-  } 
+    await dio.patch("https://sisprogress.online/settings/", data: value);
+  }
 
   Future<List<dynamic>> getCalendarEvents() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    var calendarTasks = await dio.get("http://164.90.224.111/getTasks/inCalendar");
+    var calendarTasks = await dio.get(
+        "https://sisprogress.online/getTasks/inCalendar");
 
     return calendarTasks.data["myTasks"];
   }
@@ -199,7 +229,8 @@ class Client {
       "password": password
     };
 
-    var token = await dio.post("http://164.90.224.111/user/login", data: credentials);
+    var token = await dio.post(
+        "https://sisprogress.online/user/login", data: credentials);
 
     prefs.setString("token", token.data["token"]);
 
@@ -213,7 +244,8 @@ class Client {
       "token": prefs.getString("token")
     };
 
-    var userData = await dio.post("http://164.90.224.111/user/isLogined", data: isLoggedData);
+    var userData = await dio.post(
+        "https://sisprogress.online/user/isLogined", data: isLoggedData);
     prefs.setString("user id", userData.data["id"].toString());
     prefs.setString("university", userData.data["university"].toString());
 
@@ -228,37 +260,42 @@ class Client {
       "startDate": date,
     };
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    await dio.post('http://164.90.224.111/calendar/add', data: body);
+    await dio.post('https://sisprogress.online/calendar/add', data: body);
   }
 
-  Future sendUpdateEmail(String email) async {
-     SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future sendUpdateEmail(String email, String type) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-     dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-     var body = {
-      "email": email
-     };
+    var body = {
+      "email": email,
+      "role": type
+    };
 
-     var response = await dio.post('http://164.90.224.111/addEmail', data: body);
+    var response = await dio.post('https://sisprogress.online/addEmail/update', data: body);
 
-     return response.data;
+    return response.data;
   }
 
 
   Future sendCode(String email, String code) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+    dio.options.headers =
+    {"Authorization": "Bearer ${prefs.getString("token")}"};
 
     var body = {
-      "email": email, 
+      "email": email,
       "code": code
     };
 
-    var response = await dio.patch("http://164.90.224.111/addEmail/update", data: body);
+    var response = await dio.patch(
+        "https://sisprogress.online/addEmail/update", data: body);
 
     return response.data;
   }
@@ -282,13 +319,24 @@ class Client {
       "area": data.workExp,
     };
 
-    var response = await dio.post("http://164.90.224.111/register", data: body);
+    var response = await dio.post("https://sisprogress.online/register", data: body);
 
     return response.data;
-
   }
 
   Future registerForGrade10(RegistrationGrade10 data) async {
+    var activity = data.outActivity!.map((act) {
+      bool isSingle = !act.contains("(");
+
+      if(isSingle) {
+        return "$act (1)";
+      }
+
+      return act;
+    }).toList();
+
+    debugPrint(activity.toString());
+
     var body = {
       "fullName": data.fullName,
       "email": data.email,
@@ -304,7 +352,7 @@ class Client {
       "planType": data.addmision,
       "aid": data.aid == "Yes" ? true : false,
       "legacy": data.legacy == "Yes" ? true : false,
-      "activityName": data.outActivity.toString(),
+      "activityName": activity.toString(),
       "applyingFrom": false,
       "testSubmit": false,
       "recentSchool": data.highSchool,
@@ -317,7 +365,13 @@ class Client {
 
     // print(body);
 
-    var response = await dio.post("http://164.90.224.111/register", data: body);
+    var response = await dio.post("https://sisprogress.online/register", data: body);
+
+    return response.data;
+  }
+  
+  Future<dynamic> checkIfEmailExists(String mail) async {
+    var response = await dio.get("https://sisprogress.online/addEmail/isFree", queryParameters: {"email": mail});
 
     return response.data;
   }

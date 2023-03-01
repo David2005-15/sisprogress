@@ -72,7 +72,7 @@ class _Grade9thSecond extends State<Grade9thSecond> {
                     alignment: Alignment.center,
                     width: double.infinity,
                     child: Text(
-                      "This email is already been used, please try again",
+                      "Something went wring try again",
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w400,
                         fontSize: 11,

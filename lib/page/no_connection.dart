@@ -21,27 +21,28 @@ class NoInternetConnection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const Icon(
-              Icons.signal_wifi_connected_no_internet_4_outlined,
-              color: Colors.white,
-              size: 25,
-            ),
+            // const Icon(
+            //   Icons.signal_wifi_connected_no_internet_4_outlined,
+            //   color: Colors.white,
+            //   size: 25,
+            // ),
+            Image.asset("assets/Group 2218.png", width: 190, height: 190,),
             Container(
               margin: const EdgeInsets.fromLTRB(0, 15, 0, 15),
               child: DefaultTextStyle(
                 style: GoogleFonts.montserrat(
                     fontWeight: FontWeight.w700,
-                    fontSize: 18,
+                    fontSize: 24,
                     color: Colors.white
                 ),
                 child: const Text(
-                  "You have no internet connection",
+                  "Connection Lost",
                 ),
               ),
             ),
 
             Button(
-                text: "Retry",
+                text: "Try Again",
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
                 },
