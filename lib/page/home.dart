@@ -15,10 +15,11 @@ class HomePage extends StatefulWidget {
   State<StatefulWidget> createState() => _HomePage();
 }
 
-class _HomePage extends State<HomePage> {
+class _HomePage extends State<HomePage> with TickerProviderStateMixin{
   bool isRemember = false;
   bool haveInternet = false;
   bool haveToken = false;
+  bool isLoading = true;
 
   void checkInternetConnection() async {
     try {
@@ -33,6 +34,11 @@ class _HomePage extends State<HomePage> {
         haveInternet = false;
       });
     }
+
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void isMemberRemembered() async {
@@ -49,9 +55,9 @@ class _HomePage extends State<HomePage> {
 
   @override
   void initState() {
-    super.initState();
     isMemberRemembered();
     checkInternetConnection();
+    super.initState();
   }
 
   @override
@@ -73,7 +79,7 @@ class _HomePage extends State<HomePage> {
             ),
           ),
         ),
-        nextScreen: !haveInternet ? const NoInternetConnection() : const ScaffoldHome()
+        nextScreen: !haveInternet ? NoInternetConnection() : const ScaffoldHome()
     ) : Scaffold(
         body: Stack(
           children: <Widget>[

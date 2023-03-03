@@ -173,23 +173,6 @@ class _Dashboard extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     List<int> fonts = getFontSize(MediaQuery.of(context).size.width);
-    // final List<GraphData> chartData = [
-    //   GraphData(0, 37),
-    //   GraphData(5, 33),
-    //   GraphData(10, 30),
-    //   GraphData(15, 27),
-    //   GraphData(20, 26),
-    //   GraphData(25, 23)
-    // ];
-    //
-    // final List<GraphData> chartLine = [
-    //   GraphData(0, 35),
-    //   GraphData(5, 30),
-    //   GraphData(10, 25),
-    //   GraphData(15, 20),
-    //   GraphData(20, 15),
-    //   GraphData(25, 10)
-    // ];
 
     var chosenDate = DateTime.now();
 
@@ -217,8 +200,6 @@ class _Dashboard extends State<Dashboard> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.fromLTRB(16, 20, 16, 20),
-                  // width: 328,
-                  // height: MediaQuery.of(context.size.height),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: const <BoxShadow>[
@@ -321,6 +302,7 @@ class _Dashboard extends State<Dashboard> {
                   completedTasks.toInt()
                 ]),
                 StatefulBuilder(builder: (context, setState) {
+
                   return Container(
                     width: double.infinity,
                     margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -352,10 +334,15 @@ class _Dashboard extends State<Dashboard> {
                         List<List<String>> points = [];
 
                         List<dynamic> tasks = [];
+
                         setState(() {
                           chosenDate = selectedDay;
+                          var diff = chosenDate.compareTo(DateTime.now());
 
-                          if (chosenDate.day >= DateTime.now().day) {
+                          if (diff == 0 || diff > 0) {
+                            _dialogBuilder(context, value, points, tasks,
+                                httpClient, chosenDate, () {});
+                          } else if((chosenDate.day == DateTime.now().day) && (chosenDate.month == DateTime.now().month) && (chosenDate.year == DateTime.now().year)){
                             _dialogBuilder(context, value, points, tasks,
                                 httpClient, chosenDate, () {});
                           }
@@ -367,11 +354,11 @@ class _Dashboard extends State<Dashboard> {
                               DateFormat.E().format(day).substring(0, 3);
 
                           return Container(
-                            height: 73,
+                            height: 63,
                             width: 40,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                                color: const Color(0xffFCD2D1),
+                                color: Colors.red,
                                 borderRadius: BorderRadius.circular(12)),
                             child: Column(
                               children: [
@@ -382,7 +369,7 @@ class _Dashboard extends State<Dashboard> {
                                     style: GoogleFonts.montserrat(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 14,
-                                        color: Colors.black),
+                                        color: Colors.white),
                                   ),
                                 ),
                                 Text(
@@ -390,7 +377,7 @@ class _Dashboard extends State<Dashboard> {
                                   style: GoogleFonts.montserrat(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 18,
-                                      color: Colors.black),
+                                      color: Colors.white),
                                 ),
                               ],
                             ),
@@ -467,9 +454,11 @@ class _Dashboard extends State<Dashboard> {
                         selectedBuilder: (context, day, focusedDay) {
                           String monthName =
                               DateFormat.E().format(day).substring(0, 3);
-                          return Container(
-                            // margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                            height: 63,
+                          bool today = (chosenDate.day == DateTime.now().day) && (chosenDate.month == DateTime.now().month) && (chosenDate.year == DateTime.now().year);
+
+
+                          return today ?  Container(
+                            height: 73,
                             width: 40,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
@@ -493,6 +482,34 @@ class _Dashboard extends State<Dashboard> {
                                       fontWeight: FontWeight.w400,
                                       fontSize: 18,
                                       color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ): Container(
+                            height: 73,
+                            width: 40,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: const Color(0xffFCD2D1),
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                  child: Text(
+                                    monthName,
+                                    style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                        color: Colors.black),
+                                  ),
+                                ),
+                                Text(
+                                  "${day.day}",
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
+                                      color: Colors.black),
                                 ),
                               ],
                             ),
@@ -557,9 +574,7 @@ Image buildLogoIcon() {
 Container buildTitle(List<double> fontSizes, String fullName, String greating) {
   return Container(
     height: 120,
-    // padding: const EdgeInsets.all(5),
     margin: const EdgeInsets.fromLTRB(15, 0, 0, 2),
-    // alignment: Alignment.center,
     child: AspectRatio(
       aspectRatio: 16 / 2.5,
       child: Column(
@@ -812,6 +827,7 @@ Future<void> _dialogBuilder(
                                   }
 
                                   Navigator.pop(context);
+
                                   reload();
                                 }
                               : null,

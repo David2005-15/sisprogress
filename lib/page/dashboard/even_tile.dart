@@ -300,18 +300,12 @@ class _EventTile extends State<EventTile> {
                                 onTap: () {
                                   state(
                                       () {
-                                        // if(enabledValues[i] == false) {
                                         if (cantYouSee[i] == false) {
                                           enabledValues[i] = !enabledValues[i];
                                         }
-                                        // }
 
                                         widget.subtasks[i][3] =
                                             enabledValues[i];
-
-                                        // print(val!);
-                                        // p0[3] = val!;
-                                        // print(p0[3]);
 
                                         if (enabledValues[i]) {
                                           subtaskId.add(widget.subtasks[i][1]);
@@ -319,14 +313,8 @@ class _EventTile extends State<EventTile> {
                                           subtaskId
                                               .remove(widget.subtasks[i][1]);
                                         }
-
-                                        // print(subtaskId);
-
-                                        // _showEssay(context, p0[0], title, p0[1], p0[2]);
                                       },
                                     );
-                                    // await httpClient.doneSubtask(p0[1], p0[3]);
-
                                     widget.updateState();
                                   },
                                 child: Container(
@@ -418,11 +406,12 @@ class _EventTile extends State<EventTile> {
                           Row(
                             children: <Widget>[
                               Container(
-                                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
+                                alignment: Alignment.center,
                                 child: SvgPicture.asset(
-                                  "assets/Vector.svg",
-                                  height: 25,
-                                  width: 25,
+                                  "assets/Rectangle.svg",
+                                  height: 12,
+                                  width: 12,
                                   // color: Colors.black,
                                 ),
                               ),
@@ -450,11 +439,11 @@ class _EventTile extends State<EventTile> {
                           Row(
                             children: <Widget>[
                               Container(
-                                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
                                 child: SvgPicture.asset(
-                                  "assets/Vector.svg",
-                                  height: 25,
-                                  width: 25,
+                                  "assets/Circle.svg",
+                                  height: 12,
+                                  width: 12,
                                   // color: Colors.black,
                                 ),
                               ),

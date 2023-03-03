@@ -241,7 +241,7 @@ class _CalendarPage extends State<CalendarPage> {
                 height: 290,
                 margin: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: TableCalendar(
-                  availableGestures: AvailableGestures.all,
+                  availableGestures: AvailableGestures.none,
                   daysOfWeekHeight: 50,
                   rowHeight: 40,
                   selectedDayPredicate: (day) =>
@@ -255,8 +255,8 @@ class _CalendarPage extends State<CalendarPage> {
                   calendarBuilders: CalendarBuilders(
                     selectedBuilder: (context, day, focusedDay) {
                       return Container(
-                        height: 38,
-                        width: 38,
+                        height: 34,
+                        width: 34,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -267,7 +267,7 @@ class _CalendarPage extends State<CalendarPage> {
                           "${day.day}",
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w400,
-                              fontSize: 20,
+                              fontSize: 18,
                               color: Colors.white
                           ),
                         ),
@@ -302,7 +302,7 @@ class _CalendarPage extends State<CalendarPage> {
                     outsideDaysVisible: false,
                     defaultTextStyle: GoogleFonts.poppins(
                       fontWeight: FontWeight.w400,
-                      fontSize: 20,
+                      fontSize: 18,
                       color: Colors.white,
                     ),
                     holidayTextStyle: GoogleFonts.poppins(

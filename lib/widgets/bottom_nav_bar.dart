@@ -19,7 +19,6 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 5, 10, 14),
-      // alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),     
         color: Colors.transparent
@@ -47,7 +46,7 @@ class NavBar extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage("assets/NavCal.png"), size: 24,),
-              label: "Extraculicular\n    calendar",
+              label: "Calendar",
             ),
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage("assets/Tasks.png"), size: 24,),

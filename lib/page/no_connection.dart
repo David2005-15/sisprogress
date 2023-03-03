@@ -1,11 +1,24 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/page/home.dart';
 
 import '../widgets/custom_button.dart';
 
-class NoInternetConnection extends StatelessWidget {
-  const NoInternetConnection({super.key});
+class NoInternetConnection extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _NoInternetConnection();
+
+}
+
+class _NoInternetConnection extends State<NoInternetConnection> {
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +34,6 @@ class NoInternetConnection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            // const Icon(
-            //   Icons.signal_wifi_connected_no_internet_4_outlined,
-            //   color: Colors.white,
-            //   size: 25,
-            // ),
             Image.asset("assets/Group 2218.png", width: 190, height: 190,),
             Container(
               margin: const EdgeInsets.fromLTRB(0, 15, 0, 15),

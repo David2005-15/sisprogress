@@ -40,26 +40,30 @@ class _Emaildetails extends State<Emaildetails> {
     value = 0;
     primaryEmail = TextEditingController(text: widget.email);
 
-    isSecondaryEmail = (widget.secondaryEmail != "empty") || (widget.secondaryEmail != null);
+    isSecondaryEmail =
+        (widget.secondaryEmail != "empty") || (widget.secondaryEmail != null);
     primaryEmail.text = widget.email;
     secondaryEmail.text = widget.secondaryEmail!;
-
 
     super.initState();
   }
 
+  final RegExp emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
+  bool emailMatch(String email) {
+    return emailRegex.hasMatch(email);
+  }
+
+  bool showEmailValidation = false;
+
   @override
   Widget build(BuildContext context) {
-    // if(value == 0) {
-    //   primaryEmail = TextEditingController(text: widget.email);
-    //   value += 1;
-    // }
-
     flag = widget.secondaryEmail != "empty";
 
     return StatefulBuilder(builder: (context, state) {
       state(() {
-        if(value == 0) {
+        if (value == 0) {
           primaryEmail.text = widget.email;
           secondaryEmail.text = widget.secondaryEmail!;
         }
@@ -135,6 +139,8 @@ class _Emaildetails extends State<Emaildetails> {
                       ? Column(
                           children: [
                             InputBox(
+                              showValidationOrNot: showEmailValidation,
+                              errorText: "Invalid email format",
                               textInputType: TextInputType.text,
                               onChanged: (val) {},
                               context: context,
@@ -173,9 +179,19 @@ class _Emaildetails extends State<Emaildetails> {
                                 Button(
                                     text: "Update",
                                     onPressed: () {
-                                      httpClient
-                                          .sendUpdateEmail(primaryEmail.text, "First");
-                                      successMessage(primaryEmail.text);
+                                      if (!emailMatch(primaryEmail.text)) {
+                                        setState(() {
+                                          showEmailValidation = true;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          showEmailValidation = false;
+                                        });
+
+                                        httpClient.sendUpdateEmail(
+                                            primaryEmail.text, "First");
+                                        successMessage(primaryEmail.text);
+                                      }
                                     },
                                     height: 38,
                                     width: 116)
@@ -257,7 +273,8 @@ class _Emaildetails extends State<Emaildetails> {
                                     Button(
                                         text: "Update",
                                         onPressed: () {
-                                          httpClient.sendUpdateEmail(secondaryEmail.text, "Secondary");
+                                          httpClient.sendUpdateEmail(
+                                              secondaryEmail.text, "Secondary");
                                           successMessage(secondaryEmail.text);
                                         },
                                         height: 38,
@@ -420,7 +437,8 @@ class _Emaildetails extends State<Emaildetails> {
                             color: const Color(0xff355CCA)),
                         children: <TextSpan>[
                           TextSpan(
-                              text: 'Verification link sent to this $email email',
+                              text:
+                                  'Verification link sent to this $which email',
                               style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15,
@@ -452,8 +470,6 @@ class _Emaildetails extends State<Emaildetails> {
         builder: (context) {
           return StatefulBuilder(
             builder: (context, state) {
-              bool isEmailSent = false;
-
               return AlertDialog(
                 backgroundColor: const Color(0xff121623),
                 title: Row(

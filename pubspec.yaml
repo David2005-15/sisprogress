@@ -28,12 +28,20 @@ dependencies:
   uni_links: ^0.5.1
   intl_phone_number_input: ^0.7.0
   intl: ^0.17.0
-  dio: ^4.0.6
+  http: ^0.13.5
+  dio: ^5.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/IconSIS.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#3A3D4C"
 
 
 flutter:
@@ -74,3 +82,6 @@ flutter:
     - assets/List.svg
     - assets/Connection.svg
     - assets/Group 2218.png
+    - assets/Rectangle.svg
+    - assets/Circle.svg
+    - assets/IconSIS.png
