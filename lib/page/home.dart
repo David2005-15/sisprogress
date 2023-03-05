@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/page/dashboard/scaffold_keeper.dart';
@@ -71,12 +72,10 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin{
           decoration: const BoxDecoration(
               color: Color(0xff121623)
           ),
-          child: SizedBox(
+          child: SvgPicture.asset(
+            "assets/LOGOSIS.svg",
             width: 150,
-            height: 125,
-            child: Image.asset(
-                "assets/logo.png"
-            ),
+            height: 80,
           ),
         ),
         nextScreen: !haveInternet ? NoInternetConnection() : const ScaffoldHome()
@@ -96,9 +95,9 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin{
                       .size
                       .height / 10 + 30,
                   margin: const EdgeInsets.fromLTRB(20, 20, 20, 103),
-                  child: Image.asset(
-                      "assets/logo.png"
-                  )
+                  child: SvgPicture.asset("assets/LOGOSIS.svg",
+                    width: 150,
+                    height: 80,)
               ),
             ),
             Container(

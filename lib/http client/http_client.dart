@@ -24,7 +24,7 @@ class Client {
     dio.delete("https://sisprogress.online/addEmail/delete");
   }
 
-  Future<List<String>> getAllUniversities() async {
+  Future<List<dynamic>> getAllUniversities() async {
     Response response = await dio.get(
         'https://sisprogress.online/get/AllUniversities');
 

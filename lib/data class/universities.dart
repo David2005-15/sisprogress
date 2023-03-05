@@ -12,6 +12,20 @@ class Universities {
   "University of Pennsylvania",
   "Grinnell College"
   ];
+
+  final List<List<String>> points = [
+    ["1510", "1560", "1601+"],
+    ["1515", "1565", "1601+"],
+    ["1460", "1510", "1570"],
+    ["1520", "1570", "1601+"],
+    ["1480", "1530", "1590"],
+    ["1510", "1560", "1601+"],
+    ["1490", "1540", "1601+"],
+    ["1520", "1570", "1601+"],
+    ["1515", "1565", "1601+"],
+    ["1490", "1540", "1590"],
+    ["1350", "1380", "1420"]];
+
   final List<String> schools = [    'Phillips Academy Andover',
     'Phillips Exeter Academy',    'The Hotchkiss School',
     'Choate Rosemary Hall',    'Groton School',

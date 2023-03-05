@@ -43,12 +43,11 @@ class _UniversityTile extends State<UniversityTile> {
   late TextEditingController _controller1 = TextEditingController(text: widget.selectedUniversity);
   late TextEditingController _controller2 = TextEditingController(text: widget.academicProgram);
   late TextEditingController _controller3 = TextEditingController(text: widget.study);
-  late TextEditingController dreamPointCont = TextEditingController(text: '${widget.points[0][widget.university.indexOf(widget.selectedUniversity)]} Dream Point'); 
-  late TextEditingController targetPointCont = TextEditingController(text: '${widget.points[1][widget.university.indexOf(widget.selectedUniversity)]} Target Point');
-  late TextEditingController safetyPointCont = TextEditingController(text: '${widget.points[1][widget.university.indexOf(widget.selectedUniversity)]} Target Point');
+  late TextEditingController dreamPointCont = TextEditingController(text: '${widget.points[widget.university.indexOf(widget.selectedUniversity)][0]} Dream Point');
+  late TextEditingController targetPointCont = TextEditingController(text: '${widget.points[widget.university.indexOf(widget.selectedUniversity)][1]} Target Point');
+  late TextEditingController safetyPointCont = TextEditingController(text: '${widget.points[widget.university.indexOf(widget.selectedUniversity)][2]} Safety Point');
 
   var httpClient = Client();
-  // List<String> items = ['Harvard University', 'MIT', 'Standford'];
 
   @override
   void initState() {
@@ -65,6 +64,7 @@ class _UniversityTile extends State<UniversityTile> {
 
   @override
   Widget build(BuildContext context) {
+
     return InkWell(
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
@@ -75,12 +75,10 @@ class _UniversityTile extends State<UniversityTile> {
           _controller3 = TextEditingController(text: widget.study);
           widget.onSave();
 
-          
+
         }
       },
       child: Container(
-        // width: double.infinity,
-        // height: widget.mode ? 300: 112,
         margin: const EdgeInsets.fromLTRB(16, 25, 16, 0),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
@@ -269,13 +267,6 @@ class _UniversityTile extends State<UniversityTile> {
                           Button(
                               text: "Change ",
                               onPressed: () async {
-                                // _dialogBuilder(context, widget.onSave, {
-                                //   "uni": _controller1.text,
-                                //   "target": targetPointCont.text,
-                                //   "dream": dreamPointCont.text,
-                                //   "safety": safetyPointCont.text
-                                // });
-    
                                 var body = {
                                   "university": _controller1.text,
                                   "academicProgram": _controller2.text,
@@ -328,12 +319,6 @@ class _UniversityTile extends State<UniversityTile> {
               child: ButtonBar(
                 alignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  // Button(text: "Ok",
-                  // onPressed: () {
-                  //     onSave();
-                  //     Navigator.pop(context);
-                  //   }, height: 36, width: 104
-                  // ),
 
                   SizedBox(
                     width: 104,
@@ -351,6 +336,7 @@ class _UniversityTile extends State<UniversityTile> {
                         prefs.setString(
                             "university", metadata["uni"].toString());
                         onSave();
+                        if(!mounted) return;
                         Navigator.pop(context);
                       },
                       child: Text(
@@ -386,59 +372,9 @@ class _UniversityTile extends State<UniversityTile> {
                       ),
                     ),
                   )
-
-                  //
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.pop(context);
-                  //   },
-                  //   child: Container(
-                  //     alignment: Alignment.center,
-                  //     width: 104,
-                  //     height: 36,
-                  //     decoration: BoxDecoration(
-                  //       borderRadius: BorderRadius.circular(5),
-                  //       border: Border.all(
-                  //         width: 2.0,
-                  //         color: const Color(0xffD2DAFF),
-                  //       ),
-                  //     ),
-                  //     child: Text(
-                  //       "Cancel",
-                  //       style: GoogleFonts.poppins(
-                  //         fontWeight: FontWeight.w400,
-                  //         fontSize: 15,
-                  //         color: const Color(0xffD2DAFF)
-                  //       ),
-                  //     ),
-                  //   ),
-                  // )
                 ],
               ),
-              // alignment: Alignment.center,
-              // child: ButtonBar(
-              //   alignment: MainAxisAlignment.center,
-              //   children: <Widget>[
-              //      TextButton(
-              // style: TextButton.styleFrom(
-              //   textStyle: Theme.of(context).textTheme.labelLarge,
-              // ),
-              // child: const Text('Disable'),
-              // onPressed: () {
-              //   Navigator.of(context).pop();
-              // },
             ),
-            // ElevatedButton(
-            //   style: ButtonStyle(
-            //     b
-            //   ),
-            //    child: const Text('Enable'),
-            //   onPressed: () {
-
-            //     onSave();
-            //     Navigator.pop(context);
-            //   },
-            // ),
           ],
         );
       },
@@ -458,15 +394,6 @@ Container buildMode(
     String? targetPoints,
     String? safetyPoints) {
 
-    print(points);
-
-  // targetPoint.text =
-  //                 '${points[1][items.indexOf(controller.text)]} Target Point';
-  //             dreamPoint.text =
-  //                 '${points[0][items.indexOf(controller.text)]} Dream Point';
-  //             safetyPoint.text =
-  //                 '${points[2][items.indexOf(controller.text)]} Safety Point';  
-
   return Container(
     margin: const EdgeInsets.fromLTRB(23, 16, 23, 0),
     child: LayoutBuilder(
@@ -481,7 +408,6 @@ Container buildMode(
         controller: controller,
         decoration: InputDecoration(
           alignLabelWithHint: true,
-          // hintText: widget.hintText,
           labelStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.w400,
               fontSize: 15,
@@ -510,11 +436,11 @@ Container buildMode(
             onSelected: (String value) {
               controller.text = value;
               targetPoint.text =
-                  '${points[1][items.indexOf(controller.text)]} Target Point';
+                  '${points[items.indexOf(controller.text)][1]} Target Point';
               dreamPoint.text =
-                  '${points[0][items.indexOf(controller.text)]} Dream Point';
+                  '${points[items.indexOf(controller.text)][0]} Dream Point';
               safetyPoint.text =
-                  '${points[2][items.indexOf(controller.text)]} Safety Point';
+                  '${points[items.indexOf(controller.text)][2]} Safety Point';
             },
             itemBuilder: (BuildContext context) {
               return items.map<PopupMenuItem<String>>((String value) {

@@ -187,7 +187,6 @@ class _GoalPage extends State<GoalPage> {
   Future<bool> _onBackButtonPressed() {
     setState(() {
       cantYouSee = false;
-      // Navigator.of(context).pop();
       if(!cantYouSee) {
         _overlayEntry!.remove();
         _overlayEntry = null;
@@ -227,8 +226,6 @@ class _GoalPage extends State<GoalPage> {
               buildButton(widget.title, (p0) {}),
               InkWell(
                 splashColor: Colors.transparent,
-                // highlightColor: Colors.red,
-
                 onTap: () {
                   scrollController.animateTo(0,
                       duration: const Duration(milliseconds: 500),
@@ -266,17 +263,15 @@ class _GoalPage extends State<GoalPage> {
                                         textAlign: TextAlign.left,
                                         textAlignVertical:
                                             TextAlignVertical.bottom,
-                                        // controller: searchCtrl,
                                         keyboardType: TextInputType.text,
                                         onChanged: ((val) {
-                                          setState(() {
+                                          state(() {
                                             if (val.isNotEmpty) {
                                               filteredFaculties =
                                                   facultiesInFilter
                                                       .where((element) => element
                                                           .toLowerCase()
-                                                          .contains(val
-                                                              .toLowerCase()))
+                                                          .contains(val.toLowerCase()))
                                                       .toList();
                                             }
                                             if (val.isEmpty) {
@@ -295,7 +290,6 @@ class _GoalPage extends State<GoalPage> {
                                           });
                                         }),
                                         decoration: InputDecoration(
-                                          // contentPadding: EdgeInsets.all(5.0),
                                           hintText: 'Search',
                                           alignLabelWithHint: true,
                                           hintStyle:
@@ -309,8 +303,6 @@ class _GoalPage extends State<GoalPage> {
                                             ),
                                           ),
                                           filled: true,
-                                          // contentPadding:
-                                          // EdgeInsets.all(16),
                                           fillColor: const Color(0xffB1B2FF),
                                         ),
                                       ),
@@ -322,20 +314,19 @@ class _GoalPage extends State<GoalPage> {
                                         .toSet()
                                         .toList()
                                         .map((e) {
+                                          debugPrint(filteredFaculties.toString());
                                       return Material(
                                         color: const Color(0xffD2DAFF),
                                         child: InkWell(
                                           highlightColor:
                                               const Color(0xffAAC4FF),
                                           onTap: () {
-                                            setState(() {
+                                            state(() {
                                               filterText = e;
                                               showFilter = false;
                                               _overlayEntry!.remove();
                                               _overlayEntry = null;
-                                              // goals = [];
 
-                                              // getAllTasks();
                                               if (filterText ==
                                                   "Recommendation") {
                                                 filteredFacultiesWidget = {};
@@ -352,8 +343,6 @@ class _GoalPage extends State<GoalPage> {
                                                   return pair.key == filterText;
                                                 });
                                               }
-
-                                              // tasks = tasks.where((element) => element["status"] == e).toList();
                                             });
                                           },
                                           child: Container(
@@ -391,9 +380,6 @@ class _GoalPage extends State<GoalPage> {
                   } else {
                     _overlayEntry!.remove();
                     _overlayEntry = null;
-                    setState(() {
-                      // goals2 = goals2.toSet().toList();
-                    });
                   }
                 },
                 child: Container(
@@ -427,7 +413,7 @@ class _GoalPage extends State<GoalPage> {
                           )
                         ])),
               ),
-              // recommendationWidget,
+
               Column(
                 children: filteredFacultiesWidget.values.toList(),
               )

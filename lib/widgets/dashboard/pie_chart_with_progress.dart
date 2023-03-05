@@ -40,6 +40,7 @@ class _PieChart extends State<PieChartWithProgressBar> {
         ),
 
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget> [
             Row(
               children: [
@@ -55,7 +56,6 @@ class _PieChart extends State<PieChartWithProgressBar> {
               ),
             ),
             Container(
-              // width: 200
               width: 220,
               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
               margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
@@ -66,7 +66,6 @@ class _PieChart extends State<PieChartWithProgressBar> {
                   end: Alignment.bottomRight,
                   colors: [   
                     const Color(0xffE31F1F).withOpacity(0.69),
-                    // Color.fromRGBO(227, 31, 31, 0.69),
                     const Color(0xff355CCA),
                   ],
                 ),
@@ -88,15 +87,17 @@ class _PieChart extends State<PieChartWithProgressBar> {
 
             Row(
               children: [
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  width: 130,
-                  height: 150,
-                  child: CustomPaint(
-                    painter: LinearProgressIndicator(value: widget.values, width: width),
-                    child: Container(),
-                  )
+                Center(
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    width: 130,
+                    height: 150,
+                    child: CustomPaint(
+                      painter: LinearProgressIndicator(value: widget.values, width: width, isTablet: MediaQuery.of(context).size.shortestSide >= 600),
+                      child: Container(),
+                    )
+                  ),
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(15, 10, 0, 5),
@@ -145,10 +146,12 @@ List<double> getTextPlace(double width) {
 class LinearProgressIndicator extends CustomPainter {
   final List<int> value;
   final double width;
+  final bool isTablet;
 
   LinearProgressIndicator({
     required this.width,
-    required this.value
+    required this.value,
+    required this.isTablet
   });
 
   @override
@@ -156,24 +159,28 @@ class LinearProgressIndicator extends CustomPainter {
     List<double> linearCoord = getPointerSize(width);
     List<double> textPlace = getTextPlace(width);
 
-    drawProgressLine(canvas, 25 + value[0], linearCoord[0], Colors.red);
-    drawProgressLine(canvas, 25, linearCoord[1], Colors.blue.withOpacity(0.3));
-    drawProgressLine(canvas, 25, linearCoord[2], Colors.amber.withOpacity(0.3));
-    drawProgressLine(canvas, 25, linearCoord[3], Colors.orange.withOpacity(0.3));
+    drawProgressLine(canvas, 25 + value[0], linearCoord[0], Colors.red, size);
+    drawProgressLine(canvas, 25, linearCoord[1], Colors.blue.withOpacity(0.3), size);
+    drawProgressLine(canvas, 25, linearCoord[2], Colors.amber.withOpacity(0.3), size);
+    drawProgressLine(canvas, 25, linearCoord[3], Colors.orange.withOpacity(0.3), size);
 
-    drawPointer(canvas, textPlace[0], "Extraculicular", Colors.white);
-    drawPointer(canvas, textPlace[1], "Personal development", Colors.white.withOpacity(0.3));
-    drawPointer(canvas, textPlace[2], "Academics", Colors.white.withOpacity(0.3));
-    drawPointer(canvas, textPlace[3], "Standardized test", Colors.white.withOpacity(0.3));
-    // drawPointer(canvas, textPlace[4], "Category 5");
+    drawPointer(canvas, textPlace[0], "Extraculicular", Colors.white, size);
+    drawPointer(canvas, textPlace[1], "Personal development", Colors.white.withOpacity(0.3), size);
+    drawPointer(canvas, textPlace[2], "Academics", Colors.white.withOpacity(0.3), size);
+    drawPointer(canvas, textPlace[3], "Standardized test", Colors.white.withOpacity(0.3), size);
   }
 
-  void drawProgressLine(Canvas canvas, int percentage, double offset, Color color) {
-    canvas.drawLine(Offset(20, offset), Offset(120, offset), Paint()..color=const Color(0xff121623).withOpacity(0.5)..strokeWidth=2..strokeCap=StrokeCap.round);
-    canvas.drawLine(Offset(20, offset), Offset(percentage.toDouble(), offset), Paint()..color=color..strokeWidth=3..strokeCap=StrokeCap.round);
+  void drawProgressLine(Canvas canvas, int percentage, double offset, Color color, Size size) {
+    if(isTablet) {
+      canvas.drawLine(Offset(20, size.height / 2 + offset), Offset(120, size.height / 2 + offset), Paint()..color=const Color(0xff121623).withOpacity(0.5)..strokeWidth=2..strokeCap=StrokeCap.round);
+      canvas.drawLine(Offset(20, size.height / 2 + offset), Offset(percentage.toDouble(), size.height / 2 + offset), Paint()..color=color..strokeWidth=3..strokeCap=StrokeCap.round);
+    } else {
+      canvas.drawLine(Offset(20, offset), Offset(120, offset), Paint()..color=const Color(0xff121623).withOpacity(0.5)..strokeWidth=2..strokeCap=StrokeCap.round);
+      canvas.drawLine(Offset(20, offset), Offset(percentage.toDouble(), offset), Paint()..color=color..strokeWidth=3..strokeCap=StrokeCap.round);
+    }
   }
 
-  void drawPointer(Canvas canvas, double offset, String category, Color color) {
+  void drawPointer(Canvas canvas, double offset, String category, Color color, Size size) {
     var textSpan = TextSpan(
       text: category,
       style: GoogleFonts.roboto(
@@ -189,7 +196,11 @@ class LinearProgressIndicator extends CustomPainter {
     );
 
     textPainter.layout();
-    textPainter.paint(canvas, Offset(20, offset));
+    if(isTablet) {
+      textPainter.paint(canvas, Offset(20, size.height / 2 + offset));
+    } else {
+      textPainter.paint(canvas, Offset(20, offset));
+    }
   }
 
   @override

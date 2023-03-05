@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
 import '../../http client/http_client.dart';
 import '../../widgets/dashboard/email_details.dart';
@@ -115,26 +116,15 @@ class _Profile extends State<Profile> {
 
   @override
   void initState() {
-    getUniver();
     getPoint();
     setEmail();
     setUsername();
     printValue();
-
-    debugPrint("111111111111111111111111111");
-    debugPrint(secondaryMail);
     
     super.initState();
   }
 
-  void getUniver() async {
-    var temp = await httpClient.getAllUniversities();
-    // await httpClient.getPoints();
-    setState(() {
-      uni = temp;
 
-    });
-  }
 
   void getPoint() async {
     var temp = await httpClient.getPoints();
@@ -260,7 +250,7 @@ class _Profile extends State<Profile> {
                 buildCard(<Color> [const Color(0xffD2C5DF), const Color(0xff8675A9)], completedTasks.toString(), "Completed\nTasks"),
               ],
             ),
-            UniversityTile(onEdit: changeMode, mode: isEditable, onSave: onSave, university: uni, points: points, selectedUniversity: university, academicProgram: academicProgram, study: study,
+            UniversityTile(onEdit: changeMode, mode: isEditable, onSave: onSave, university: Universities().universities, points: Universities().points, selectedUniversity: university, academicProgram: academicProgram, study: study,
               dreamPoint: dreamPoints,
               targetPoint: targetPoints,
               safetyPoint: safetyPoints),

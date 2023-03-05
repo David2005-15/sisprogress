@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:sis_progress/data%20class/notification_data.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
@@ -100,7 +101,6 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       bottomNavigationBar: NavBar(
           selected: _selected,
@@ -121,14 +121,16 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
 SizedBox buildLogoIcon(VoidCallback onTap) {
   return SizedBox(
-    width: 62,
-    height: 39,
+    width: 82,
+    height: 62,
     child: IconButton(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onPressed: onTap,
-        icon: Image.asset(
-          "assets/logo.png",
+        icon: SvgPicture.asset(
+          "assets/LOGOSIS.svg",
+          width: 82,
+          height: 62,
         )),
   );
 }

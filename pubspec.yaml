@@ -3,7 +3,7 @@ description: Ankap Project.
 
 publish_to: 'none'
 
-version: 1.0.1+25
+version: 1.0.1+26
 
 environment:
   sdk: '>=2.18.4 <3.0.0'
@@ -39,7 +39,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/IconSIS.png"
+  image_path: "assets/ICONSISpng.png"
   min_sdk_android: 21
   adaptive_icon_background: "#3A3D4C"
 
@@ -84,4 +84,5 @@ flutter:
     - assets/Group 2218.png
     - assets/Rectangle.svg
     - assets/Circle.svg
-    - assets/IconSIS.png
+    - assets/ICONSISpng.png
+    - assets/LOGOSIS.svg
