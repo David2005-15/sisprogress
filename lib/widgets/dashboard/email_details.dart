@@ -22,13 +22,14 @@ class Emaildetails extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _Emaildetails();
 }
-
+//
 class _Emaildetails extends State<Emaildetails> {
   late TextEditingController primaryEmail;
   var secondaryEmail = TextEditingController();
   late bool isSecondaryEmail;
-
+//
   Client httpClient = Client();
+
 
   bool selectedFirst = false;
   bool selectedSecond = false;
@@ -56,6 +57,7 @@ class _Emaildetails extends State<Emaildetails> {
   }
 
   bool showEmailValidation = false;
+  bool showSecondaryEmailValidation = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,8 @@ class _Emaildetails extends State<Emaildetails> {
 
     return StatefulBuilder(builder: (context, state) {
       state(() {
-        if (value == 0) {
+        debugPrint(secondaryEmail.text);
+        if (value == 0 && secondaryEmail.text == "") {
           primaryEmail.text = widget.email;
           secondaryEmail.text = widget.secondaryEmail!;
         }
@@ -105,7 +108,7 @@ class _Emaildetails extends State<Emaildetails> {
                       Container(
                         margin: const EdgeInsets.fromLTRB(20, 13, 0, 0),
                         child: Text(
-                          "Personal Details",
+                          "Email Details",
                           style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
@@ -233,6 +236,8 @@ class _Emaildetails extends State<Emaildetails> {
                               children: [
                                 InputBox(
                                   textInputType: TextInputType.text,
+                                  errorText: "Invalid email format",
+                                  showValidationOrNot: showSecondaryEmailValidation,
                                   onChanged: (val) {},
                                   context: context,
                                   controller: secondaryEmail,
@@ -273,9 +278,22 @@ class _Emaildetails extends State<Emaildetails> {
                                     Button(
                                         text: "Update",
                                         onPressed: () {
-                                          httpClient.sendUpdateEmail(
-                                              secondaryEmail.text, "Secondary");
-                                          successMessage(secondaryEmail.text);
+                                          // httpClient.sendUpdateEmail(
+                                          //     secondaryEmail.text, "Secondary");
+                                          // successMessage(secondaryEmail.text);
+                                          if (!emailMatch(secondaryEmail.text)) {
+                                            state(() {
+                                              showSecondaryEmailValidation = true;
+                                            });
+                                          } else {
+                                            state(() {
+                                              showSecondaryEmailValidation = false;
+                                            });
+
+                                            httpClient.sendUpdateEmail(
+                                                secondaryEmail.text, "Secondary");
+                                            successMessage(secondaryEmail.text);
+                                          }
                                         },
                                         height: 38,
                                         width: 116)
@@ -287,7 +305,7 @@ class _Emaildetails extends State<Emaildetails> {
                       : Container(),
                   widget.mode
                       ? Container()
-                      : secondaryEmail.text != "empty"
+                      : secondaryEmail.text != "empty" && secondaryEmail.text != "Secondary Email"
                           ? Container(
                               margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                               child: Row(
@@ -305,6 +323,7 @@ class _Emaildetails extends State<Emaildetails> {
                                           color: Colors.white),
                                     ),
                                   ),
+
                                   Container(
                                     margin:
                                         const EdgeInsets.fromLTRB(20, 0, 10, 0),
@@ -359,7 +378,8 @@ class _Emaildetails extends State<Emaildetails> {
                           : InkWell(
                               onTap: () {
                                 state(() {
-                                  secondaryEmail.text = "Secondary Mail";
+                                  secondaryEmail.text = "Secondary Email";
+                                  value += 1;
                                 });
                               },
                               child: Container(
@@ -424,7 +444,7 @@ class _Emaildetails extends State<Emaildetails> {
             return AlertDialog(
               backgroundColor: const Color(0xff121623),
               content: SizedBox(
-                height: 115,
+                height: 150,
                 child: Column(
                   children: [
                     RichText(

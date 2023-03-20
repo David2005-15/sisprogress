@@ -139,15 +139,16 @@ class _Registration extends State<Registration> {
   }
 
   String month = DateFormat("MMMM").format(DateTime(2008, DateTime.now().day, DateTime.now().month));
-  String year = DateTime(2008, DateTime.now().day, DateTime.now().month).year.toString();
+  String year = (DateTime(2008, DateTime.now().day, DateTime.now().month).year - 1).toString();
   bool anyError = false;
 
   @override
   void initState() {
+    debugPrint(year);
     super.initState();
   }
 
-  PhoneNumber number = PhoneNumber(isoCode: 'AM');
+  PhoneNumber number = PhoneNumber(isoCode: 'US');
   @override
   Widget build(BuildContext context) {
 
@@ -639,12 +640,12 @@ class _Registration extends State<Registration> {
                               widget.registration.grade = 9;
                             });
 
-                            if (!(showEmailValidation &&
-                                    showcountryErrorText &&
-                                    showageErroText &&
-                                    showpasswordErroText &&
-                                    showconfirmPasswordErrorText) &&
-                                !anyError) {
+                            if ((showEmailValidation == false) &&
+                                (showcountryErrorText == false) &&
+                                (showageErroText == false) &&
+                                (showpasswordErroText == false) &&
+                                (showconfirmPasswordErrorText == false) &&
+                                (anyError == false)) {
                               if (!mounted) return;
                               Navigator.push(
                                   context,
@@ -699,10 +700,6 @@ class _Registration extends State<Registration> {
                                                 widget.reg10.profession,
                                           )));
                             }
-
-                            // if(showValidationOrNo && showEmailValidation) {
-                            // Navigator.push(context, MaterialPageRoute(builder: (context) => Grade10thFirst(registration: widget.reg10,)));
-                            // }
                           }
                         },
                       ),
@@ -718,7 +715,7 @@ class _Registration extends State<Registration> {
   }
 
   Future<void> _dialogBuilder() {
-    DateTime choosenDate = DateTime(2008, );
+    DateTime choosenDate = DateTime(2008, DateTime.now().month, DateTime.now().day);
 
     return showDialog(
         context: context,
@@ -730,7 +727,7 @@ class _Registration extends State<Registration> {
                   width: 100,
                   height: 220,
                   child: TableCalendar(
-                    availableGestures: AvailableGestures.all,
+                    availableGestures: AvailableGestures.none,
                     daysOfWeekHeight: 30,
                     rowHeight: 30,
                     selectedDayPredicate: (day) => isSameDay(day, choosenDate),
@@ -830,24 +827,7 @@ class _Registration extends State<Registration> {
                         margin: const EdgeInsets.fromLTRB(0, 13, 0, 0),
                         child: PopupMenuButton(
                           onSelected: (val) {
-                            // widget.onMonthSelect(
-                            //     val.toString());
-
                             state(() {
-                              // month = val;
-                              // // print(month);
-
-                              // var formatter = DateFormat('MMMM');
-                              // var date = formatter.parse(month);
-                              // var monthNumber = date.month;
-                              // // var monthNumber = DateTime.parse('2022-$month-01').month;
-                              // choosenDate = DateTime(choosenDate.year, monthNumber, choosenDate.day);
-
-                              // print(choosenDate.month);
-                              // print(choosenDate);
-
-                              // // print(choosenDate);
-                              // widget.age.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
                               month = val;
 
                               DateFormat monthFormat = DateFormat.MMMM();
@@ -900,12 +880,6 @@ class _Registration extends State<Registration> {
                           constraints: const BoxConstraints.expand(
                               width: 68, height: 150),
                           onSelected: (val) {
-                            // widget.onMonthSelect(
-                            //     val.toString());
-                            // setState(() {
-
-                            // });
-
                             state(() {
                               year = val;
                               choosenDate = DateTime(int.parse(year),
@@ -929,7 +903,7 @@ class _Registration extends State<Registration> {
                                 .map<PopupMenuItem<String>>((String value) {
                               return PopupMenuItem(
                                   height: 25,
-                                  value: value.toString(),
+                                  value: (int.parse(value) - 1).toString(),
                                   child: Text(
                                     value.toString(),
                                     style: GoogleFonts.poppins(

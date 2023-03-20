@@ -49,9 +49,6 @@ class CustomRadioState extends State<CustomRadio> {
 
   @override
   Widget build(BuildContext context) {
-
-    print(selectedFirst);
-    print(selectedSecond);
     return Container(
       alignment: Alignment.centerLeft,
       margin: const EdgeInsets.fromLTRB(38, 10, 0, 0),
@@ -67,10 +64,11 @@ class CustomRadioState extends State<CustomRadio> {
                   // key: UniqueKey(),
                   onTap: () {
                     setState(() {
-                      widget.methodParent();
+
                       widget.handler.value = widget.groupValue[0];
                       selectedFirst = true;
                       selectedSecond = false;
+                      widget.methodParent();
                     });
                   },
                   child: Container(
@@ -105,12 +103,13 @@ class CustomRadioState extends State<CustomRadio> {
                   // key: UniqueKey(),
                   onTap: () {
                     setState(() {
-                      widget.methodParent();
+
                       // widget.methodParent!();
                       // widget.handler.visible = true;
                       widget.handler.value = widget.groupValue[1];
                       selectedFirst = false;
                       selectedSecond = true;
+                      widget.methodParent();
                     });
                   },
                   child: Container(

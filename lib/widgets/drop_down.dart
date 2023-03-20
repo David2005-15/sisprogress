@@ -114,15 +114,15 @@ class _DropDown extends State<DropDown> {
               fontSize: 10,
               color: const Color(0xffE31F1F)
             ),
-            enabledBorder: UnderlineInputBorder(
+            enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
             ),
         
-            focusedBorder: UnderlineInputBorder(
+            focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
             ),
         
-            focusColor: Color(0xffD2DAFF)
+            focusColor: const Color(0xffD2DAFF)
           ),
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w400,

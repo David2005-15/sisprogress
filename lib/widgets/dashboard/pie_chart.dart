@@ -32,8 +32,6 @@ class PieChart extends StatelessWidget {
       aspectRatio: 16 / 10,
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 20, 16, 20),
-        // width: 328,
-        // height: MediaQuery.of(context.size.height),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           boxShadow: const <BoxShadow> [

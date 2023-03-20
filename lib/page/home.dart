@@ -65,18 +65,11 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     return isRemember ? AnimatedSplashScreen(
         backgroundColor: const Color(0xff121623),
-        splash: Container(
-          width: double.infinity,
-          height: double.infinity,
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-              color: Color(0xff121623)
-          ),
-          child: SvgPicture.asset(
-            "assets/LOGOSIS.svg",
-            width: 150,
-            height: 80,
-          ),
+        splashTransition: SplashTransition.fadeTransition,
+        splash: SvgPicture.asset(
+          "assets/LOGOSIS.svg",
+          width: 150,
+          height: 80,
         ),
         nextScreen: !haveInternet ? NoInternetConnection() : const ScaffoldHome()
     ) : Scaffold(

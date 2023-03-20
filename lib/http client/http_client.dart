@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/registration_data_grade10.dart';
 import 'package:sis_progress/data%20class/registration_data_grade9.dart';
@@ -23,6 +26,34 @@ class Client {
 
     dio.delete("https://sisprogress.online/addEmail/delete");
   }
+
+  Future updateImage(XFile file) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String fileName = file.path.split('/').last;
+
+    FormData formData = FormData.fromMap({
+      "img": await MultipartFile.fromFile(file.path, filename:fileName),
+    });
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    await dio.patch("https://sisprogress.online/uploadImage", data: formData, options: Options(
+      contentType: Headers.multipartFormDataContentType,
+    ));
+  }
+
+  Future<dynamic> getImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+      Response response = await dio.get("https://sisprogress.online/user/get",);
+
+    return response.data["img"];
+  }
+
+
 
   Future<List<dynamic>> getAllUniversities() async {
     Response response = await dio.get(

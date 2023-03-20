@@ -50,6 +50,7 @@ class _Profile extends State<Profile> {
   late String dreamPoints = "";
   late String targetPoints = "";
   late String safetyPoints = "";
+  late String image = "http://drive.google.com/uc?export=view&id=1T4h9d1wyGy-apEyrTW_D6C1UvdLSE166";
 
   void setUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -57,6 +58,15 @@ class _Profile extends State<Profile> {
     setState(() {
       fullName = value["fullName"];
       prefs.setString("country", value["country"]);    
+    });
+  }
+
+
+  void getImage() async {
+    var temp = await httpClient.getImage();
+
+    setState(() {
+      image = temp;
     });
   }
 
@@ -73,11 +83,12 @@ class _Profile extends State<Profile> {
     });
   }
 
-  Future getImage() async {
+  Future updateImage() async {
     var image = await _picker.pickImage(source: ImageSource.gallery, maxWidth: 120, maxHeight: 120);
 
     setState(() {
       _image = image;
+      httpClient.updateImage(_image!);
     });
   }
 
@@ -112,6 +123,7 @@ class _Profile extends State<Profile> {
 
     setEmail();
     setUsername();
+
   }
 
   @override
@@ -120,7 +132,8 @@ class _Profile extends State<Profile> {
     setEmail();
     setUsername();
     printValue();
-    
+    getImage();
+
     super.initState();
   }
 
@@ -186,7 +199,7 @@ class _Profile extends State<Profile> {
                               backgroundImage: _image != null ? Image.file(
                                 File(_image!.path),
                                 fit: BoxFit.contain,
-                              ).image : Image.asset("assets/AvatarAvatar.png").image,
+                              ).image : Image.network(image).image,
                               radius: 55,
                             ),
                           ),
@@ -195,7 +208,9 @@ class _Profile extends State<Profile> {
                         Align(
                           alignment: Alignment.bottomRight,
                           child: InkWell(
-                            onTap: getImage,
+                            onTap: updateImage,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             child: Container(
                               width: 50,
                               height: 50,

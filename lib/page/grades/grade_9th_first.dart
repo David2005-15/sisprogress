@@ -37,8 +37,8 @@ class Grade9thFirst extends StatefulWidget {
 }
 
 class _Grade9thFirst extends State<Grade9thFirst> {
-  List<String> terms = ["Fall 2023", "Fall 2024", "Fall 2025", "Fall 2026"];
-  List<String> plans = ["Early Desicion", "Regular Desicion"];
+  List<String> terms = ["Fall 2024", "Fall 2025", "Fall 2026", "Fall 2027"];
+  List<String> plans = ["Early Decision", "Regular Decision"];
   List<String> scores = ["Yes", "No"];
   List<String> legacys = ["Yes", "No"];
 
@@ -115,9 +115,7 @@ class _Grade9thFirst extends State<Grade9thFirst> {
               buildMode(widget._controller3, Universities().academics, "Profession", showacademicErrorText, academicErrorText),
               buildQuestion("3. Which field of study interests you?"),
               buildMode(widget._controller4, Universities().subjects, "Study", showstudyErrorText, studyErrorText),
-              // CustomRadio(value: term, groupValue: terms),
               buildQuestion("4. Preferred Start term options."),
-              // buildAnswer(changeTerms, terms, term),
               CustomRadioGroup(
                 handler: widget.term,
                 groupValue: terms,
@@ -126,13 +124,10 @@ class _Grade9thFirst extends State<Grade9thFirst> {
                 errors: termErrorMessage,
               ),
               buildQuestion("5. Preferred admission plan."),
-              // buildAnswer(changePlan, plans, plan),
               CustomRadio(handler: widget.plan, groupValue: plans, methodParent: () => debugPrint("Hello"), value: widget.plan.value, errors: planErrorMessage,),
               buildQuestion("6. Do you intend to pursue need-based Financial Aid?"),
-              // buildAnswer(changeScore, scores, score),
               CustomRadio(handler: widget.score, groupValue: scores, methodParent: () => debugPrint("Hello"), value: widget.score.value, errors: aidErrorMessage,),
               buildQuestion("7. Are you a legacy?"),
-              // buildAnswer(changeLegacy, legacys, legacy),
               CustomRadio(handler: widget.legacy, groupValue: legacys, methodParent: () => debugPrint("Hello"), value: widget.legacy.value, errors: legacyErrorMessage,),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 27, 0, 0),

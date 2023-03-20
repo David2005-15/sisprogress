@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
@@ -42,7 +41,7 @@ class NavBar extends StatelessWidget {
           items: const <BottomNavigationBarItem> [
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage("assets/Home.png"), size: 24,),
-              label: "Dashboard"
+              label: "Home"
             ),
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage("assets/NavCal.png"), size: 24,),

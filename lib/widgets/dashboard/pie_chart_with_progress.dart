@@ -55,29 +55,30 @@ class _PieChart extends State<PieChartWithProgressBar> {
                 ),
               ),
             ),
-            Container(
-              width: 220,
-              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-              margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [   
-                    const Color(0xffE31F1F).withOpacity(0.69),
-                    const Color(0xff355CCA),
-                  ],
+            Expanded(
+              child: Container(
+                width: 220,
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [   
+                      const Color(0xffE31F1F).withOpacity(0.69),
+                      const Color(0xff355CCA),
+                    ],
+                  ),
                 ),
-              ),
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Text(
-                  "Inactive categories will come soon.",
-                  style: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                    color: Colors.white
+                child: FittedBox(
+                  child: Text(
+                    "Inactive categories will come soon.",
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                      color: Colors.white
+                    ),
                   ),
                 ),
               ),
@@ -263,6 +264,7 @@ class ProgressBarPainter extends CustomPainter {
     final Map<String, List<double>> pointsCoord = getPointCoord(width);
 
     final center = Offset((size.width + 50) / 2, size.height / 2);
+
     drawPie(canvas, Colors.red, makeCenter(center, widthSize[0]), (3.1415 * 2) * (value[0] / 100));
     drawPie(canvas, Colors.blue.withOpacity(0.3), makeCenter(center, widthSize[1]), 0.2);
     drawPie(canvas, Colors.amber.withOpacity(0.3), makeCenter(center, widthSize[2]), 0.2);

@@ -10,7 +10,7 @@
 
     <application
         android:name="${applicationName}"
-        android:label="sis_progress"
+        android:label="SIS Progress"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

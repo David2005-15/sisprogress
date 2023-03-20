@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sis_progress/data%20class/graph_data.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart_with_progress.dart';
 import 'package:sis_progress/widgets/tile.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../../widgets/dashboard/graph.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -542,7 +545,6 @@ class _Dashboard extends State<Dashboard> {
                     ),
                   );
                 }),
-                // Graph(data: chartData, lineData: chartLine,),
                 PieChart(
                   context: context,
                   title: "Overall Progress",

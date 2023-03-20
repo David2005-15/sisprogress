@@ -37,7 +37,7 @@ class Grade10thFirst extends StatefulWidget {
 }
 
 class _Grade10thFirst extends State<Grade10thFirst> {
-  List<String> terms = ["Fall 2023", "Fall 2024", "Fall 2025", "Fall 2026"];
+  List<String> terms = ["Fall 2024", "Fall 2025", "Fall 2026", "Fall 2027"];
   List<String> plans = ["Early Decision", "Regular Decision"];
   List<String> scores = ["Yes", "No"];
   List<String> legacys = ["Yes", "No"];

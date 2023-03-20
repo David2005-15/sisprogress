@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -33,8 +34,10 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   Color backgroundColor = Colors.white;
 
   String fullName = "";
+  String image = "http://drive.google.com/uc?export=view&id=1T4h9d1wyGy-apEyrTW_D6C1UvdLSE166";
 
   Client httpClient = Client();
+
 
   _ScaffoldHome() {
     page = CalendarPage();
@@ -76,6 +79,14 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     });
   }
 
+  void setImage() async {
+    var temp = await httpClient.getImage();
+
+    setState(() {
+      image = temp;
+    });
+  }
+
   void onAvatar() {
     setState(() {
       body = const Profile();
@@ -85,6 +96,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   @override
   void initState() {
     body = pages[0];
+    setImage();
 
     super.initState();
   }
@@ -109,10 +121,12 @@ class _ScaffoldHome extends State<ScaffoldHome> {
               _selected = count;
               body = pages[_selected];
             });
+
+            setImage();
           }),
       appBar: CustomAppBar(buildLogoIcon(onIcon), <Widget>[
         buildNotification(onTap: onNotification),
-        buildAvatar(onTap: onAvatar)
+        buildAvatar(onTap: onAvatar, url: image)
       ]),
       body: body,
     );
@@ -135,18 +149,21 @@ SizedBox buildLogoIcon(VoidCallback onTap) {
   );
 }
 
-Container buildAvatar({required VoidCallback onTap}) {
-  return Container(
-    margin: const EdgeInsets.fromLTRB(10, 0, 16, 0),
-    child: InkWell(
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        onTap: onTap,
-        child: Image.asset(
-          "assets/AvatarAvatar.png",
-          width: 35,
-          height: 35,
-        )),
+InkWell buildAvatar({required VoidCallback onTap, required String url}) {
+  return InkWell(
+    highlightColor: Colors.transparent,
+    splashColor: Colors.transparent,
+    onTap: onTap,
+    child: Container(
+      width: 36,
+      height: 36,
+      margin: const EdgeInsets.fromLTRB(15, 0, 16, 0),
+      child: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        backgroundImage: Image.network(url, fit: BoxFit.contain,).image,
+        radius: 55,
+      ),
+    ),
   );
 }
 

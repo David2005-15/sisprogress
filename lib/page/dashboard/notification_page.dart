@@ -6,10 +6,7 @@ import 'package:sis_progress/widgets/dashboard/notification_tile.dart';
 class NotificationPage extends StatefulWidget {
   final List<NotificationData> notifications;
 
-  const NotificationPage({
-    required this.notifications,
-    super.key
-  });
+  const NotificationPage({required this.notifications, super.key});
 
   @override
   State<StatefulWidget> createState() => _NotificationPage();
@@ -24,19 +21,35 @@ class _NotificationPage extends State<NotificationPage> {
     });
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return SingleChildScrollView(
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: <Widget>[
+  //         buildTitle(),
+  //
+  //         Text(
+  //           "You don’t have any notification right now.",
+  //           style: GoogleFonts.montserrat(
+  //               fontWeight: FontWeight.w500, fontSize: 16, color: Colors.white),
+  //         ),
+  //
+  //       ],
+  //     ),
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget> [
-          buildTitle(),
-          // widget.notifications.map((e) => null).toList()
-          Visibility(
-            visible: visibility,
-            child: NotificationTile(data: widget.notifications[0], onTap: removeNote)
-          )
-        ],
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      alignment: Alignment.center,
+      child: Text(
+        "You don’t have any notification right now.",
+        style: GoogleFonts.montserrat(
+            fontWeight: FontWeight.w500, fontSize: 16, color: Colors.white),
       ),
     );
   }
@@ -50,14 +63,12 @@ Container buildTitle() {
       child: Text(
         "Notifications",
         style: GoogleFonts.montserrat(
-          fontWeight: FontWeight.w700,
-          fontSize: 24,
-          fontStyle: FontStyle.normal,
-          letterSpacing: -0.02,
-          color: Colors.white
-        ),
+            fontWeight: FontWeight.w700,
+            fontSize: 24,
+            fontStyle: FontStyle.normal,
+            letterSpacing: -0.02,
+            color: Colors.white),
       ),
     ),
   );
 }
-

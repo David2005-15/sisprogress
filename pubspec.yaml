@@ -1,9 +1,9 @@
 name: sis_progress
-description: Ankap Project.
+description: SIS Progress
 
 publish_to: 'none'
 
-version: 1.0.1+26
+version: 1.0.1+32
 
 environment:
   sdk: '>=2.18.4 <3.0.0'
@@ -86,3 +86,4 @@ flutter:
     - assets/Circle.svg
     - assets/ICONSISpng.png
     - assets/LOGOSIS.svg
+    - assets/opening_image.png

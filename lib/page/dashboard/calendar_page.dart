@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -11,12 +10,9 @@ import 'package:table_calendar/table_calendar.dart';
 
 
 class CalendarPage extends StatefulWidget {
-  CalendarPage({
+  const CalendarPage({
     super.key
   });
-
-
-
 
   @override
   State<StatefulWidget> createState() => _CalendarPage();
@@ -43,22 +39,24 @@ class _CalendarPage extends State<CalendarPage> {
     "November",
     "December"
   ];
-  String month = "February";
+
+  String month = DateFormat('MMMM').format(DateTime.now());
 
   List<Color> colors = [const Color(0xffB1B2FF), Colors.white, Colors.white];
 
   Client httpClient = Client();
 
   var event = [];
+  var allEvents = [];
 
 
   List<List<dynamic>> feedbacks = [];
 
   void updateEvent() async {
     var temp = await httpClient.getCalendarEvents();
-    stderr.writeln(temp);
     
     setState(() {
+      allEvents = temp;
       event.clear();
 
 
@@ -253,24 +251,185 @@ class _CalendarPage extends State<CalendarPage> {
                     });
                   },
                   calendarBuilders: CalendarBuilders(
-                    selectedBuilder: (context, day, focusedDay) {
-                      return Container(
-                        height: 34,
-                        width: 34,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.transparent,
-                            border: Border.all(color: Colors.white, width: 1)
-                        ),
-                        child: Text(
-                          "${day.day}",
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 18,
-                              color: Colors.white
+                    todayBuilder: (context, day, focusedDay) {
+
+                      var tempo = [];
+
+
+
+                      for(var elem in allEvents) {
+                        var date = DateTime.parse(elem["startDate"]);
+
+                        if((date.day == day.day) &&
+                            (date.month == day.month)) {
+                          tempo.add(elem);
+                        }
+                      }
+
+                      List<dynamic> uniqueStatus =
+                        tempo.map((person) => person["status"]).toSet().toList();
+
+                      return Column(
+                        children: [
+                          Container(
+                            height: 30,
+                            width: 30,
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color(0xffb1b2ff)
+                            ),
+                            child: Text(
+                              day.day.toString(),
+                              style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                  color: const Color(0xff121623)
+                              ),
+                            ),
                           ),
-                        ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: uniqueStatus.map((e) {
+                                return Container(
+                                  margin: const EdgeInsets.fromLTRB(0.5, 2, 0.5, 0.5),
+                                  width: 5,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: getProcess(e).eventColor
+                                  ),
+                                );
+                              }).toList()
+                          )
+                        ],
+                      );
+                    },
+                    defaultBuilder: (context, day, focusedDay) {
+                      var diff = day.compareTo(DateTime.now());
+
+                      var tempo = [];
+
+                      for(var elem in allEvents) {
+                        var date = DateTime.parse(elem["startDate"]);
+
+                        if((date.day == day.day) &&
+                            (date.month == day.month)) {
+                            tempo.add(elem);
+                        }
+                      }
+
+                      List<dynamic> uniqueStatus =
+                        tempo.map((person) => person["status"]).toSet().toList();
+
+                      return diff < 0 ? Column(
+                        children: [
+                          Container(
+                            height: 30,
+                            width: 30,
+                            alignment: Alignment.center,
+                            child: Text(
+                              day.day.toString(),
+                              style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                  color: const Color(0xff7d7d7d)
+                              ),
+                            ),
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: uniqueStatus.map((e) {
+                                return Container(
+                                  margin: const EdgeInsets.all(0.5),
+                                  width: 5,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: getProcess(e).eventColor
+                                  ),
+                                );
+                              }).toList()
+                          )
+                        ],
+                      ) : Column(
+                        children: [
+                          Container(
+                            height: 30,
+                            width: 30,
+                            alignment: Alignment.center,
+                            child: Text(
+                              day.day.toString(),
+                              style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                  color: Colors.white
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: uniqueStatus.map((e) {
+
+                              return Container(
+                                margin: const EdgeInsets.all(0.5),
+                                width: 5,
+                                height: 5,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: getProcess(e).eventColor
+                                ),
+                              );
+                            }).toList()
+                          )
+                        ],
+                      );
+                    },
+                    selectedBuilder: (context, day, focusedDay) {
+                      var tempo = [];
+
+                      for(var elem in allEvents) {
+                        var date = DateTime.parse(elem["startDate"]);
+
+                        if((date.day == day.day) &&
+                            (date.month == day.month)) {
+                          tempo.add(elem);
+                        }
+                      }
+
+                      List<dynamic> uniqueStatus =
+                        tempo.map((person) => person["status"]).toSet().toList();
+
+                      return Column(
+                        children: [
+                          Container(
+                            height: 30,
+                            width: 30,
+                            alignment: Alignment.center,
+                            child: Text(
+                              "${day.day}",
+                              style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                  color: const Color(0xffB1B2FF)
+                              ),
+                            ),
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: uniqueStatus.map((e) {
+                                return Container(
+                                  margin: const EdgeInsets.all(0.5),
+                                  width: 5,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: getProcess(e).eventColor
+                                  ),
+                                );
+                              }).toList()
+                          )
+                        ],
                       );
                     },
                   ),
@@ -339,9 +498,6 @@ class _CalendarPage extends State<CalendarPage> {
                   List<bool> temp2 = [];
 
 
-                  // print(feedbacks);
-
-
                   e["SubTasks"].forEach((p0) {
                     swap.add([
                       p0["name"],
@@ -358,7 +514,7 @@ class _CalendarPage extends State<CalendarPage> {
                   String substringValue = "${temp2.length}/${swap.length}";
 
                   return EventTile(
-                    proccess: getProcess(e["status"]),
+                    process: getProcess(e["status"]),
                     title: e["positionName"],
                     description: "Hello World",
                     subtasks: swap,
@@ -369,7 +525,7 @@ class _CalendarPage extends State<CalendarPage> {
                     facultyName: e["facultyName"],
                     companyName: e["companyName"],
                     taskId: e["id"],
-                    choosenDate: chosenDate,);
+                    chosenDate: chosenDate,);
                 }).toList(),
               )
             ],
@@ -490,10 +646,10 @@ class _CalendarPage extends State<CalendarPage> {
                                         child: Text(
                                           "${e["points"]} Points",
                                           style: GoogleFonts.montserrat(
-                                              fontWeight: FontWeight.w400,
+                                              fontWeight: FontWeight.w600,
                                               fontSize: 14,
-                                              color:
-                                              const Color(0xff646464)),
+                                              color: Colors.black54
+                                          ),
                                         ),
                                       ),
                                     ],

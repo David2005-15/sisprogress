@@ -125,7 +125,7 @@ class _MyTask extends State<MyTask> {
                       icon: Transform.rotate(
                         angle: 3.14159,
                         child: SvgPicture.asset("assets/VectorChevron.svg",
-                        width: 11.5, height: 6.5,)
+                        width: 12.5, height: 7.5,)
                   ),
 
                   onSelected: (val) async {
@@ -169,38 +169,44 @@ class _MyTask extends State<MyTask> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Container(
-                margin: const EdgeInsets.fromLTRB(32, 0, 0, 0),
-                child: Text(
-                  "My Points",
-                  style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: const Color(0xffBFBFBF)
-                  ),
-                )
+            Expanded(
+              child: Container(
+                  margin: const EdgeInsets.fromLTRB(32, 0, 0, 0),
+                  child: Text(
+                    "My Points",
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: const Color(0xffBFBFBF)
+                    ),
+                  )
+              ),
             ),
-            Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Text(
-                  "Status",
-                  style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: const Color(0xffBFBFBF)
-                  ),
-                )
+            Expanded(
+              child: Container(
+                  margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: Text(
+                    "Status",
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: const Color(0xffBFBFBF)
+                    ),
+                  )
+              ),
             ),
-            Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 32, 0),
-                child: Text(
-                  "Due date for max points",
-                  style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: const Color(0xffBFBFBF)
-                  ),
-                )
+            Expanded(
+              child: Container(
+                  margin: const EdgeInsets.fromLTRB(0, 0, 32, 0),
+                  child: Text(
+                    "Due date for max points",
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: const Color(0xffBFBFBF)
+                    ),
+                  )
+              ),
             )
           ],
         ),

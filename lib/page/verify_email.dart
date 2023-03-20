@@ -28,7 +28,6 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
     super.initState();
     _controller =
         AnimationController(vsync: this, duration: const Duration(minutes: 5));
-    _controller.forward();
   }
 
   bool sendAgain = false;
@@ -72,74 +71,83 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
       changeIsDiabled();
     }
 
-    startTimer();
+    if(sendAgain) {
+      startTimer();
+    }
 
-    return Scaffold(
-      appBar: CustomAppBar(buildLogoIcon(context), List.empty()),
-      body: Container(
-        alignment: Alignment.topCenter,
-        child: Container(
-          decoration: BoxDecoration(
-            color: const Color(0xff3A3D4C),
-            borderRadius: BorderRadius.circular(5)
-          ),
-          width: double.infinity,
-          height: double.infinity,
-          // constraints: BoxConstraints.expand(),
-          margin: const EdgeInsets.fromLTRB(16, 15, 16, 32),
-          // alignment: Alignment.topCenter,
-          child: SingleChildScrollView(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget> [
-                const ProgressBar(isPassed: [true, true, true],),
-                buildTitle(),
-                buildSubtitle(widget.email ?? ""),
-                buildDescription(),
-                Button(text: resetOrSendAgain, onPressed: isDisabled ? () {
-                  if(resetOrSendAgain == "Resend verification link") {
-                    _dialogBuilder(context, widget.email ?? "");
-                  }
-                  setState(() {
-                    sendAgain = true;
-                    resetOrSendAgain = "Resend verification link";
-                    isDisabled = false;
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
 
-                  });
-                } : null, height: 35, width: double.infinity),
-    
-                Visibility(
-                  visible: sendAgain,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(5, 15, 20, 0),
-                    child: IntrinsicHeight(
-                      child: Stack(
-                        children: <Widget> [     
-                          Align(
-                            alignment: AlignmentDirectional.centerEnd,
-                            child: Text(
-                              time,
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                color: const Color(0xffB1B2FF),
-                              ),
+        return Future.value(true);
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(buildLogoIcon(context), List.empty()),
+        body: Container(
+          alignment: Alignment.topCenter,
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xff3A3D4C),
+              borderRadius: BorderRadius.circular(5)
+            ),
+            width: double.infinity,
+            height: double.infinity,
+            // constraints: BoxConstraints.expand(),
+            margin: const EdgeInsets.fromLTRB(16, 15, 16, 32),
+            // alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget> [
+                  const ProgressBar(isPassed: [true, true, true],),
+                  buildTitle(),
+                  buildSubtitle(widget.email ?? ""),
+                  buildDescription(),
+                  Button(text: resetOrSendAgain, onPressed: isDisabled ? () {
+                    if(resetOrSendAgain == "Resend verification link") {
+                      _dialogBuilder(context, widget.email ?? "");
+                    }
+                    setState(() {
+                      sendAgain = true;
+                      resetOrSendAgain = "Resend verification link";
+                      isDisabled = false;
+
+                    });
+                  } : null, height: 35, width: double.infinity),
+
+                  Visibility(
+                    visible: sendAgain,
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(5, 15, 20, 0),
+                      child: IntrinsicHeight(
+                        child: Stack(
+                          children: <Widget> [
+                            Align(
+                              alignment: AlignmentDirectional.centerEnd,
+                              child: Text(
+                                time,
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: const Color(0xffB1B2FF),
+                                ),
+                              )
                             )
-                          )
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                Visibility(
-                  visible: sendAgain,
-                  child: Button(text: "Back to login", onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
-                  }, height: 36, width: double.infinity),
-                )
-              ],
+                  Visibility(
+                    visible: sendAgain,
+                    child: Button(text: "Back to login", onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                    }, height: 36, width: double.infinity),
+                  )
+                ],
+              ),
             ),
           ),
         ),

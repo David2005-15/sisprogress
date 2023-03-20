@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 
 class ExploreTile extends StatelessWidget {
@@ -79,15 +78,12 @@ class ExploreTile extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Text(
-                                      title,
-                                      style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12,
-                                        color: const Color(0xff2E2323)
-                                      ),
+                                  Text(
+                                    title,
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      color: const Color(0xff2E2323)
                                     ),
                                   ),
                                 ],
@@ -107,15 +103,12 @@ class ExploreTile extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Text(
-                                      position,
-                                      style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12,
-                                        color: const Color(0xff2E2323)
-                                      ),
+                                  Text(
+                                    position,
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      color: const Color(0xff2E2323)
                                     ),
                                   ),
                                 ],

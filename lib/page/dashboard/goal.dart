@@ -1,5 +1,6 @@
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/widgets/dashboard/explore_more_goals_tile.dart';
@@ -56,6 +57,8 @@ class _GoalPage extends State<GoalPage> {
     });
   }
 
+  bool openedFirst = true;
+
   void getAllRecommendations() async {
     var temp = await client.getRecommendations();
     var temp2 = await client.getAllFaculties();
@@ -76,13 +79,17 @@ class _GoalPage extends State<GoalPage> {
     if(recommendation.isNotEmpty) {
       recommendationWidget = StatefulBuilder(builder: (context, state) {
         return ExpansionTile(
+          initiallyExpanded: openedFirst,
           trailing: Container(
             margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-            child: const ImageIcon(
-              AssetImage("assets/Vectorchevorn.png"),
-              size: 14,
-              color: Color(0xffB1B2FF),
-            ),
+            child: Transform.rotate(
+                angle: 3.14159,
+                child: SvgPicture.asset(
+                  "assets/VectorChevron.svg",
+                  width: 15.5,
+                  height: 9.5,
+                  color: const Color(0xffB1B2FF),
+                )),
           ),
           title: Row(
             children: [
@@ -135,11 +142,14 @@ class _GoalPage extends State<GoalPage> {
       facultiesWidget[key] = ExpansionTile(
         trailing: Container(
           margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-          child: const ImageIcon(
-            AssetImage("assets/Vectorchevorn.png"),
-            size: 14,
-            color: Color(0xffB1B2FF),
-          ),
+          child: Transform.rotate(
+              angle: 3.14159,
+              child: SvgPicture.asset(
+                "assets/VectorChevron.svg",
+                width: 15.5,
+                height: 9.5,
+                color: const Color(0xffB1B2FF),
+              )),
         ),
         title: Row(
           children: [
@@ -162,10 +172,10 @@ class _GoalPage extends State<GoalPage> {
           ],
         ),
         children: (value as List<dynamic>).map<Widget>((e) {
-          var disballed = !(e["isFree"] == false);
+          var disabled = !(e["isFree"] == false);
 
           return ExploreTile(
-            disabled: disballed,
+            disabled: disabled,
             taskCount:
                 "${e["SubTasks"].where((p0) => p0['status'] == true).length}/${e["SubTasks"].length}",
             taskId: e["id"],
@@ -232,6 +242,19 @@ class _GoalPage extends State<GoalPage> {
                       curve: Curves.fastOutSlowIn);
                   setState(() {
                     showFilter = !showFilter;
+
+                    filteredFaculties  = facultiesInFilter;
+
+                      if(recommendation.isNotEmpty) {
+                        filteredFaculties.insert(
+                            0, "Recommendation");
+                        filteredFaculties.insert(
+                            1, "All");
+                      } else {
+                        filteredFaculties.insert(
+                            0, "All");
+                      }
+
                   });
                   if (showFilter) {
                     _overlayEntry = OverlayEntry(builder: (context) {
@@ -321,7 +344,7 @@ class _GoalPage extends State<GoalPage> {
                                           highlightColor:
                                               const Color(0xffAAC4FF),
                                           onTap: () {
-                                            state(() {
+                                            setState(() {
                                               filterText = e;
                                               showFilter = false;
                                               _overlayEntry!.remove();
@@ -405,11 +428,10 @@ class _GoalPage extends State<GoalPage> {
                           ),
                           Container(
                             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: const ImageIcon(
-                              AssetImage("assets/Vectorchevorn.png"),
-                              size: 14,
-                              color: Colors.grey,
-                            ),
+                            child: Transform.rotate(
+                                angle: 3.14159,
+                                child: SvgPicture.asset("assets/VectorChevron.svg",
+                                  width: 12, height: 7.5)),
                           )
                         ])),
               ),
