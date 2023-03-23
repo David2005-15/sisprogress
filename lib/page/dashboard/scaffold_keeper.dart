@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:sis_progress/data%20class/notification_data.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
-import 'package:sis_progress/page/dashboard/dashboard.dart';
-import 'package:sis_progress/page/dashboard/explore_more_goals.dart';
-import 'package:sis_progress/page/dashboard/notification_page.dart';
-import 'package:sis_progress/page/dashboard/profile.dart';
+import 'dashboard.dart';
+import 'explore_more_goals.dart';
+import 'notification_page.dart';
+import 'profile.dart';
 import 'package:sis_progress/widgets/bottom_nav_bar.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'calendar_page.dart';
@@ -40,7 +39,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
 
   _ScaffoldHome() {
-    page = CalendarPage();
+    page = const CalendarPage();
     pages = [
       const Dashboard(),
       page,
@@ -160,7 +159,7 @@ InkWell buildAvatar({required VoidCallback onTap, required String url}) {
       margin: const EdgeInsets.fromLTRB(15, 0, 16, 0),
       child: CircleAvatar(
         backgroundColor: Colors.transparent,
-        backgroundImage: Image.network(url, fit: BoxFit.contain,).image,
+        backgroundImage: Image.network(url, fit: BoxFit.scaleDown,).image,
         radius: 55,
       ),
     ),
@@ -186,19 +185,6 @@ InkWell buildNotification({required VoidCallback onTap}) {
   );
 }
 
-Color getColor(Set<MaterialState> states) {
-  const Set<MaterialState> interactiveStates = <MaterialState>{
-    MaterialState.pressed,
-    MaterialState.hovered,
-    MaterialState.focused,
-    MaterialState.disabled
-  };
-
-  if (states.any(interactiveStates.contains)) {
-    return Colors.grey;
-  }
-  return Colors.blue;
-}
 
 Container buildCheckbox(
     {required Color iconColor,

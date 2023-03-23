@@ -18,10 +18,14 @@ class EventTile extends StatefulWidget {
   final String substringValue;
   final VoidCallback updateState;
   final DateTime chosenDate;
+  final double taskPoint;
+  final double taskDay;
 
   const EventTile(
       {required this.eventDate,
       required this.points,
+      required this.taskPoint,
+      required this.taskDay,
       required this.subtasks,
       required this.description,
       required this.process,
@@ -46,44 +50,29 @@ class _EventTile extends State<EventTile> {
 
   var points = [];
   var currentDay = 0;
-  var currentPoint = 0;
+  double currentPoint = 0;
 
   void getAllTasks() async {
     var temp = await httpClient.getTimePoints(widget.taskId);
 
-    setState(() {
-      points = temp["taskDesc"];
-      currentDay = temp["currentDay"];
-      currentPoint = temp["currentPoint"];
-    });
+    if (mounted) {
+      setState(() {
+        points = temp["taskDesc"];
+        currentDay = temp["currentDay"];
+        currentPoint = double.parse(temp["currentPoint"].toString());
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    updateTasks();
-    getAllFeedbacks();
     getAllTasks();
-  }
-
-  void updateTasks() async {
-    var temp = await httpClient.getCalendarEvents();
-    setState(() {
-      tasks = temp;
-    });
-  }
-
-  void getAllFeedbacks() async {
-    var temp = await httpClient.getAllFeedbacks(widget.taskId);
-
-    setState(() {
-      feedbacks = temp;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    getAllTasks();
+    // getAllTasks();
     return InkWell(
       onTap: () {
         widget.updateState();
@@ -165,8 +154,7 @@ class _EventTile extends State<EventTile> {
                                   style: GoogleFonts.montserrat(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 11,
-                                      color: Colors.black
-                                  ),
+                                      color: Colors.black),
                                 ),
                               ),
                             ),
@@ -791,6 +779,7 @@ class _EventTile extends State<EventTile> {
                                                               id, true);
                                                       widget.updateState();
                                                     }
+                                                    getAllTasks();
                                                     widget.updateState();
 
                                                     if (!mounted) return;
@@ -824,7 +813,6 @@ class _EventTile extends State<EventTile> {
                                       fontWeight: FontWeight.w400,
                                       fontSize: 20,
                                       color: const Color(0xff355CCA),
-                                      fontStyle: FontStyle.italic,
                                       decoration: TextDecoration.underline),
                                 ))
                           ],
@@ -844,9 +832,13 @@ class _EventTile extends State<EventTile> {
   Future<void> _putFeedback(BuildContext context, int taskId,
       String description, List<dynamic> feedback) {
     List<dynamic> feed = [];
+    bool isEmpty = true;
 
     httpClient.getAllFeedbacks(taskId).then((val) async {
       feed = val;
+      if (feed.isNotEmpty) {
+        isEmpty = false;
+      }
     });
 
     return showDialog(
@@ -898,47 +890,54 @@ class _EventTile extends State<EventTile> {
                         Theme(
                           data: Theme.of(context)
                               .copyWith(dividerColor: Colors.transparent),
-                          child: ExpansionTile(
-                              title: Text(
-                                "My feedback history",
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: const Color(0xff646464)),
-                              ),
-                              children: [
-                                SizedBox(
-                                    height: 50,
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        children: feed.map<Widget>((e) {
-                                          return Container(
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                border: Border.all(
-                                                    width: 1.5,
-                                                    color: const Color(
-                                                        0xff3A3D4C))),
-                                            margin: const EdgeInsets.fromLTRB(
-                                                13, 2, 13, 2),
-                                            padding: const EdgeInsets.fromLTRB(
-                                                5, 7, 5, 7),
-                                            child: Text(
-                                              e["feedback"],
-                                              style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 12,
-                                                  fontStyle: FontStyle.italic,
-                                                  color:
-                                                      const Color(0xff3A3D4C)),
+                          child: isEmpty
+                              ? Container()
+                              : ExpansionTile(
+                                  title: Text(
+                                    "My feedback history",
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: const Color(0xff646464)),
+                                  ),
+                                  children: [
+                                      SizedBox(
+                                          height: 50,
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              children: feed.map<Widget>((e) {
+                                                return Container(
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      border: Border.all(
+                                                          width: 1.5,
+                                                          color: const Color(
+                                                              0xff3A3D4C))),
+                                                  margin:
+                                                      const EdgeInsets.fromLTRB(
+                                                          13, 2, 13, 2),
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          5, 7, 5, 7),
+                                                  child: Text(
+                                                    e["feedback"],
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 12,
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                        color: const Color(
+                                                            0xff3A3D4C)),
+                                                  ),
+                                                );
+                                              }).toList(),
                                             ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ))
-                              ]),
+                                          ))
+                                    ]),
                         ),
                         Container(
                           margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
@@ -1009,7 +1008,6 @@ class _EventTile extends State<EventTile> {
                                   color: Color(0xff355CCA), width: 1),
                             ),
                             onPressed: () {
-                              getAllFeedbacks();
                               widget.updateState();
                               Navigator.pop(context);
                             },
@@ -1034,13 +1032,9 @@ class _EventTile extends State<EventTile> {
                             onPressed: answer.text.isNotEmpty
                                 ? () {
                                     var httpClient = Client();
-
                                     httpClient.sendEssay(answer.text, taskId);
                                     widget.updateState();
-                                    getAllFeedbacks();
-
                                     Navigator.pop(context);
-                                    // widget.updateState();
                                   }
                                 : null,
                             child: Text(

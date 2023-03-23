@@ -525,7 +525,9 @@ class _CalendarPage extends State<CalendarPage> {
                     facultyName: e["facultyName"],
                     companyName: e["companyName"],
                     taskId: e["id"],
-                    chosenDate: chosenDate,);
+                    chosenDate: chosenDate,
+                  taskDay: double.parse(e["days"].toString()),
+                  taskPoint: double.parse(e["point"].toString()),);
                 }).toList(),
               )
             ],

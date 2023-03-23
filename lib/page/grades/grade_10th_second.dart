@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/data%20class/registration_data_grade10.dart';
-import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/verify_email.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
@@ -38,6 +37,16 @@ class _Grade10thSecond extends State<Grade10thSecond> {
   List<String> thirdQuestion = ["Yes", "No"];
   List<String> yesOrNo = ["Yes", "No"];
   List<String> noOrYes = ["No", "Yes"];
+
+  List<dynamic> selection = [];
+
+  void setSelections() async {
+    var temp = await httpClient.getAllActivities();
+
+    setState(() {
+      selection = temp;
+    });
+  }
 
   Client httpClient = Client();
 
@@ -93,6 +102,8 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
   @override
   void initState() {
+    setSelections();
+
     if (widget.reg.place != null) {
       widget.secondQuest.value = widget.reg.place;
     }
@@ -300,8 +311,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                   } else {
                                     whichTest.remove("ACT");
                                   }
-
-                                  // print(whichTest);
                                 });
                               },
                               child: Icon(Icons.check,
@@ -469,15 +478,14 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                             // controller.text = value;
                           },
                           itemBuilder: (BuildContext context) {
-                            return Universities()
-                                .clubCategories
-                                .map<PopupMenuItem<String>>((String value) {
+                            return selection
+                                .map<PopupMenuItem<String>>((dynamic value) {
                               bool isEnabled = actions
-                                  .where((element) => element.contains(value))
+                                  .where((element) => element.contains(value.toString()))
                                   .isNotEmpty;
 
                               return PopupMenuItem(
-                                  value: value,
+                                  value: value.toString(),
                                   child: StatefulBuilder(
                                       builder: (context, state) {
                                     return Row(
@@ -564,7 +572,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                               margin: const EdgeInsets.fromLTRB(
                                                   0, 0, 5, 0),
                                               decoration: BoxDecoration(
-                                                  color: Color(0xff355CCA)
+                                                  color: const Color(0xff355CCA)
                                                       .withOpacity(0.2),
                                                   borderRadius:
                                                       BorderRadius.circular(5),
@@ -627,17 +635,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                                 .remove(value);
                                                           }
 
-                                                          // if(actions.where((element) => element.contains(value)).length > 1) {
-                                                          //   var content = actions[i].split(" ");
-                                                          //   print(content[0]);
-                                                          //   print(content[1]);
-                                                          //   print("${content[0]} (${content.length - 1})");
-                                                          //   actions[i] = "${content[0]} (${content.length - 1})";
-
-                                                          // } else {
-
-                                                          // }
-                                                          // var content = actions[i].split(" ");
                                                         }
                                                       }
                                                     });
@@ -652,11 +649,10 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                       () {
                                                         var temp =
                                                             actions.reversed;
-                                                        print(temp);
+                                          ;
                                                       },
                                                     );
 
-                                                    print(actions);
                                                   },
                                                   child: const Icon(
                                                       Icons.remove,
@@ -665,8 +661,8 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                           Color(0xff355CCA))),
                                             ),
                                             Text(isEnabled
-                                                ? "${values.where((e) => e.contains(value)).length + 1}"
-                                                : "1"),
+                                                ? "${values.where((e) => e.contains(value)).length}"
+                                                : "0"),
                                             Container(
                                               width: 20,
                                               height: 20,
@@ -1340,7 +1336,7 @@ Row buildNavigation(BuildContext context, List<String> printable,
                 backgroundColor: const Color(0xff36519D)),
             onPressed: onPress,
             child: Text(
-              "Next",
+              "Submit",
               style: GoogleFonts.montserrat(
                   fontWeight: FontWeight.w500, fontSize: 18),
             )),

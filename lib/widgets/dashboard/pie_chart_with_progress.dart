@@ -59,7 +59,7 @@ class _PieChart extends State<PieChartWithProgressBar> {
               child: Container(
                 width: 220,
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
+                margin: const EdgeInsets.fromLTRB(25, 17, 10, 0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   gradient: LinearGradient(

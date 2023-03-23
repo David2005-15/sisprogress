@@ -6,6 +6,8 @@ import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/progress/progress_bar.dart';
 
+import '../http client/http_client.dart';
+
 
 class VerifyEmail extends StatefulWidget {
   final String? email;
@@ -21,13 +23,11 @@ class VerifyEmail extends StatefulWidget {
 }
 
 class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixin{
-  late AnimationController _controller;
+  Client httpClient = Client();
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(minutes: 5));
   }
 
   bool sendAgain = false;
@@ -105,6 +105,8 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
                   buildSubtitle(widget.email ?? ""),
                   buildDescription(),
                   Button(text: resetOrSendAgain, onPressed: isDisabled ? () {
+
+                    httpClient.sendVerificationLink(widget.email!);
                     if(resetOrSendAgain == "Resend verification link") {
                       _dialogBuilder(context, widget.email ?? "");
                     }

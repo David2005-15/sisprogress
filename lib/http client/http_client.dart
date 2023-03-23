@@ -27,6 +27,20 @@ class Client {
     dio.delete("https://sisprogress.online/addEmail/delete");
   }
 
+  Future sendVerificationLink(String email) async {
+    var body = {
+      "email": email
+    };
+
+    await dio.post("https://sisprogress.online/register/sendMail", data: body);
+  }
+
+  Future<dynamic> getAllActivities() async {
+    var result = await dio.get("https://sisprogress.online/getTasks/activities");
+
+    return await result.data;
+  }
+
   Future updateImage(XFile file) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 

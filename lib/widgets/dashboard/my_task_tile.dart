@@ -55,7 +55,7 @@ class _MyTaskTile extends State<MyTaskTile> {
 
   var points = [];
   var currentDay = 0;
-  var currentPoint = 0;
+  double currentPoint = 0;
 
   void getAllTasks() async {
     var temp = await httpClient.getTimePoints(widget.taskId);
@@ -63,7 +63,7 @@ class _MyTaskTile extends State<MyTaskTile> {
     setState(() {
       points = temp["taskDesc"];
       currentDay = temp["currentDay"];
-      currentPoint = temp["currentPoint"];
+      currentPoint = double.parse(temp["currentPoint"].toString());
     });
   }
 
@@ -72,8 +72,11 @@ class _MyTaskTile extends State<MyTaskTile> {
     super.initState();
     updateTasks();
     getAllTasks();
+  }
 
-    // print(tasks);
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void updateTasks() async {
@@ -85,17 +88,8 @@ class _MyTaskTile extends State<MyTaskTile> {
 
   List<dynamic> feedbacks = [];
 
-  void getAllFeedbacks() async {
-    var temp = await httpClient.getAllFeedbacks(widget.taskId);
-
-    setState(() {
-      feedbacks = temp;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    getAllTasks();
     return InkWell(
         onTap: () {
           if (widget.chosenDate.day <= DateTime.now().day) {
@@ -806,6 +800,7 @@ class _MyTaskTile extends State<MyTaskTile> {
                                                     id, true);
                                                 widget.updateState();
                                               }
+                                              getAllTasks();
                                               widget.updateState();
 
                                               if (!mounted) return;
@@ -1024,7 +1019,7 @@ class _MyTaskTile extends State<MyTaskTile> {
                                   color: Color(0xff355CCA), width: 1),
                             ),
                             onPressed: () {
-                              getAllFeedbacks();
+
                               widget.updateState();
                               Navigator.pop(context);
                             },
@@ -1052,7 +1047,7 @@ class _MyTaskTile extends State<MyTaskTile> {
 
                               httpClient.sendEssay(answer.text, taskId);
                               widget.updateState();
-                              getAllFeedbacks();
+
 
                               Navigator.pop(context);
                               // widget.updateState();

@@ -29,6 +29,7 @@ dependencies:
   intl_phone_number_input: ^0.7.0
   intl: ^0.17.0
   http: ^0.13.5
+  shimmer: ^2.0.0
   dio: ^5.0.1
 
 dev_dependencies:
