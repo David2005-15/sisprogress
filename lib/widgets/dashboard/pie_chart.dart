@@ -51,11 +51,11 @@ class PieChart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget> [
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: EdgeInsets.fromLTRB(18, 16, 0, fonts.last.toDouble()),
+                  margin: EdgeInsets.fromLTRB(18, 27, 0, fonts.last.toDouble()),
                   child: Text(
                     title,
                     style: GoogleFonts.montserrat(
@@ -66,20 +66,20 @@ class PieChart extends StatelessWidget {
                   ),
                 ),
 
-                Container(
-                  margin: const EdgeInsets.fromLTRB(18, 22, 0, 0),
-                  child: Text(
-                    halfPerc,
-                    style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w500,
-                      fontSize: fonts[1].toDouble(),
-                      color: const Color(0xffBFBFBF)
-                    ),
-                  ),
-                ),
+                // Container(
+                //   margin: const EdgeInsets.fromLTRB(18, 22, 0, 0),
+                //   child: Text(
+                //     halfPerc,
+                //     style: GoogleFonts.roboto(
+                //         fontWeight: FontWeight.w500,
+                //         fontSize: fonts[1].toDouble(),
+                //         color: Colors.transparent
+                //     ),
+                //   ),
+                // ),
 
                 Container(
-                  margin: const EdgeInsets.fromLTRB(18, 15, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(18, 30, 0, 0),
                   child: Row(
                     children: <Widget> [
                       Container(
@@ -94,7 +94,7 @@ class PieChart extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.all(9),
                         child: Text(
-                          "Done",
+                          "Task Done",
                           style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w500,
                             fontSize: fonts[2].toDouble(),
@@ -122,7 +122,7 @@ class PieChart extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.all(9),
                         child: Text(
-                          "Progress",
+                          "Task Underway",
                           style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w500,
                             fontSize: fonts[2].toDouble(),

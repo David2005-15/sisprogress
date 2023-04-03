@@ -80,11 +80,11 @@ class CustomRadioGroupState extends State<CustomRadioGroup> {
                     });
                   },
                   child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.transparent, border: Border.all(width: 1, color: selectedFirst ? const Color(0xff355CCA): const Color(0xffBFBFBF))),
+                  // padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.transparent, border: Border.all(width: 1.5, color: selectedFirst ? const Color(0xff355CCA): const Color(0xffBFBFBF))),
                   child: Icon(
                       Icons.circle,
-                      size: 14,
+                      size: 16,
                       color: selectedFirst ? const Color(0xff355CCA) : Colors.transparent,
                     ),
                   ),
@@ -122,11 +122,11 @@ class CustomRadioGroupState extends State<CustomRadioGroup> {
                     });
                   },
                   child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.transparent, border: Border.all(width: 1, color: selectedSecond ? const Color(0xff355CCA): const Color(0xffBFBFBF))),
+                  // padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.transparent, border: Border.all(width: 1.5, color: selectedSecond ? const Color(0xff355CCA): const Color(0xffBFBFBF))),
                   child: Icon(
                       Icons.circle,
-                      size: 14,
+                      size: 16,
                       color: selectedSecond ? const Color(0xff355CCA) : Colors.transparent,
                     ),
                   ),
@@ -166,11 +166,11 @@ class CustomRadioGroupState extends State<CustomRadioGroup> {
                     });
                   },
                   child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.transparent, border: Border.all(width: 1, color: selectedThrid ? const Color(0xff355CCA): const Color(0xffBFBFBF))),
+                  // padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.transparent, border: Border.all(width: 1.5, color: selectedThrid ? const Color(0xff355CCA): const Color(0xffBFBFBF))),
                   child: Icon(
                       Icons.circle,
-                      size: 14,
+                      size: 16,
                       color: selectedThrid ? const Color(0xff355CCA) : Colors.transparent,
                     ),
                   ),
@@ -210,11 +210,11 @@ class CustomRadioGroupState extends State<CustomRadioGroup> {
                     });
                   },
                   child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.transparent, border: Border.all(width: 1, color: selectedFourth ? const Color(0xff355CCA): const Color(0xffBFBFBF))),
+                  // padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.transparent, border: Border.all(width: 1.5, color: selectedFourth ? const Color(0xff355CCA): const Color(0xffBFBFBF))),
                   child: Icon(
                       Icons.circle,
-                      size: 14,
+                      size: 16,
                       color: selectedFourth ? const Color(0xff355CCA) : Colors.transparent,
                     ),
                   ),

@@ -8,6 +8,10 @@ class  RegistrationGrade9 {
   int? grade;
   String? term;
   String? addmision;
+  String? firstAcademic;
+  String? secondAcademic;
+  String? thirdAcademic;
+  String? fourthAcademic;
   String? aid;
   String? legacy;
   String? workExp;

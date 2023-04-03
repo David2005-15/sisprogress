@@ -13,6 +13,7 @@ class InputBox extends StatefulWidget {
   bool? enabled;
   bool? showValidationOrNot;
   bool? disabledSymbols;
+  bool? inRadioGroup;
 
   InputBox({
     this.initialValue,
@@ -20,6 +21,7 @@ class InputBox extends StatefulWidget {
     this.errorText,
     this.showValidationOrNot,
     this.disabledSymbols,
+    this.inRadioGroup,
     required this.textInputType,
     required this.onChanged,
     required this.context,
@@ -65,7 +67,7 @@ class _InputBox extends State<InputBox> {
     getColor(widget.controller.text);
 
     return Container(
-      margin: EdgeInsets.fromLTRB(23, getTopMargin(widget.context), 23, 0),
+      margin: EdgeInsets.fromLTRB(23, widget.inRadioGroup != null ? 0 : getTopMargin(widget.context), 23, 0),
       child: TextFormField(
         readOnly: widget.enabled ?? false,
         maxLines: 1,

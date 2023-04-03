@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/data%20class/registration_data_grade10.dart';
+import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/verify_email.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
+import 'package:sis_progress/widgets/drop_down.dart';
 import 'package:sis_progress/widgets/input_box.dart';
 import 'package:sis_progress/widgets/radio_button.dart';
 import 'package:sis_progress/widgets/select_box.dart';
@@ -18,9 +20,11 @@ class Grade10thSecond extends StatefulWidget {
   final TextEditingController work = TextEditingController();
   final TextEditingController work2 = TextEditingController();
   final TextEditingController school = TextEditingController();
+  final TextEditingController dropDownSchool = TextEditingController();
   final DropDownDataClass schoolDataclass = DropDownDataClass();
   final RegistrationGrade10 reg;
   final RadioButtonHandler secondQuest = RadioButtonHandler(value: null);
+  final RadioButtonHandler schoolQuest = RadioButtonHandler(value: null);
   final RadioButtonHandler thirdQuest = RadioButtonHandler(value: null);
   final RadioButtonHandler fifthQuest = RadioButtonHandler(value: null);
   final RadioButtonHandler sixthQuest = RadioButtonHandler(value: null);
@@ -45,6 +49,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
     setState(() {
       selection = temp;
+      selection = selection.map((word) => word.replaceAll(' ', '-')).toList();
     });
   }
 
@@ -121,14 +126,19 @@ class _Grade10thSecond extends State<Grade10thSecond> {
     }
 
     if (widget.reg.school != null) {
-      widget.school.text = widget.reg.school!;
+      if(Universities().schools.contains(widget.reg.school!)) {
+        widget.schoolDataclass.value = widget.reg.school;
+        widget.schoolQuest.value = "Yes";
+      } else {
+        widget.school.text = widget.reg.school!;
+        widget.schoolQuest.value = "No";
+      }
     }
 
     if (widget.reg.outActivity != null) {
       actions = widget.reg.outActivity!;
     }
 
-    // print(widget.wo);
     if (widget.reg.details != null) {
       if (widget.reg.details == "No") {
         isVisible = false;
@@ -142,7 +152,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
     if (widget.reg.satAndAct != null) {
       whichTest = widget.reg.satAndAct!;
-      // print(widget.reg.satAndAct);
       if (widget.reg.satAndAct!.isEmpty) {
         widget.thirdQuest.value = "No";
         whichTest = [];
@@ -172,7 +181,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
         }
       }
     } else {
-      // widget.thirdQuest.value = "No";
       whichTest = [];
     }
     super.initState();
@@ -186,6 +194,8 @@ class _Grade10thSecond extends State<Grade10thSecond> {
   bool validSchool = false;
   bool anyError = false;
   bool canPass = true;
+
+  bool isSchoolOther = false;
 
   @override
   Widget build(BuildContext context) {
@@ -265,8 +275,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                   } else {
                                     whichTest.remove("SAT");
                                   }
-
-                                  // print(whichTest);
                                 });
                               },
                               child: Icon(
@@ -335,28 +343,63 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 ),
               ),
               buildQuestion("3. What is your current high school?"),
-              // InputBox(textInputType: TextInputType.text, onChanged: (String val) {print("Hello World");}, context: context, controller: widget.controller, isPassword: false, initialValue: "School", showValidationOrNot: validSchool, errorText: "This field is required",),
-              InputBox(
-                textInputType: TextInputType.text,
-                onChanged: (val) {},
-                context: context,
-                controller: widget.school,
-                isPassword: false,
-                initialValue: "School",
-                errorText: "Select your school",
-                showValidationOrNot: validSchool,
+              CustomRadio(
+                methodParent: () {
+                  if(widget.schoolQuest.value == "Yes") {
+                    setState(() {
+                      isSchoolOther = false;
+                      widget.school.text = "";
+                    });
+                  } else if(widget.schoolQuest.value == "No") {
+                    setState(() {
+                      isSchoolOther = true;
+                      widget.dropDownSchool.text = "";
+                    });
+                  }
+                },
+                handler: widget.schoolQuest,
+                groupValue: const ["Yes", "No"],
+                value: widget.schoolQuest.value,
+                child: [
+                  buildMode2(widget.dropDownSchool, Universities().schools, "School", false, "Error", (val) {
+                    setState(() {
+                      widget.school.text = "";
+                    });
+                  }),
+
+                  InputBox(
+                    enabled: !isSchoolOther,
+                    inRadioGroup: false,
+                    textInputType: TextInputType.text,
+                    onChanged: (val) {
+                      setState(() {
+                        widget.dropDownSchool.text = "";
+                      });
+                    },
+                    context: context,
+                    controller: widget.school,
+                    isPassword: false,
+                    initialValue: "Other",
+                    errorText: "Select your school",
+                    showValidationOrNot: false,
+                  )
+                ],
               ),
-              // SchoolDropDown(
-              //   dropDownDataClass: widget.schoolDataclass,
-              //   context: context,
-              //   onChange: (val) {
-              //     setState(() {
-              //       widget.schoolDataclass.value = val;
-              //     });
-              //   },
-              //   showValidationOrNot: validSchool,
-              //   errorText: "Select your school",
-              // ),
+
+              Container(
+                width: double.infinity,
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.fromLTRB(23, 15, 0, 5),
+                child: Text(
+                  validSchool ? "Select your school": "",
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 10,
+                      color: const Color(0xffE31F1F)
+                  ),
+                )
+              ),
+
               buildQuestion(
                   "4. Do you wish to report any honors related to your academic achievements?"),
               // buildAnswer(getFifthQuest, yesOrNo, fifthQuest),
@@ -445,8 +488,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                       controller: cont,
                       decoration: InputDecoration(
                         alignLabelWithHint: true,
-                        labelText: "Select your activites",
-                        // hintText: widget.hintText,
+                        labelText: "Select your activities",
                         labelStyle: GoogleFonts.poppins(
                             fontWeight: FontWeight.w400,
                             fontSize: 15,
@@ -481,11 +523,12 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                             return selection
                                 .map<PopupMenuItem<String>>((dynamic value) {
                               bool isEnabled = actions
-                                  .where((element) => element.contains(value.toString()))
+                                  .where((element) =>
+                                      element.contains(value.toString()))
                                   .isNotEmpty;
 
                               return PopupMenuItem(
-                                  value: value.toString(),
+                                  value: value,
                                   child: StatefulBuilder(
                                       builder: (context, state) {
                                     return Row(
@@ -518,8 +561,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                         actions.removeWhere(
                                                             (e) => e.contains(
                                                                 value));
-
-                                                        // print(actions);
                                                       }
                                                     }
                                                   });
@@ -593,18 +634,17 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                         if (actions[i]
                                                             .contains(value)) {
                                                           try {
+
                                                             var content =
                                                                 actions[i]
                                                                     .split(" ");
-                                                            print(content[0]);
+
                                                             var val = int.parse(
                                                                 content[1]
                                                                     .replaceAll(
                                                                         RegExp(
                                                                             r'[\(\)]'),
                                                                         ''));
-                                                            // values.remove(actions[i]);
-                                                            // print("${content[0]} (${content.length - 1})");
 
                                                             if (values
                                                                     .where((e) =>
@@ -634,7 +674,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                             actions
                                                                 .remove(value);
                                                           }
-
                                                         }
                                                       }
                                                     });
@@ -649,10 +688,9 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                       () {
                                                         var temp =
                                                             actions.reversed;
-                                          ;
+                                                        ;
                                                       },
                                                     );
-
                                                   },
                                                   child: const Icon(
                                                       Icons.remove,
@@ -681,16 +719,31 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                   onTap: () {
                                                     state(
                                                       () {
-                                                        var val = 0;
+
                                                       },
                                                     );
 
                                                     setState(() {
-                                                      // if(actions.length != 10) {
-                                                      //   if(actions.where((element) => element.contains(value)).length > 0) {
-                                                      //     actions.add("$value (${actions.where((element) => element.contains(value)).length + 1})");
-                                                      //   }
-                                                      // }
+                                                      int all = 0;
+
+                                                      for(int i = 0; i < actions.length; i++) {
+                                                        try {
+                                                          var content = actions[i].split(" ");
+                                                          all += int.parse(
+                                                              content[1]
+                                                                  .replaceAll(
+                                                                  RegExp(
+                                                                      r'[\(\)]'),
+                                                                  ''));
+                                                        } catch (E) {
+                                                          debugPrint(E.toString());
+                                                        }
+                                                      }
+
+                                                      for(int i = 0; i < actions.length; i++) {
+
+                                                      }
+
                                                       for (int i = 0;
                                                           i < actions.length;
                                                           i++) {
@@ -700,15 +753,14 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                             var content =
                                                                 actions[i]
                                                                     .split(" ");
-                                                            print(content[0]);
+
                                                             var val = int.parse(
                                                                 content[1]
                                                                     .replaceAll(
                                                                         RegExp(
                                                                             r'[\(\)]'),
                                                                         ''));
-                                                            // print("${content[0]} (${content.length - 1})");
-                                                            if (val < 10) {
+                                                            if (val < 10 && all < 10) {
                                                               actions[i] =
                                                                   "${content[0]} (${val + 1})";
                                                               values.add(
@@ -720,21 +772,8 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                             actions[i] =
                                                                 "${actions[i]} (${actions.where((element) => element.contains(value)).length + 1})";
                                                           }
-
-                                                          // if(actions.where((element) => element.contains(value)).length > 1) {
-                                                          //   var content = actions[i].split(" ");
-                                                          //   print(content[0]);
-                                                          //   print(content[1]);
-                                                          //   print("${content[0]} (${content.length - 1})");
-                                                          //   actions[i] = "${content[0]} (${content.length - 1})";
-
-                                                          // } else {
-
-                                                          // }
-                                                          // var content = actions[i].split(" ");
                                                         }
                                                       }
-                                                      // temp = actions;
                                                     });
 
                                                     state(
@@ -747,7 +786,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                       () {
                                                         var temp =
                                                             actions.reversed;
-                                                        print(temp);
                                                       },
                                                     );
                                                   },
@@ -805,7 +843,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                         fontSize: 12,
                         color: const Color(0xffD2DAFF)),
                     errorText: !canPass ? "Please fill required fields" : null,
-                    hintText: "Type about your activites or work experiance",
+                    hintText: "Type about your activities or work experience",
                     hintStyle: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
@@ -884,12 +922,18 @@ class _Grade10thSecond extends State<Grade10thSecond> {
               buildNavigation(context, widget.activities, () async {
                 widget.reg.place = widget.secondQuest.value;
                 widget.reg.testScore = widget.thirdQuest.value;
-                widget.reg.school = widget.school.text;
+
                 widget.reg.honors = widget.fifthQuest.value;
                 // widget.reg.test = sixthQuest;
                 widget.reg.addmisionTest = widget.sixthQuest.value;
                 widget.reg.outActivity = actions;
                 widget.reg.essayWorkExp = widget.work.text;
+
+                if(isSchoolOther) {
+                  widget.reg.school = widget.schoolDataclass.value;
+                } else if(!isSchoolOther) {
+                  widget.reg.school = widget.school.text;
+                }
 
                 if (widget.ninthQuest.value == "Yes") {
                   widget.reg.details = widget.work2.text;
@@ -913,9 +957,14 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   });
                 }
 
+                if(widget.school.text.isEmpty && widget.schoolDataclass.value == null) {
+                  setState(() {
+                    validSchool = true;
+                  });
+                }
+
                 if (widget.fifthQuest.value == null) {
                   setState(() {
-                    // Do you wish to report any honors related to your academic achievements?
                     honorsErrorText.add("This field is required");
                   });
                 }
@@ -923,12 +972,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 if (widget.sixthQuest.value == null) {
                   setState(() {
                     addmisionTest.add("This field is required");
-                  });
-                }
-
-                if (widget.school.text == "") {
-                  setState(() {
-                    validSchool = true;
                   });
                 }
 
@@ -965,10 +1008,9 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
                 if ((activityErrorText == "") &&
                     satOrAcrErrorText.isEmpty &&
-                    !validSchool &&
                     addmisionTest.isEmpty &&
                     honorsErrorText.isEmpty &&
-                    applyingFromErrors.isEmpty) {
+                    applyingFromErrors.isEmpty && validSchool == false) {
                   var value = await httpClient.registerForGrade10(widget.reg);
                   if (value == "user alredy exit") {
                     setState(() {
@@ -979,8 +1021,8 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => VerifyEmail(
-                                  email: widget.reg.email,
-                                )));
+                              email: widget.reg.email,
+                            )));
                   }
                 }
               }, () {
@@ -988,7 +1030,11 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 widget.reg.testScore = widget.thirdQuest.value;
                 widget.reg.honors = widget.fifthQuest.value;
                 widget.reg.addmisionTest = widget.sixthQuest.value;
-                widget.reg.school = widget.schoolDataclass.value;
+                if(!isSchoolOther) {
+                  widget.reg.school = widget.schoolDataclass.value;
+                } else {
+                  widget.reg.school = widget.school.text;
+                }
                 widget.reg.outActivity = actions;
                 widget.reg.essayWorkExp = widget.work.text;
                 widget.reg.satAndAct = whichTest;
@@ -1156,8 +1202,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                             actions = temp;
                                           });
                                           setState(() {});
-
-                                          print(actions);
                                         },
                                         child: const Icon(Icons.remove,
                                             size: 14,
@@ -1185,8 +1229,6 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                               actions.add(
                                                   "$value (${temp.where((element) => element == value).length})");
                                             }
-
-                                            // temp = actions;
                                           });
                                         },
                                         child: const Icon(
@@ -1276,8 +1318,6 @@ Container buildActivity(
 
 Container buildButton(String value, List<String> activites, Color color) {
   return Container(
-    // height: 100,
-    // width: 150,
     margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
     child: OutlinedButton(
       style: OutlinedButton.styleFrom(
@@ -1298,6 +1338,87 @@ Container buildButton(String value, List<String> activites, Color color) {
         ),
       ),
     ),
+  );
+}
+
+Container buildMode2(
+    TextEditingController controller,
+    List<String> items,
+    String lableText,
+    bool? showValidationOrNo,
+    String errorText,
+    Function(String)? onChange) {
+  // controller.text = lableText;
+  return Container(
+    margin: const EdgeInsets.fromLTRB(23, 0, 23, 0),
+    child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return TextFormField(
+            readOnly: true,
+            style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w400,
+                fontSize: 15,
+                fontStyle: FontStyle.normal,
+                color: Colors.white),
+            controller: controller,
+            decoration: InputDecoration(
+              alignLabelWithHint: true,
+              labelText: lableText,
+              errorText: showValidationOrNo ?? false ? errorText: null,
+              errorStyle: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 10,
+                  color: const Color(0xffE31F1F)
+              ),
+              labelStyle: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                  fontStyle: FontStyle.normal,
+                  color: const Color(0xffD2DAFF)),
+              hintStyle: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                  fontStyle: FontStyle.normal,
+                  color: const Color(0xffD2DAFF)),
+              enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+              border: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)),
+              focusColor: const Color(0xffD2DAFF),
+              focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xff36519D))),
+              suffixIcon: PopupMenuButton<String>(
+                color: const Color(0xffD2DAFF),
+                constraints:
+                BoxConstraints.expand(height: 150, width: constraints.maxWidth),
+                icon: const Icon(
+                  Icons.arrow_drop_down,
+                  color: Color(0xffD2DAFF),
+                ),
+                onSelected: (String value) {
+                  controller.text = value;
+                  if(onChange != null) {
+                    onChange(value);
+                  }
+                },
+                itemBuilder: (BuildContext context) {
+                  return items.map<PopupMenuItem<String>>((String value) {
+                    return PopupMenuItem(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            color: const Color(0xff121623),
+                          ),
+                        ));
+                  }).toList();
+                },
+              ),
+            ),
+          );
+        }),
   );
 }
 

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
+import 'package:sis_progress/page/login.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import '../input_box.dart';
 
@@ -11,25 +12,26 @@ class Emaildetails extends StatefulWidget {
   final String email;
   final VoidCallback updateStates;
   String? secondaryEmail;
+  bool isVerified;
 
   Emaildetails(
       {required this.mode,
       required this.email,
       required this.secondaryEmail,
       required this.updateStates,
+        required this.isVerified,
       super.key});
 
   @override
   State<StatefulWidget> createState() => _Emaildetails();
 }
+
 //
 class _Emaildetails extends State<Emaildetails> {
   late TextEditingController primaryEmail;
   var secondaryEmail = TextEditingController();
   late bool isSecondaryEmail;
-//
   Client httpClient = Client();
-
 
   bool selectedFirst = false;
   bool selectedSecond = false;
@@ -145,7 +147,11 @@ class _Emaildetails extends State<Emaildetails> {
                               showValidationOrNot: showEmailValidation,
                               errorText: "Invalid email format",
                               textInputType: TextInputType.text,
-                              onChanged: (val) {},
+                              onChanged: (val) {
+                                state(() {
+
+                                });
+                              },
                               context: context,
                               controller: primaryEmail,
                               isPassword: false,
@@ -178,10 +184,33 @@ class _Emaildetails extends State<Emaildetails> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Container(),
+                                Container(
+                                  height: 38,
+                                  width: 128,
+                                  margin:
+                                      const EdgeInsets.fromLTRB(22, 20, 22, 10),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      state(() {
+                                        widget.mode = false;
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                        side: const BorderSide(
+                                            width: 1.5,
+                                            color: Color(0xffD2DAFF))),
+                                    child: Text("Discard",
+                                        style: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 18,
+                                            color: const Color(0xffD2DAFF))),
+                                  ),
+                                ),
                                 Button(
                                     text: "Update",
-                                    onPressed: () {
+                                    onPressed: primaryEmail.text != widget.email ? () {
                                       if (!emailMatch(primaryEmail.text)) {
                                         setState(() {
                                           showEmailValidation = true;
@@ -195,7 +224,7 @@ class _Emaildetails extends State<Emaildetails> {
                                             primaryEmail.text, "First");
                                         successMessage(primaryEmail.text);
                                       }
-                                    },
+                                    }: null,
                                     height: 38,
                                     width: 116)
                               ],
@@ -237,13 +266,51 @@ class _Emaildetails extends State<Emaildetails> {
                                 InputBox(
                                   textInputType: TextInputType.text,
                                   errorText: "Invalid email format",
-                                  showValidationOrNot: showSecondaryEmailValidation,
+                                  showValidationOrNot:
+                                      showSecondaryEmailValidation,
                                   onChanged: (val) {},
                                   context: context,
                                   controller: secondaryEmail,
                                   isPassword: false,
                                   initialValue: "Secondary Email",
                                 ),
+
+                                !widget.isVerified ? Container(
+                                  margin: const EdgeInsets.fromLTRB(28, 5, 0, 0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Tooltip(
+                                        preferBelow: false,
+                                        message: "Important! Please verify your new email address /oliviasmith@gmail.com/. Until it is verified, you will continue to use your original email address. You can delete the unverified email address or change it in your account settings.",
+                                        textStyle: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 9,
+                                          color: Colors.white
+                                        ),
+                                        triggerMode: TooltipTriggerMode.tap,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xffE31F1F),
+                                          borderRadius: BorderRadius.circular(2)
+                                        ),
+                                        margin: EdgeInsets.fromLTRB(20, 0, MediaQuery.of(context).size.width/2, 0),
+                                        child: const Icon(
+                                          Icons.error_outlined,
+                                          color: Color(0xffE31F1F),
+                                          size: 16,
+                                        )
+                                      ),
+                                      Text(
+                                        "   New email address not verified",
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 9,
+                                          color: const Color(0xffE31F1F)
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ): Container(),
+
                                 Container(
                                   margin:
                                       const EdgeInsets.fromLTRB(26, 0, 0, 0),
@@ -274,24 +341,49 @@ class _Emaildetails extends State<Emaildetails> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Container(),
+                                    Container(
+                                      height: 38,
+                                      width: 128,
+                                      margin: const EdgeInsets.fromLTRB(
+                                          22, 20, 22, 10),
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          state(() {
+                                            widget.mode = false;
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                            side: const BorderSide(
+                                                width: 1.5,
+                                                color: Color(0xffD2DAFF))),
+                                        child: Text("Discard",
+                                            style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 18,
+                                                color:
+                                                    const Color(0xffD2DAFF))),
+                                      ),
+                                    ),
                                     Button(
                                         text: "Update",
                                         onPressed: () {
-                                          // httpClient.sendUpdateEmail(
-                                          //     secondaryEmail.text, "Secondary");
-                                          // successMessage(secondaryEmail.text);
-                                          if (!emailMatch(secondaryEmail.text)) {
+                                          if (!emailMatch(
+                                              secondaryEmail.text)) {
                                             state(() {
-                                              showSecondaryEmailValidation = true;
+                                              showSecondaryEmailValidation =
+                                                  true;
                                             });
                                           } else {
                                             state(() {
-                                              showSecondaryEmailValidation = false;
+                                              showSecondaryEmailValidation =
+                                                  false;
                                             });
 
                                             httpClient.sendUpdateEmail(
-                                                secondaryEmail.text, "Secondary");
+                                                secondaryEmail.text,
+                                                "Secondary");
                                             successMessage(secondaryEmail.text);
                                           }
                                         },
@@ -305,7 +397,8 @@ class _Emaildetails extends State<Emaildetails> {
                       : Container(),
                   widget.mode
                       ? Container()
-                      : secondaryEmail.text != "empty" && secondaryEmail.text != "Secondary Email"
+                      : secondaryEmail.text != "empty" &&
+                              secondaryEmail.text != "Secondary Email"
                           ? Container(
                               margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                               child: Row(
@@ -323,7 +416,6 @@ class _Emaildetails extends State<Emaildetails> {
                                           color: Colors.white),
                                     ),
                                   ),
-
                                   Container(
                                     margin:
                                         const EdgeInsets.fromLTRB(20, 0, 10, 0),
@@ -443,38 +535,42 @@ class _Emaildetails extends State<Emaildetails> {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
               backgroundColor: const Color(0xff121623),
-              content: SizedBox(
-                height: 150,
-                child: Column(
-                  children: [
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        text: '',
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            color: const Color(0xff355CCA)),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text:
-                                  'Verification link sent to this $which email',
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
-                                  color: Colors.white)),
-                        ],
-                      ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      text: 'Verification link sent to ',
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                          color: Colors.white),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: which,
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                color: const Color(0xffFCD2D1))),
+                        TextSpan(
+                            text: " email",
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                color: Colors.white))
+                      ],
                     ),
-                    Button(
-                        text: "OK",
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        height: 36,
-                        width: 145)
-                  ],
-                ),
+                  ),
+                  Button(
+                      text: "OK",
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                      },
+                      height: 36,
+                      width: 145)
+                ],
               ),
             );
           });

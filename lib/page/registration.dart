@@ -139,11 +139,12 @@ class _Registration extends State<Registration> {
   }
 
   String month = DateFormat("MMMM").format(DateTime(2008, DateTime.now().day, DateTime.now().month));
-  String year = (DateTime(2008, DateTime.now().day, DateTime.now().month).year - 1).toString();
+  String year = (DateTime(2008, DateTime.now().day, DateTime.now().month).year).toString();
   bool anyError = false;
 
   @override
   void initState() {
+    debugPrint(month);
     debugPrint(year);
     super.initState();
   }
@@ -517,7 +518,7 @@ class _Registration extends State<Registration> {
                         onPressed: () async {
                           Client client = Client();
                           var value =
-                              await client.checkIfEmailExists(widget.email.text);
+                          await client.checkIfEmailExists(widget.email.text);
 
                           if (value == "existing email address") {
                             setState(() {
@@ -661,6 +662,7 @@ class _Registration extends State<Registration> {
                             }
                           } else if (widget.dropDown.value ==
                               "10th grade or above") {
+
                             widget.reg10.phone = phoneValue;
                             widget.reg10.country = widget.coutnry.value;
                             // print(widget.age.text);
@@ -850,7 +852,7 @@ class _Registration extends State<Registration> {
                                 .map<PopupMenuItem<String>>((String value) {
                               return PopupMenuItem(
                                   height: 25,
-                                  value: value.toString(),
+                                  value: value .toString(),
                                   child: Text(
                                     value.toString(),
                                     style: GoogleFonts.poppins(
@@ -870,7 +872,7 @@ class _Registration extends State<Registration> {
                               fontSize: 15,
                               color: Colors.white),
                           child: Text(
-                            year,
+                            year == "2010" ? (int.parse(year) - 2).toString() : year,
                           ),
                         ),
                       ),
@@ -903,7 +905,7 @@ class _Registration extends State<Registration> {
                                 .map<PopupMenuItem<String>>((String value) {
                               return PopupMenuItem(
                                   height: 25,
-                                  value: (int.parse(value) - 1).toString(),
+                                  value: (int.parse(value)).toString(),
                                   child: Text(
                                     value.toString(),
                                     style: GoogleFonts.poppins(

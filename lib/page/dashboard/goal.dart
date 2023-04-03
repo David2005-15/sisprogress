@@ -115,6 +115,7 @@ class _GoalPage extends State<GoalPage> {
             var disballed = !(e["isFree"] == false);
 
             return ExploreTile(
+                url: e["imgMobile"],
                 onClick: () {
                   setState(() {
                     disballed = !disballed;
@@ -175,6 +176,7 @@ class _GoalPage extends State<GoalPage> {
           var disabled = !(e["isFree"] == false);
 
           return ExploreTile(
+            url: e["imgMobile"],
             disabled: disabled,
             taskCount:
                 "${e["SubTasks"].where((p0) => p0['status'] == true).length}/${e["SubTasks"].length}",

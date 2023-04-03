@@ -41,9 +41,6 @@ class PersonalDetails extends StatelessWidget {
   TextEditingController instagram = TextEditingController();
 
 
-  // bool isSecondaryEmail = false;
-  // String removeText = "Add secondary email";
-
   bool isFullNameEmpty = false;
   bool isPhoneEmpty = false;
 
@@ -211,7 +208,7 @@ class PersonalDetails extends StatelessWidget {
                   ),
                 ),
                 mode ? Container(
-                  margin: EdgeInsets.fromLTRB(23, 20, 23, 0),
+                  margin: const EdgeInsets.fromLTRB(23, 20, 23, 0),
                   child: TextFormField(
                           readOnly: true,
                           maxLines: 1,
@@ -239,17 +236,16 @@ class PersonalDetails extends StatelessWidget {
                               enabledBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Color(0xffD2DAFF), width: 1)),
-                              border: UnderlineInputBorder(
+                              border: const UnderlineInputBorder(
                                   borderSide: BorderSide(color: Color(0xffD4D4D4), width: 1)),
                               focusColor: const Color(0xffD2DAFF),
                               focusedBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(color: Color(0xff36519D))),
                               suffixIcon: GestureDetector(
                                 onTap: () {
-                                  // choosenDate = DateTime.now();
                                   _showCalendar(context);
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.calendar_month_outlined,
                                   color: Colors.white,
                                   size: 20,
@@ -340,24 +336,43 @@ class PersonalDetails extends StatelessWidget {
                 mode ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(),
+                    Container(
+                      height: 38,
+                      width: 128,
+                      margin: const EdgeInsets.fromLTRB(22, 20, 22, 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          onSave();
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            side: const BorderSide(width: 1.5, color: Color(0xffD2DAFF))
+                        ),
+                        child: Text(
+                            "Discard",
+                            style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                                color: const Color(0xffD2DAFF)
+                            )
+                        ),
+                      ),
+                    ),
                     Button(text: "Change ", onPressed: () async {
-                      // await _dialogBuilder(context, () { });
-                      // {fullName,phone,country,email,age,greade,university,academicProgram,study}
-                      print(agecnt.text);
                       var body = {
                         "fullName": fullName.text,
                         "phone": number.text,
                         "age": DateFormat("MM/dd/yyyy").parse(agecnt.text).toIso8601String(),
                         "country": coutnry.value,
-        
-                        // "greade": 9
                       };
 
                       if(fullName.text.isNotEmpty && number.text.isNotEmpty) {
                         await httpClient.updateUniversityAndAcademic(body).then((value) {
                           onSave();
                         });
+
+                        message(context);
                       } else {
                         state(() {
                           if(fullName.text.isEmpty) {
@@ -369,10 +384,7 @@ class PersonalDetails extends StatelessWidget {
                           }
                         });
                       }
-                      
-        
-        
-                      // onSave();
+
                     }, height: 38, width: 128),
                   ],
                 ): Container()
@@ -384,7 +396,44 @@ class PersonalDetails extends StatelessWidget {
         );
       }
     );
-    
+  }
+
+  void message(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: const Color(0xff121623),
+            title: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                  text: "Yeah! ",
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: const Color(0xff355CCA)),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text:
+                        "Your personal details are changed successfully.",
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Colors.white))
+                  ]),
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              Button(
+                  text: "Ok",
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  height: 35,
+                  width: 140)
+            ],
+          );
+        });
   }
 
   Future<void> _showCalendar(BuildContext context) {
@@ -469,7 +518,7 @@ class PersonalDetails extends StatelessWidget {
                                 fontSize: 12,
                                 color: Colors.white,
                               ),
-                              todayDecoration: BoxDecoration(color: Colors.transparent),
+                              todayDecoration: const BoxDecoration(color: Colors.transparent),
                               holidayTextStyle: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12,

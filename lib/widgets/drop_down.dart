@@ -284,9 +284,7 @@ class _SchoolDropdown extends State<SchoolDropDown> {
       height: 100,
       child: Center(
         child: DropdownButtonFormField(
-          // itemHeight: 60,r
           menuMaxHeight: 150,
-          // isExpanded: true,
           hint: Text(
             "School",
             style:  GoogleFonts.poppins(

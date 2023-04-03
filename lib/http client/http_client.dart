@@ -18,6 +18,27 @@ class Client {
     return _instance;
   }
 
+  Future<dynamic> changePassword(String currentPassword, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    var body = {
+      "currentPassword": currentPassword,
+      "password": password
+    };
+
+    try {
+      var response = await dio.patch("https://sisprogress.online/settings/password", data: body);
+
+      if(response.statusCode == 200) {
+        return response.data;
+      }
+    } catch (e) {
+      return "error";
+    }
+  }
+
   Future removeSecondaryMail() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -251,7 +272,7 @@ class Client {
     dio.options.headers =
     {"Authorization": "Bearer ${prefs.getString("token")}"};
 
-    await dio.patch("https://sisprogress.online/settings/", data: value);
+    await dio.patch("https://sisprogress.online/settings", data: value);
   }
 
   Future<List<dynamic>> getCalendarEvents() async {
@@ -362,6 +383,10 @@ class Client {
       "aid": data.aid == "Yes" ? true : false,
       "legacy": data.legacy == "Yes" ? true : false,
       "area": data.workExp,
+      "academicProgramFirst": data.firstAcademic,
+      "academicProgramSecond": data.secondAcademic,
+      "academicProgramThird": data.thirdAcademic,
+      "academicProgramFourth": data.fourthAcademic
     };
 
     var response = await dio.post("https://sisprogress.online/register", data: body);
@@ -371,6 +396,7 @@ class Client {
 
   Future registerForGrade10(RegistrationGrade10 data) async {
     var activity = data.outActivity!.map((act) {
+      act = act.replaceAll("-", " ");
       bool isSingle = !act.contains("(");
 
       if(isSingle) {
@@ -380,7 +406,6 @@ class Client {
       return act;
     }).toList();
 
-    debugPrint(activity.toString());
 
     var body = {
       "fullName": data.fullName,
@@ -404,11 +429,13 @@ class Client {
       "report": false,
       "hadtests": false,
       "workExperience": data.essayWorkExp,
-      "addinfo": true,
-      "moreInfo": data.details
+      "addinfo``  ": true,
+      "moreInfo": data.details,
+      "academicProgramFirst": data.firstAcademic,
+      "academicProgramSecond": data.secondAcademic,
+      "academicProgramThird": data.thirdAcademic,
+      "academicProgramFourth": data.fourthAcademic
     };
-
-    // print(body);
 
     var response = await dio.post("https://sisprogress.online/register", data: body);
 
@@ -420,5 +447,4 @@ class Client {
 
     return response.data;
   }
-
 } 

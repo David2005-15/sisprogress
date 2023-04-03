@@ -9,8 +9,10 @@ class ExploreTile extends StatelessWidget {
   final int taskId;
   final String taskCount;
   final VoidCallback onClick;
+  final String? url;
 
   ExploreTile({
+    required this.url,
     required this.onClick,
     required this.taskCount,
     required this.taskId,
@@ -38,11 +40,11 @@ class ExploreTile extends StatelessWidget {
             children: <Widget> [
               Align(
                 alignment: Alignment.topCenter,
-                child: Container(
+                child: SizedBox(
                   width: MediaQuery.of(context).size.width - 30,
-                  child: const ClipRRect(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                    child: Image(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+                    child: url != null ? Image.network(url!) : const Image(
                       image: AssetImage("assets/Books.png"),
                       height: 95,
                       fit: BoxFit.cover

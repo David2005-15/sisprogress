@@ -7,15 +7,23 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/universities.dart';
+import 'package:sis_progress/page/change_password.dart';
 import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
 import 'package:sis_progress/widgets/drawers/shimmer_load.dart';
+import 'package:sis_progress/widgets/input_box.dart';
 import '../../http client/http_client.dart';
+import '../../widgets/custom_button.dart';
 import '../../widgets/dashboard/email_details.dart';
 import '../../widgets/dashboard/profile_university_tile.dart';
 import '../login.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final VoidCallback updateAppBar;
+
+  const Profile({
+    required this.updateAppBar,
+    super.key
+  });
 
   @override
   State<StatefulWidget> createState() => _Profile();
@@ -40,7 +48,10 @@ class _Profile extends State<Profile> {
   late String fullName = "";
   late String age = "";
   late String gradeLevel = "";
-  late String academicProgram = "";
+  late String firstAcademic = "";
+  late String secondAcademic = "";
+  late String thirdAcademic = "";
+  late String fourthAcademic = "";
   late String university = "";
   late String study = "";
   late String dreamPoints = "";
@@ -73,6 +84,8 @@ class _Profile extends State<Profile> {
   int totalPoints = 0;
   int completedTasks = 0;
 
+  bool isVerifiedSecondaryEmail = true;
+
   void printValue() async {
     var value = await httpClient.getDashboardData();
     setState(() {
@@ -86,16 +99,19 @@ class _Profile extends State<Profile> {
     var image = await _picker.pickImage(
         source: ImageSource.gallery, maxWidth: 120, maxHeight: 120);
 
-    if(mounted) {
+    if (mounted) {
       setState(() {
         _image = image;
-        httpClient.updateImage(_image!);
       });
+
+      await httpClient.updateImage(_image!);
     }
+
+    widget.updateAppBar();
   }
 
   void changeMode() {
-    if(mounted) {
+    if (mounted) {
       setState(() {
         isEditable = true;
       });
@@ -150,17 +166,21 @@ class _Profile extends State<Profile> {
   void setEmail() async {
     var value = await httpClient.getUserData();
 
-    if(mounted) {
+    if (mounted) {
       setState(() {
         mail = value["firstEmail"]["email"];
         phone = value["phone"].toString();
         country = value["country"].toString();
         age = value["age"].toString();
         university = value["university"].toString();
-        academicProgram = value["academicProgram"].toString();
-        study = value["study"].toString();
+        firstAcademic = value["academicProgramFirst"].toString();
+        secondAcademic = value["academicProgramSecond"].toString();
+        thirdAcademic = value["academicProgramThird"].toString();
+        fourthAcademic = value["academicProgramFourth"].toString();
+
         if (value["secondaryEmail"] != null) {
           secondaryMail = value["secondaryEmail"]["email"];
+          isVerifiedSecondaryEmail = value["secondaryEmail"]["isVerified"];
         } else {
           secondaryMail = "empty";
         }
@@ -226,8 +246,18 @@ class _Profile extends State<Profile> {
                                     shape: BoxShape.circle),
                                 margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                 padding: const EdgeInsets.all(10),
-                                child: SvgPicture.asset(
-                                  "assets/Camera.svg",
+                                child: Tooltip(
+                                  showDuration: const Duration(seconds: 2),
+                                  margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff3A3D4C),
+                                    borderRadius: BorderRadius.circular(2)
+                                  ),
+                                  triggerMode: TooltipTriggerMode.longPress,
+                                  message: "You can upload an image up to 1 mb",
+                                  child: SvgPicture.asset(
+                                    "assets/Camera.svg",
+                                  ),
                                 )),
                           ),
                         ),
@@ -266,12 +296,13 @@ class _Profile extends State<Profile> {
                     "Days\nin training"),
                 buildCard(
                     <Color>[const Color(0xffFCD2D1), const Color(0xffFF5C58)],
-                    totalPoints.toString(),
-                    "Total\nPoints"),
-                buildCard(
-                    <Color>[const Color(0xffD2C5DF), const Color(0xff8675A9)],
                     completedTasks.toString(),
                     "Completed\nTasks"),
+                buildCard(
+                    // <Color>[const Color(0xffFCD2D1), const Color(0xffFF5C58)],
+                    <Color>[const Color(0xffD2C5DF), const Color(0xff8675A9)],
+                    totalPoints.toString(),
+                    "Dream\nmilestone"),
               ],
             ),
             UniversityTile(
@@ -281,8 +312,10 @@ class _Profile extends State<Profile> {
                 university: Universities().universities,
                 points: Universities().points,
                 selectedUniversity: university,
-                academicProgram: academicProgram,
-                study: study,
+                firstAcademic: firstAcademic,
+                secondAcademic: secondAcademic,
+                thirdAcademic: thirdAcademic,
+                fourthAcademic: fourthAcademic,
                 dreamPoint: dreamPoints,
                 targetPoint: targetPoints,
                 safetyPoint: safetyPoints),
@@ -303,12 +336,15 @@ class _Profile extends State<Profile> {
               email: mail,
               secondaryEmail: secondaryMail,
               updateStates: setEmail,
+              isVerified: isVerifiedSecondaryEmail,
             ),
+            buildChangePassword(changePassword),
+            // ChangePassword(),
             InkWell(
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
               onTap: () {
-                logoutDailogBuilder();
+                logoutDialogBuilder();
               },
               child: Container(
                 margin: const EdgeInsets.fromLTRB(16, 25, 16, 25),
@@ -335,7 +371,7 @@ class _Profile extends State<Profile> {
     );
   }
 
-  logoutDailogBuilder() {
+  logoutDialogBuilder() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -345,7 +381,7 @@ class _Profile extends State<Profile> {
               width: double.infinity,
               alignment: Alignment.center,
               child: Text(
-                "Leave?",
+                "Are you sure you want to log out?",
                 style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w600,
                     fontSize: 15,
@@ -354,37 +390,238 @@ class _Profile extends State<Profile> {
             ),
             actionsAlignment: MainAxisAlignment.center,
             actions: <Widget>[
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    "Cancel",
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                        color: Colors.white),
-                  )),
-              ElevatedButton(
-                  onPressed: () {
-                    SharedPreferences.getInstance().then((value) {
-                      value.setBool("auth", false);
-                    });
+              Container(
+                width: 100,
+                height: 35,
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                            width: 1.5, color: Color(0xffD2DAFF))),
+                    child: Text(
+                      "Cancel",
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          color: const Color(0xffD2DAFF)),
+                    )),
+              ),
+              Container(
+                width: 100,
+                height: 35,
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                child: ElevatedButton(
+                    onPressed: () {
+                      SharedPreferences.getInstance().then((value) {
+                        value.setBool("auth", false);
+                      });
 
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
-                  },
-                  child: Text(
-                    "Yes",
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                        color: Colors.white),
-                  ))
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff355CCA)
+                    ),
+                    child: Text(
+                      "Yes",
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          color: Colors.white),
+                    )),
+              )
             ],
           );
         });
   }
+
+  changePassword() {
+    var currentPassword = TextEditingController();
+    var password = TextEditingController();
+    var confirmPassword = TextEditingController();
+
+    return showDialog(
+        context: context,
+        builder: (builder) {
+          return StatefulBuilder(
+            builder: (context, state) {
+              return AlertDialog(
+                backgroundColor: const Color(0xff121623),
+                title: Container(
+                  width: MediaQuery.of(context).size.width - 10,
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Change password",
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.white
+                    ),
+                  ),
+                ),
+
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget> [
+                    InputBox(textInputType: TextInputType.text, onChanged: (val) {state((){});}, context: context, controller: currentPassword, isPassword: true, initialValue: "Current Password",),
+                    InputBox(textInputType: TextInputType.text, onChanged: (val) {state((){});}, context: context, controller: password, isPassword: true, initialValue: "New Password",),
+                    InputBox(textInputType: TextInputType.text, onChanged: (val) {state((){});}, context: context, controller: confirmPassword, isPassword: true, initialValue: "Confirm new password",),
+                  ],
+                ),
+                actionsAlignment: MainAxisAlignment.center,
+                actions: <Widget>[
+                  Button(text: "Change password", onPressed: currentPassword.text.isNotEmpty && password.text.isNotEmpty && confirmPassword.text.isNotEmpty ? () async {
+                    var client = Client();
+
+                    var response = await client.changePassword(currentPassword.text, password.text);
+                    debugPrint(response.data);
+
+                    if(response != "error") {
+                      var preferences = await SharedPreferences.getInstance();
+                      preferences.setString("token", response["newToken"]);;
+                      successMessage();
+                    } else {
+                      errorMessage();
+                    }
+                  }: null, height: 38, width: double.infinity)
+                ],
+              );
+            }
+          );
+        }
+    );
+  }
+
+  errorMessage() {
+    return showDialog(
+        context: context,
+        builder: (builder) {
+          return AlertDialog(
+            backgroundColor: const Color(0xff121623),
+            title: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                  text: "OOPS!",
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: const Color(0xffFE8F8F)
+                  ),
+                  children: [
+                    TextSpan(
+                        text: " Something went wrong.",
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Colors.white
+                        )
+                    )
+                  ]
+              ),
+            ),
+
+            actions: [
+              Button(text: "Ok", onPressed: () {
+                Navigator.pop(context);
+                // Navigator.pop(context);
+              }, height: 36, width: double.infinity)
+            ],
+          );
+        }
+    );
+  }
+
+  successMessage() {
+    return showDialog(
+        context: context,
+        builder: (builder) {
+          return AlertDialog(
+            backgroundColor: const Color(0xff121623),
+            title: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: "YEAH!",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: const Color(0xff355CCA)
+                ),
+                children: [
+                  TextSpan(
+                    text: " Your password is changed successfully.",
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: Colors.white
+                    )
+                  )
+                ]
+              ),
+            ),
+            actions: [
+              Button(text: "Ok", onPressed: (){
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                }, height: 38, width: double.infinity)
+            ],
+          );
+        }
+    );
+  }
+}
+
+buildChangePassword(Function() showChange) {
+  return Container(
+    width: double.infinity,
+    height: 111,
+    margin: const EdgeInsets.fromLTRB(16, 23, 16, 0),
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: const <BoxShadow>[
+          BoxShadow(offset: Offset(0, 10), spreadRadius: 0, blurRadius: 30)
+        ],
+        gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: <Color>[
+              Color(0xff272935),
+              Color(0xff121623),
+            ])),
+    child: Column(
+      children: <Widget> [
+        Container(
+          width: double.infinity,
+          alignment: Alignment.centerLeft,
+          margin: const EdgeInsets.fromLTRB(15, 13, 0, 0),
+          child: Text(
+            "Change password",
+            style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: const Color(0xffD2DAFF)
+            ),
+          ),
+        ),
+
+        Container(
+          width: double.infinity,
+          alignment: Alignment.centerRight,
+          child: Button(
+            text: "Change",
+            onPressed: () {
+              showChange();
+            },
+            height: 38,
+            width: 120,
+          ),
+        )
+      ],
+    ),
+  );
 }
 
 Container buildTitle() {

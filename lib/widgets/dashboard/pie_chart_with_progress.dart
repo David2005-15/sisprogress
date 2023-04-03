@@ -21,7 +21,7 @@ class _PieChart extends State<PieChartWithProgressBar> {
     List<int> fontSize = getFontSize(width);
     
     return AspectRatio(
-      aspectRatio: 16 / 10.45,
+      aspectRatio: 16 / 11,
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 20, 16, 20),
         decoration: BoxDecoration(
@@ -45,9 +45,9 @@ class _PieChart extends State<PieChartWithProgressBar> {
             Row(
               children: [
                 Container(
-              margin: const EdgeInsets.fromLTRB(25, 17, 0, 0),
+              margin: const EdgeInsets.fromLTRB(20, 17, 0, 0),
               child: Text(
-                "Progress",
+                "Target Gauge",
                 style: GoogleFonts.montserrat(
                   fontWeight: FontWeight.w700,
                   fontSize: fontSize[0].toDouble(),
@@ -59,7 +59,7 @@ class _PieChart extends State<PieChartWithProgressBar> {
               child: Container(
                 width: 220,
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                margin: const EdgeInsets.fromLTRB(25, 17, 10, 0),
+                margin: const EdgeInsets.fromLTRB(15, 17, 10, 0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   gradient: LinearGradient(
@@ -73,7 +73,7 @@ class _PieChart extends State<PieChartWithProgressBar> {
                 ),
                 child: FittedBox(
                   child: Text(
-                    "Inactive categories will come soon.",
+                    "Inactive categories will be coming soon.",
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
@@ -164,11 +164,13 @@ class LinearProgressIndicator extends CustomPainter {
     drawProgressLine(canvas, 25, linearCoord[1], Colors.blue.withOpacity(0.3), size);
     drawProgressLine(canvas, 25, linearCoord[2], Colors.amber.withOpacity(0.3), size);
     drawProgressLine(canvas, 25, linearCoord[3], Colors.orange.withOpacity(0.3), size);
+    drawProgressLine(canvas, 25, linearCoord[4], const Color(0xffFCD2D1).withOpacity(0.3), size);
 
-    drawPointer(canvas, textPlace[0], "Extraculicular", Colors.white, size);
+    drawPointer(canvas, textPlace[0], "Extracurricular", Colors.white, size);
     drawPointer(canvas, textPlace[1], "Personal development", Colors.white.withOpacity(0.3), size);
     drawPointer(canvas, textPlace[2], "Academics", Colors.white.withOpacity(0.3), size);
-    drawPointer(canvas, textPlace[3], "Standardized test", Colors.white.withOpacity(0.3), size);
+    drawPointer(canvas, textPlace[3], "Standardized tests", Colors.white.withOpacity(0.3), size);
+    drawPointer(canvas, textPlace[4], "Career choice", Colors.white.withOpacity(0.3), size);
   }
 
   void drawProgressLine(Canvas canvas, int percentage, double offset, Color color, Size size) {
@@ -269,13 +271,14 @@ class ProgressBarPainter extends CustomPainter {
     drawPie(canvas, Colors.blue.withOpacity(0.3), makeCenter(center, widthSize[1]), 0.2);
     drawPie(canvas, Colors.amber.withOpacity(0.3), makeCenter(center, widthSize[2]), 0.2);
     drawPie(canvas, Colors.orange.withOpacity(0.3), makeCenter(center, widthSize[3]), 0.2);
+    drawPie(canvas, const Color(0xffFCD2D1).withOpacity(0.3), makeCenter(center, widthSize[4]), 0.2);
     // drawPie(canvas, Colors.purple, makeCenter(center, widthSize[4]), 3.5);
 
     drawPointer(canvas, points["first"], pointsCoord["first"], Colors.red, Colors.white, value[0]);
     drawPointer(canvas, points["second"], pointsCoord["second"], Colors.blue.withOpacity(0.3), Colors.white.withOpacity(0.3), value[1]);
     drawPointer(canvas, points["third"], pointsCoord["third"], Colors.amber.withOpacity(0.3), Colors.white.withOpacity(0.3), value[2]);
     drawPointer(canvas, points["fourth"], pointsCoord["fourth"], Colors.orange.withOpacity(0.3), Colors.white.withOpacity(0.3), value[3]);
-    // drawPointer(canvas, points["fifth"], pointsCoord["fifth"], Colors.purple, Colors.white, value[4]);
+    drawPointer(canvas, points["fifth"], pointsCoord["fifth"], const Color(0xffFCD2D1).withOpacity(0.3), Colors.white.withOpacity(0.3), value[4]);
   }
 
   void drawPie(Canvas canvas, Color color, Rect rect, double value) {

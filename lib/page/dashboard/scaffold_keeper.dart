@@ -45,7 +45,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
       page,
       const ExploreMoreGoals(),
       const MyTask(),
-      const Profile()
+      Profile(updateAppBar: setImage,)
     ];
   }
 
@@ -84,12 +84,16 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     setState(() {
       image = temp;
     });
+
+    debugPrint("Hello");
   }
 
   void onAvatar() {
     setState(() {
-      body = const Profile();
+      body = Profile(updateAppBar: setImage,);
     });
+
+
   }
 
   @override
