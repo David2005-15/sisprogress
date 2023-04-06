@@ -411,7 +411,7 @@ class _EventTile extends State<EventTile> {
                                         color: const Color(0xff3A3D4C)),
                                   ),
                                   Text(
-                                    "     ${currentPoint.toString()} ${MediaQuery.of(context).size.width < 370 ? "":"points"}",
+                                    "     ${(currentPoint.toString().split(".")[1] == "0" ? currentPoint.toInt() : currentPoint).toString()} ${MediaQuery.of(context).size.width < 370 ? "":"points"}",
                                     style: GoogleFonts.montserrat(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 15,
@@ -806,7 +806,6 @@ class _EventTile extends State<EventTile> {
                                         subtaskId.remove(widget.subtasks[i][1]);
                                       });
                                     }
-                                    debugPrint(subtaskId.toString());
                                   },
                                 );
                                 widget.updateState();
@@ -989,7 +988,7 @@ class _EventTile extends State<EventTile> {
                                         color: const Color(0xff3A3D4C)),
                                   ),
                                   Text(
-                                    "     ${currentPoint.toString()} ${MediaQuery.of(context).size.width < 370 ? "": "points"}",
+                                    "     ${(currentPoint.toString().split(".")[1] == "0" ? currentPoint.toInt() : currentPoint).toString()} ${MediaQuery.of(context).size.width < 370 ? "": "points"}",
                                     style: GoogleFonts.montserrat(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 15,

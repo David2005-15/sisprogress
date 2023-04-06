@@ -70,7 +70,6 @@ class _GoalPage extends State<GoalPage> {
 
     if(recommendation.isNotEmpty) {
       filteredFaculties.insert(0, "Recommendation");
-      debugPrint("Hello");
       filteredFaculties.insert(1, "All");
     } else {
       filteredFaculties.insert(0, "All");
@@ -339,7 +338,6 @@ class _GoalPage extends State<GoalPage> {
                                         .toSet()
                                         .toList()
                                         .map((e) {
-                                          debugPrint(filteredFaculties.toString());
                                       return Material(
                                         color: const Color(0xffD2DAFF),
                                         child: InkWell(

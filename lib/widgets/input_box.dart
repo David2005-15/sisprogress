@@ -14,6 +14,7 @@ class InputBox extends StatefulWidget {
   bool? showValidationOrNot;
   bool? disabledSymbols;
   bool? inRadioGroup;
+  bool? disableNumbers;
 
   InputBox({
     this.initialValue,
@@ -22,6 +23,7 @@ class InputBox extends StatefulWidget {
     this.showValidationOrNot,
     this.disabledSymbols,
     this.inRadioGroup,
+    this.disableNumbers,
     required this.textInputType,
     required this.onChanged,
     required this.context,
@@ -45,6 +47,9 @@ class _InputBox extends State<InputBox> {
   void initState() {
     if(widget.disabledSymbols == true) {
       formatters.add(FilteringTextInputFormatter.allow(RegExp("^[a-zA-Z0-9_ ]*")));
+    }
+    if(widget.disableNumbers == true) {
+      formatters.add(FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z]+|\s")));
     }
     super.initState();
     _passwordVisible = false;

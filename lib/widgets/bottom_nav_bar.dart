@@ -23,7 +23,7 @@ class NavBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),     
           color: Colors.transparent
         ),
-        height: Platform.isIOS ? 86 : 67,
+        height: Platform.isIOS ? 67 : 67,
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           child: BottomNavigationBar(

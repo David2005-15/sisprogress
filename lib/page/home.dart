@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/page/dashboard/scaffold_keeper.dart';
 import 'package:sis_progress/page/login.dart';
 import 'package:sis_progress/page/no_connection.dart';
@@ -21,6 +22,8 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin{
   bool haveInternet = false;
   bool haveToken = false;
   bool isLoading = true;
+
+  Client clinet = Client();
 
   void checkInternetConnection() async {
     try {
@@ -42,6 +45,16 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin{
     });
   }
 
+  dynamic isTokenValid = "";
+
+  void validTokenCheck() async {
+    var value = await clinet.getUserData();
+
+    setState(() {
+      isTokenValid = value;
+    });
+  }
+
   void isMemberRemembered() async {
     var prefs = await SharedPreferences.getInstance();
 
@@ -56,6 +69,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin{
 
   @override
   void initState() {
+    validTokenCheck();
     isMemberRemembered();
     checkInternetConnection();
     super.initState();
@@ -71,7 +85,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin{
           width: 150,
           height: 80,
         ),
-        nextScreen: !haveInternet ? NoInternetConnection() : const ScaffoldHome()
+        nextScreen: !haveInternet ? NoInternetConnection() : isTokenValid != "not found" ? const ScaffoldHome():  LoginPage()
     ) : Scaffold(
         body: Stack(
           children: <Widget>[

@@ -66,20 +66,20 @@ class PieChart extends StatelessWidget {
                   ),
                 ),
 
-                // Container(
-                //   margin: const EdgeInsets.fromLTRB(18, 22, 0, 0),
-                //   child: Text(
-                //     halfPerc,
-                //     style: GoogleFonts.roboto(
-                //         fontWeight: FontWeight.w500,
-                //         fontSize: fonts[1].toDouble(),
-                //         color: Colors.transparent
-                //     ),
-                //   ),
-                // ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(18, 22, 0, 0),
+                  child: Text(
+                    halfPerc,
+                    style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w500,
+                        fontSize: fonts[1].toDouble() + 2,
+                        color: Colors.white.withOpacity(0.3)
+                    ),
+                  ),
+                ),
 
                 Container(
-                  margin: const EdgeInsets.fromLTRB(18, 30, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(18, 17, 0, 0),
                   child: Row(
                     children: <Widget> [
                       Container(

@@ -46,14 +46,14 @@ class _Tile extends State<Tile> {
             ),
 
             Container(
-              margin: const EdgeInsets.fromLTRB(8, 10, 0, 0),
+              margin: const EdgeInsets.fromLTRB(8, 6, 0, 0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   widget.point.toString(),
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
-                    fontSize: 10,
+                    fontSize: 13,
                     color: const Color(0xff2E2323)
                   ),
                 )
@@ -69,7 +69,7 @@ class _Tile extends State<Tile> {
                   textAlign: TextAlign.left,
                   style: GoogleFonts.montserrat(
                     fontWeight: FontWeight.w400,
-                    fontSize: 7,
+                    fontSize: 8,
                     color: const Color(0xff2E2323)
                   ),
                 ),

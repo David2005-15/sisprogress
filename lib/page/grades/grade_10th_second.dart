@@ -127,7 +127,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
 
     if (widget.reg.school != null) {
       if(Universities().schools.contains(widget.reg.school!)) {
-        widget.schoolDataclass.value = widget.reg.school;
+        widget.dropDownSchool.text = widget.reg.school!;
         widget.schoolQuest.value = "Yes";
       } else {
         widget.school.text = widget.reg.school!;
@@ -527,6 +527,22 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                       element.contains(value.toString()))
                                   .isNotEmpty;
 
+                              int all = 0;
+
+                              for(int i = 0; i < actions.length; i++) {
+                                try {
+                                  var content = actions[i].split(" ");
+                                  all += int.parse(
+                                      content[1]
+                                          .replaceAll(
+                                          RegExp(
+                                              r'[\(\)]'),
+                                          ''));
+                                } catch (E) {
+                                  debugPrint(E.toString());
+                                }
+                              }
+
                               return PopupMenuItem(
                                   value: value,
                                   child: StatefulBuilder(
@@ -541,7 +557,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                               margin: const EdgeInsets.fromLTRB(
                                                   5, 0, 5, 0),
                                               child: InkWell(
-                                                onTap: () {
+                                                onTap: all < 10 ? () {
                                                   state(
                                                     () {
                                                       var temp = isEnabled;
@@ -553,11 +569,12 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                   });
 
                                                   setState(() {
+
+
                                                     if (actions.length != 10) {
-                                                      if (!isEnabled) {
+                                                      if (!isEnabled && all < 11) {
                                                         actions.add(value);
                                                       } else {
-                                                        // print(actions);
                                                         actions.removeWhere(
                                                             (e) => e.contains(
                                                                 value));
@@ -569,7 +586,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                                                     // actions = temp;
                                                     isEnabled = !isEnabled;
                                                   });
-                                                },
+                                                }: null,
                                                 child: Container(
                                                   width: 24,
                                                   height: 24,
@@ -930,7 +947,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 widget.reg.essayWorkExp = widget.work.text;
 
                 if(isSchoolOther) {
-                  widget.reg.school = widget.schoolDataclass.value;
+                  widget.reg.school = widget.dropDownSchool.text;
                 } else if(!isSchoolOther) {
                   widget.reg.school = widget.school.text;
                 }
@@ -957,11 +974,13 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                   });
                 }
 
-                if(widget.school.text.isEmpty && widget.schoolDataclass.value == null) {
+                if(widget.school.text.isEmpty && widget.dropDownSchool.text.isEmpty) {
                   setState(() {
                     validSchool = true;
                   });
                 }
+
+                debugPrint(validSchool.toString());
 
                 if (widget.fifthQuest.value == null) {
                   setState(() {
@@ -1031,7 +1050,7 @@ class _Grade10thSecond extends State<Grade10thSecond> {
                 widget.reg.honors = widget.fifthQuest.value;
                 widget.reg.addmisionTest = widget.sixthQuest.value;
                 if(!isSchoolOther) {
-                  widget.reg.school = widget.schoolDataclass.value;
+                  widget.reg.school = widget.dropDownSchool.text;
                 } else {
                   widget.reg.school = widget.school.text;
                 }

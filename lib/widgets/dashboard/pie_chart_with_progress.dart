@@ -162,8 +162,8 @@ class LinearProgressIndicator extends CustomPainter {
 
     drawProgressLine(canvas, 25 + value[0], linearCoord[0], Colors.red, size);
     drawProgressLine(canvas, 25, linearCoord[1], Colors.blue.withOpacity(0.3), size);
-    drawProgressLine(canvas, 25, linearCoord[2], Colors.amber.withOpacity(0.3), size);
-    drawProgressLine(canvas, 25, linearCoord[3], Colors.orange.withOpacity(0.3), size);
+    drawProgressLine(canvas, 25, linearCoord[2], const Color(0xffFF5C58).withOpacity(0.3), size);
+    drawProgressLine(canvas, 25, linearCoord[3], const Color(0xffB1B2FF).withOpacity(0.3), size);
     drawProgressLine(canvas, 25, linearCoord[4], const Color(0xffFCD2D1).withOpacity(0.3), size);
 
     drawPointer(canvas, textPlace[0], "Extracurricular", Colors.white, size);
@@ -276,8 +276,8 @@ class ProgressBarPainter extends CustomPainter {
 
     drawPointer(canvas, points["first"], pointsCoord["first"], Colors.red, Colors.white, value[0]);
     drawPointer(canvas, points["second"], pointsCoord["second"], Colors.blue.withOpacity(0.3), Colors.white.withOpacity(0.3), value[1]);
-    drawPointer(canvas, points["third"], pointsCoord["third"], Colors.amber.withOpacity(0.3), Colors.white.withOpacity(0.3), value[2]);
-    drawPointer(canvas, points["fourth"], pointsCoord["fourth"], Colors.orange.withOpacity(0.3), Colors.white.withOpacity(0.3), value[3]);
+    drawPointer(canvas, points["third"], pointsCoord["third"], const Color(0xffFF5C58).withOpacity(0.3), Colors.white.withOpacity(0.3), value[2]);
+    drawPointer(canvas, points["fourth"], pointsCoord["fourth"], const Color(0xffB1B2FF).withOpacity(0.3), Colors.white.withOpacity(0.3), value[3]);
     drawPointer(canvas, points["fifth"], pointsCoord["fifth"], const Color(0xffFCD2D1).withOpacity(0.3), Colors.white.withOpacity(0.3), value[4]);
   }
 

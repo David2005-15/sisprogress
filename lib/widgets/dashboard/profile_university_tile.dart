@@ -105,25 +105,15 @@ class _UniversityTile extends State<UniversityTile> {
       }
     }
     else {
-      if(_controller4.text == widget.firstAcademic) {
-        if(_controller1.text == widget.selectedUniversity) {
-          return true;
-        }
-
-        return false;
-      }
-
-      if(_controller4.text == "") {
-        return true;
-      }
+      return (_controller1.text == widget.selectedUniversity)
+          && (_controller4.text == widget.firstAcademic)
+          && (_controller3.text == widget.secondAcademic || _controller3.text.isEmpty)
+          && (_controller5.text == widget.thirdAcademic || _controller5.text.isEmpty);
     }
-
-    return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(widget.fourthAcademic);
     if (widget.selectedUniversity == "Columbia University") {
       _controller1.text = widget.selectedUniversity;
       if (widget.firstAcademic != "null") {
@@ -233,6 +223,85 @@ class _UniversityTile extends State<UniversityTile> {
                     ],
                   ),
 
+                  Container(
+                    width: double.infinity,
+                    margin: widget.mode
+                        ? const EdgeInsets.fromLTRB(23, 10, 0, 3)
+                        : const EdgeInsets.fromLTRB(23, 0, 0, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        widget.mode
+                            ? Container(
+                          margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                          child: RichText(
+                            text: TextSpan(
+                              text: dreamPointCont.text,
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
+                                  color: const Color(0xffD4D4D4)),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: ' (Dream Points)',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        color: const Color(0xffD2DAFF))),
+                              ],
+                            ),
+                          ),
+                        )
+                            : Container(),
+                        widget.mode
+                            ? Container(
+                          margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                          child: RichText(
+                            text: TextSpan(
+                              text: targetPointCont.text,
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
+                                  color: const Color(0xffD4D4D4)),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: ' (Target Points)',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        color: const Color(0xffD2DAFF))),
+                              ],
+                            ),
+                          ),
+                        )
+                            : Container(),
+                        widget.mode
+                            ? Container(
+                          margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                          child: RichText(
+                            text: TextSpan(
+                              text: safetyPointCont.text,
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
+                                  color: const Color(0xffD4D4D4)),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: ' (Safety Points)',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        color: const Color(0xffD2DAFF))),
+                              ],
+                            ),
+                          ),
+                        )
+                            : Container()
+                      ],
+                    ),
+                  ),
+
                   widget.mode ? buildMode(_controller1, uniDataClass.getAllUniversities(),
                       "University", null, "Hello", (val) {
                     state(() {
@@ -257,7 +326,7 @@ class _UniversityTile extends State<UniversityTile> {
                             _controller4.text != "" && _controller1.text == "Columbia University" ? buildQuestion("Third Intended Area of Study", false): Container(),
                             _controller4.text != "" && _controller1.text == "Columbia University" ? buildMode(_controller7, uniDataClass.removeDuplicates(uniDataClass.getColumbiaValues(_controller4.text), [_controller5.text, _controller6.text]), "Academic", false, "Hello", (p0) {}): Container(),
                             _controller1.text == "Johns Hopkins University" || _controller1.text == "Princeton University" || _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildQuestion(questions[0][2], false),
-                            _controller1.text == "Johns Hopkins University" || _controller1.text == "Princeton University" || _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildMode(_controller5, uniDataClass.removeDuplicates(questions[1][2].keys.toList(), [_controller4.text, _controller3.text]), "Academic", false, "Hello", (p0) {}),
+                            _controller1.text == "Johns Hopkins University" || _controller1.text == "Princeton University" || _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildMode(_controller5, uniDataClass.removeDuplicates(questions[1][2].keys.toList(), [_controller4.text, _controller3.text]), "Academic", false, "Hello", (p0) {state((){});}),
                             _controller1.text == "University of Pennsylvania" && _controller5.text != "" ? buildQuestion("Primary Major of Interest", false): Container(),
                             _controller5.text != "" && uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller5.text) != null? buildMode(_controller3, uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller5.text), "Academic", null, "Hello", (p0) {state(() {_controller4.text = "";});}): Container(),
                             _controller3.text != "" && uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller3.text) != null? buildQuestion("Secondary School Choice (if not selected for primary program choice)", false): Container(),
@@ -296,7 +365,7 @@ class _UniversityTile extends State<UniversityTile> {
                   ): Container(),
 
                   !widget.mode ? Container(
-                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -324,84 +393,6 @@ class _UniversityTile extends State<UniversityTile> {
                     ),
                   ): Container(),
 
-                  Container(
-                    width: double.infinity,
-                    margin: widget.mode
-                        ? const EdgeInsets.fromLTRB(23, 10, 0, 3)
-                        : const EdgeInsets.fromLTRB(23, 0, 0, 15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        widget.mode
-                            ? Container(
-                                margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: dreamPointCont.text,
-                                    style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 15,
-                                        color: const Color(0xffD4D4D4)),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: ' (Dream Points)',
-                                          style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 15,
-                                              color: const Color(0xffD2DAFF))),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : Container(),
-                        widget.mode
-                            ? Container(
-                                margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: targetPointCont.text,
-                                    style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 15,
-                                        color: const Color(0xffD4D4D4)),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: ' (Target Points)',
-                                          style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 15,
-                                              color: const Color(0xffD2DAFF))),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : Container(),
-                        widget.mode
-                            ? Container(
-                                margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: safetyPointCont.text,
-                                    style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 15,
-                                        color: const Color(0xffD4D4D4)),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: ' (Safety Points)',
-                                          style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 15,
-                                              color: const Color(0xffD2DAFF))),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : Container()
-                      ],
-                    ),
-                  ),
                   widget.mode
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

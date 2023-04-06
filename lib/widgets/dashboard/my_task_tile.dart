@@ -113,7 +113,7 @@ class _MyTaskTile extends State<MyTaskTile> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: 200,
+                width: MediaQuery.of(context).size.width - 40,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -727,7 +727,6 @@ class _MyTaskTile extends State<MyTaskTile> {
                                         color: Colors.white
                                     ),
                                   ),
-
                                 ),
                               )
                             ],

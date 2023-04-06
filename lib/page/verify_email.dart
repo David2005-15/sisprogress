@@ -39,7 +39,7 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
   String time = "0:30";
 
   void startTimer () {
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         if(timer != 0) {
           timer--;
@@ -92,13 +92,9 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
             ),
             width: double.infinity,
             height: double.infinity,
-            // constraints: BoxConstraints.expand(),
             margin: const EdgeInsets.fromLTRB(16, 15, 16, 32),
-            // alignment: Alignment.topCenter,
             child: SingleChildScrollView(
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget> [
                   const ProgressBar(isPassed: [true, true, true],),
                   buildTitle(),
@@ -197,61 +193,9 @@ class _VerifyEmail extends State<VerifyEmail> with SingleTickerProviderStateMixi
                       ),
                     ),
                   ),
-
-                  
-
-                  //
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.pop(context);
-                  //   },
-                  //   child: Container(
-                  //     alignment: Alignment.center,
-                  //     width: 104,
-                  //     height: 36,
-                  //     decoration: BoxDecoration(
-                  //       borderRadius: BorderRadius.circular(5),
-                  //       border: Border.all(
-                  //         width: 2.0,
-                  //         color: const Color(0xffD2DAFF),
-                  //       ),
-                  //     ),
-                  //     child: Text(
-                  //       "Cancel",
-                  //       style: GoogleFonts.poppins(
-                  //         fontWeight: FontWeight.w400,
-                  //         fontSize: 15,
-                  //         color: const Color(0xffD2DAFF)
-                  //       ),
-                  //     ),
-                  //   ),
-                  // )
                 ],
               ),
-              // alignment: Alignment.center,
-              // child: ButtonBar(
-              //   alignment: MainAxisAlignment.center,
-              //   children: <Widget>[
-              //      TextButton(
-              // style: TextButton.styleFrom(
-              //   textStyle: Theme.of(context).textTheme.labelLarge,
-              // ),
-              // child: const Text('Disable'),
-              // onPressed: () {
-              //   Navigator.of(context).pop();
-              // },
             ),
-            // ElevatedButton(
-            //   style: ButtonStyle(
-            //     b
-            //   ),
-            //    child: const Text('Enable'),
-            //   onPressed: () {
-
-            //     onSave();
-            //     Navigator.pop(context);
-            //   },
-            // ),
           ],
         );
       },
@@ -334,25 +278,3 @@ Container buildDescription() {
     ),
   );
 }
-
-TextButton buildSendAgainButton() {
-  return TextButton(
-    onPressed: () {
-      
-    },
-    child: Text(
-      "Send Again",
-      style: GoogleFonts.montserrat(
-        fontWeight: FontWeight.w500,
-        fontSize: 18,
-        color: const Color(0xffBFBFBF)
-      ),
-    ),
-  );
-}
-
-// void getHeight(BuildContext context) {
-//   double height = MediaQuery.of(context).size.height;
-
-//   print(height);
-// }

@@ -57,8 +57,7 @@ class _Profile extends State<Profile> {
   late String dreamPoints = "";
   late String targetPoints = "";
   late String safetyPoints = "";
-  late String image =
-      "http://drive.google.com/uc?export=view&id=1T4h9d1wyGy-apEyrTW_D6C1UvdLSE166";
+  late String image = "http://drive.google.com/uc?export=view&id=1T4h9d1wyGy-apEyrTW_D6C1UvdLSE166";
 
   bool isLoading = true;
 
@@ -96,8 +95,7 @@ class _Profile extends State<Profile> {
   }
 
   Future updateImage() async {
-    var image = await _picker.pickImage(
-        source: ImageSource.gallery, maxWidth: 120, maxHeight: 120);
+    var image = await _picker.pickImage(source: ImageSource.gallery, maxWidth: 120, maxHeight: 120);
 
     if (mounted) {
       setState(() {
@@ -124,9 +122,6 @@ class _Profile extends State<Profile> {
       setEmail();
     });
 
-    setEmail();
-    setEmail();
-    setEmail();
     setEmail();
   }
 
@@ -190,182 +185,201 @@ class _Profile extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return Future.value(false);
+    return RefreshIndicator(
+      onRefresh: () async {
+        getPoint();
+        setEmail();
+        setUsername();
+        printValue();
+        getImage();
+        onSave();
+        onPersonalSave();
       },
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            buildTitle(),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-              width: double.infinity,
-              height: 100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  SizedBox(
-                    width: 120,
-                    height: 120,
-                    child: Stack(
-                      children: [
-                        ColorAnimation(
-                          isLoading: isLoading,
-                          tree: Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.transparent,
-                                backgroundImage: _image != null
-                                    ? Image.file(
-                                        File(_image!.path),
-                                        fit: BoxFit.contain,
-                                      ).image
-                                    : Image.network(image).image,
-                                radius: 55,
+      color: Colors.white,
+      child: WillPopScope(
+        onWillPop: () async {
+          return Future.value(false);
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              buildTitle(),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                width: double.infinity,
+                height: 100,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 120,
+                      height: 120,
+                      child: Stack(
+                        children: [
+                          ColorAnimation(
+                            isLoading: isLoading,
+                            tree: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: _image != null
+                                      ? Image.file(
+                                          File(_image!.path),
+                                          fit: BoxFit.contain,
+                                        ).image
+                                      : Image.network(image).image,
+                                  radius: 55,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: InkWell(
-                            onTap: updateImage,
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                    color: Color(0xff3A3D4C),
-                                    shape: BoxShape.circle),
-                                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                padding: const EdgeInsets.all(10),
-                                child: Tooltip(
-                                  showDuration: const Duration(seconds: 2),
-                                  margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff3A3D4C),
-                                    borderRadius: BorderRadius.circular(2)
-                                  ),
-                                  triggerMode: TooltipTriggerMode.longPress,
-                                  message: "You can upload an image up to 1 mb",
-                                  child: SvgPicture.asset(
-                                    "assets/Camera.svg",
-                                  ),
-                                )),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: InkWell(
+                              onTap: updateImage,
+                              highlightColor: Colors.transparent,
+                              splashColor: Colors.transparent,
+                              child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xff3A3D4C),
+                                      shape: BoxShape.circle),
+                                  margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  padding: const EdgeInsets.all(10),
+                                  child: Tooltip(
+                                    showDuration: const Duration(seconds: 2),
+                                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xff3A3D4C),
+                                      borderRadius: BorderRadius.circular(2)
+                                    ),
+                                    triggerMode: TooltipTriggerMode.longPress,
+                                    message: "You can upload an image up to 1 mb",
+                                    child: SvgPicture.asset(
+                                      "assets/Camera.svg",
+                                    ),
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width - 200,
+                          child: Text(
+                            fullName,
+                            // textAlign: TextAlign.center,
+                            style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                color: Colors.white),
                           ),
                         ),
+                        Container(
+                          width: MediaQuery.of(context).size.width - 200,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            country,
+                            style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                color: const Color(0xffBFBFBF)),
+                          ),
+                        )
                       ],
                     ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        fullName,
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
-                            color: Colors.white),
-                      ),
-                      Text(
-                        country,
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17,
-                            color: const Color(0xffBFBFBF)),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                buildCard(
-                    <Color>[const Color(0xffD2DAFF), const Color(0xff355CCA)],
-                    traingDays.toString(),
-                    "Days\nin training"),
-                buildCard(
-                    <Color>[const Color(0xffFCD2D1), const Color(0xffFF5C58)],
-                    completedTasks.toString(),
-                    "Completed\nTasks"),
-                buildCard(
-                    // <Color>[const Color(0xffFCD2D1), const Color(0xffFF5C58)],
-                    <Color>[const Color(0xffD2C5DF), const Color(0xff8675A9)],
-                    totalPoints.toString(),
-                    "Dream\nmilestone"),
-              ],
-            ),
-            UniversityTile(
-                onEdit: changeMode,
-                mode: isEditable,
-                onSave: onSave,
-                university: Universities().universities,
-                points: Universities().points,
-                selectedUniversity: university,
-                firstAcademic: firstAcademic,
-                secondAcademic: secondAcademic,
-                thirdAcademic: thirdAcademic,
-                fourthAcademic: fourthAcademic,
-                dreamPoint: dreamPoints,
-                targetPoint: targetPoints,
-                safetyPoint: safetyPoints),
-            PersonalDetails(
-              mode: editPersonal,
-              onEdit: onPersonalEdit,
-              onSave: onPersonalSave,
-              phone: phone,
-              email: mail,
-              age: age != ""
-                  ? DateFormat('dd/MM/yyyy').format(DateTime.parse(age))
-                  : "",
-              country: country,
-              name: fullName,
-            ),
-            Emaildetails(
-              mode: false,
-              email: mail,
-              secondaryEmail: secondaryMail,
-              updateStates: setEmail,
-              isVerified: isVerifiedSecondaryEmail,
-            ),
-            buildChangePassword(changePassword),
-            // ChangePassword(),
-            InkWell(
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              onTap: () {
-                logoutDialogBuilder();
-              },
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(16, 25, 16, 25),
-                width: double.infinity,
-                height: 50,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    border:
-                        Border.all(width: 1, color: const Color(0xff26459B)),
-                    color: Colors.transparent),
-                child: Text(
-                  "Log out",
-                  style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                      color: const Color(0xff26459B)),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  buildCard(
+                      <Color>[const Color(0xffD2DAFF), const Color(0xff355CCA)],
+                      traingDays.toString(),
+                      "Days\nin training"),
+                  buildCard(
+                      <Color>[const Color(0xffFCD2D1), const Color(0xffFF5C58)],
+                      completedTasks.toString(),
+                      "Completed\nTasks"),
+                  buildCard(
+                      // <Color>[const Color(0xffFCD2D1), const Color(0xffFF5C58)],
+                      <Color>[const Color(0xffD2C5DF), const Color(0xff8675A9)],
+                      totalPoints.toString(),
+                      "Dream\nmilestone"),
+                ],
+              ),
+              UniversityTile(
+                  onEdit: changeMode,
+                  mode: isEditable,
+                  onSave: onSave,
+                  university: Universities().universities,
+                  points: Universities().points,
+                  selectedUniversity: university,
+                  firstAcademic: firstAcademic,
+                  secondAcademic: secondAcademic,
+                  thirdAcademic: thirdAcademic,
+                  fourthAcademic: fourthAcademic,
+                  dreamPoint: dreamPoints,
+                  targetPoint: targetPoints,
+                  safetyPoint: safetyPoints),
+              PersonalDetails(
+                mode: editPersonal,
+                onEdit: onPersonalEdit,
+                onSave: onPersonalSave,
+                phone: phone,
+                email: mail,
+                age: age != ""
+                    ? DateFormat('dd/MM/yyyy').format(DateTime.parse(age))
+                    : "",
+                country: country,
+                name: fullName,
+              ),
+              Emaildetails(
+                mode: false,
+                email: mail,
+                secondaryEmail: secondaryMail,
+                updateStates: setEmail,
+                isVerified: isVerifiedSecondaryEmail,
+              ),
+              buildChangePassword(changePassword),
+              // ChangePassword(),
+              InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: logoutDialogBuilder,
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(16, 25, 16, 25),
+                  width: double.infinity,
+                  height: 50,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      border: Border.all(width: 2, color: const Color(0xff26459B)),
+                      color: Colors.transparent
+                  ),
+                  child: Text(
+                    "Log out",
+                    style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: const Color(0xff26459B)
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -477,7 +491,6 @@ class _Profile extends State<Profile> {
                     var client = Client();
 
                     var response = await client.changePassword(currentPassword.text, password.text);
-                    debugPrint(response.data);
 
                     if(response != "error") {
                       var preferences = await SharedPreferences.getInstance();
@@ -565,7 +578,6 @@ class _Profile extends State<Profile> {
               Button(text: "Ok", onPressed: (){
                   Navigator.pop(context);
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                 }, height: 38, width: double.infinity)
             ],
           );

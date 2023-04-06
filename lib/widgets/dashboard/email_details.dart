@@ -193,6 +193,7 @@ class _Emaildetails extends State<Emaildetails> {
                                     onPressed: () {
                                       state(() {
                                         widget.mode = false;
+                                        primaryEmail.text = widget.email;
                                       });
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -222,7 +223,7 @@ class _Emaildetails extends State<Emaildetails> {
 
                                         httpClient.sendUpdateEmail(
                                             primaryEmail.text, "First");
-                                        successMessage(primaryEmail.text);
+                                        successMessage(primaryEmail.text, false);
                                       }
                                     }: null,
                                     height: 38,
@@ -268,7 +269,11 @@ class _Emaildetails extends State<Emaildetails> {
                                   errorText: "Invalid email format",
                                   showValidationOrNot:
                                       showSecondaryEmailValidation,
-                                  onChanged: (val) {},
+                                  onChanged: (val) {
+                                    setState(() {
+
+                                    });
+                                  },
                                   context: context,
                                   controller: secondaryEmail,
                                   isPassword: false,
@@ -281,7 +286,7 @@ class _Emaildetails extends State<Emaildetails> {
                                     children: <Widget>[
                                       Tooltip(
                                         preferBelow: false,
-                                        message: "Important! Please verify your new email address /oliviasmith@gmail.com/. Until it is verified, you will continue to use your original email address. You can delete the unverified email address or change it in your account settings.",
+                                        message: "Important! Please verify your new email address /${secondaryEmail.text}/. Until it is verified, you will continue to use your original email address. You can delete the unverified email address or change it in your account settings.",
                                         textStyle: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 9,
@@ -292,6 +297,7 @@ class _Emaildetails extends State<Emaildetails> {
                                           color: const Color(0xffE31F1F),
                                           borderRadius: BorderRadius.circular(2)
                                         ),
+                                        showDuration: const Duration(seconds: 10),
                                         margin: EdgeInsets.fromLTRB(20, 0, MediaQuery.of(context).size.width/2, 0),
                                         child: const Icon(
                                           Icons.error_outlined,
@@ -368,7 +374,7 @@ class _Emaildetails extends State<Emaildetails> {
                                     ),
                                     Button(
                                         text: "Update",
-                                        onPressed: () {
+                                        onPressed: (widget.secondaryEmail  == secondaryEmail.text) ? null : () {
                                           if (!emailMatch(
                                               secondaryEmail.text)) {
                                             state(() {
@@ -384,7 +390,7 @@ class _Emaildetails extends State<Emaildetails> {
                                             httpClient.sendUpdateEmail(
                                                 secondaryEmail.text,
                                                 "Secondary");
-                                            successMessage(secondaryEmail.text);
+                                            successMessage(secondaryEmail.text, true);
                                           }
                                         },
                                         height: 38,
@@ -528,7 +534,7 @@ class _Emaildetails extends State<Emaildetails> {
     });
   }
 
-  Future successMessage(String which) {
+  Future successMessage(String which, bool isSecondary) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -566,7 +572,9 @@ class _Emaildetails extends State<Emaildetails> {
                       text: "OK",
                       onPressed: () {
                         Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                        if(!isSecondary) {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                        }
                       },
                       height: 36,
                       width: 145)
@@ -577,107 +585,6 @@ class _Emaildetails extends State<Emaildetails> {
         });
   }
 
-  Future changeEmail(String email, String whichEmail) {
-    bool _onEditing = true;
-    String? _code;
-
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(
-            builder: (context, state) {
-              return AlertDialog(
-                backgroundColor: const Color(0xff121623),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(),
-                    Center(
-                      child: Text(
-                        "Verify your email",
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            color: Colors.white),
-                      ),
-                    ),
-                    _getUpdateCloseButton(context, () {})
-                  ],
-                ),
-                content: SizedBox(
-                  height: 300,
-                  child: Column(
-                    children: <Widget>[
-                      buildSubtitle(email),
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-                        child: VerificationCode(
-                          digitsOnly: false,
-                          textStyle: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: Colors.white),
-                          // length: 6,
-                          keyboardType: TextInputType.number,
-                          underlineColor: const Color(0xffD2DAFF),
-                          underlineUnfocusedColor: const Color(0xffD2DAFF),
-                          // If this is null it will use primaryColor: Colors.red from Theme
-                          length: 6,
-                          cursorColor: Colors.blue,
-                          onCompleted: (String value) {
-                            state(() {
-                              _code = value;
-                            });
-                          },
-                          onEditing: (bool value) {
-                            state(() {
-                              _onEditing = value;
-                            });
-                            if (!_onEditing) FocusScope.of(context).unfocus();
-                          },
-                        ),
-                      ),
-                      Button(
-                          text: "Submit",
-                          onPressed: _code != null
-                              ? () {
-                                  state(() {
-                                    httpClient.sendCode(email, _code!);
-                                    Navigator.pop(context);
-                                    successMessage(whichEmail);
-                                  });
-                                }
-                              : null,
-                          height: 36,
-                          width: 175),
-                      Column(
-                        children: <Widget>[
-                          Text(
-                            "Haven't received your verification code yet?",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                color: const Color(0xffD4D4D4)),
-                          ),
-                          TextButton(
-                              onPressed: () {},
-                              child: Text("Resend Again",
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
-                                      color: const Color(0xffD2DAFF),
-                                      decoration: TextDecoration.underline)))
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        });
-  }
 
   _getUpdateCloseButton(context, VoidCallback updateState) {
     return Padding(

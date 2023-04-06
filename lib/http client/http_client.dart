@@ -18,6 +18,28 @@ class Client {
     return _instance;
   }
 
+  Future<dynamic> getNotifications() async {
+    var prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    var response = await dio.get("https://sisprogress.online/notification/get");
+
+    return response.data;
+  }
+
+  Future<dynamic> readNotification(int id) async {
+    var prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {"Authorization": "Bearer ${prefs.getString("token")}"};
+
+    var body = {
+      "id": id
+    };
+
+    await dio.patch("https://sisprogress.online/notification/read", data: body);
+  }
+
   Future<dynamic> changePassword(String currentPassword, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -303,7 +325,7 @@ class Client {
     return token.data;
   }
 
-  Future<Map<String, dynamic>> getUserData() async {
+  Future<dynamic> getUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var isLoggedData = {

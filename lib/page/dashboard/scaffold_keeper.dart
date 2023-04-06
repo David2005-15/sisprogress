@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:sis_progress/data%20class/notification_data.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
@@ -25,8 +26,6 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   late Widget body;
 
   DateTime todayDate = DateTime.now();
-
-  late CalendarPage page;
   late List<Widget> pages;
 
   Color iconColor = Colors.blue;
@@ -37,12 +36,10 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
   Client httpClient = Client();
 
-
   _ScaffoldHome() {
-    page = const CalendarPage();
     pages = [
       const Dashboard(),
-      page,
+      const CalendarPage(),
       const ExploreMoreGoals(),
       const MyTask(),
       Profile(updateAppBar: setImage,)
@@ -68,13 +65,8 @@ class _ScaffoldHome extends State<ScaffoldHome> {
   }
 
   void onNotification() {
-    var data = NotificationData(
-        title: "Notification Data", description: "It is notification");
-
     setState(() {
-      body = NotificationPage(
-        notifications: <NotificationData>[data],
-      );
+      body = NotificationPage(onChange: getNotificationCount,);
     });
   }
 
@@ -84,20 +76,28 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     setState(() {
       image = temp;
     });
-
-    debugPrint("Hello");
   }
 
   void onAvatar() {
     setState(() {
       body = Profile(updateAppBar: setImage,);
     });
+  }
 
+  int notificationCount = 0;
 
+  void getNotificationCount() async {
+    var temp = await httpClient.getDashboardData();
+
+    setState(() {
+      notificationCount = temp["notificationCount"];
+      debugPrint(temp["notificationCount"].toString());
+    });
   }
 
   @override
   void initState() {
+    getNotificationCount();
     body = pages[0];
     setImage();
 
@@ -120,6 +120,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
       bottomNavigationBar: NavBar(
           selected: _selected,
           onChange: (int count) {
+            getNotificationCount();
             setState(() {
               _selected = count;
               body = pages[_selected];
@@ -128,7 +129,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
             setImage();
           }),
       appBar: CustomAppBar(buildLogoIcon(onIcon), <Widget>[
-        buildNotification(onTap: onNotification),
+        buildNotification(onTap: onNotification, count: notificationCount),
         buildAvatar(onTap: onAvatar, url: image)
       ]),
       body: body,
@@ -161,16 +162,18 @@ InkWell buildAvatar({required VoidCallback onTap, required String url}) {
       width: 36,
       height: 36,
       margin: const EdgeInsets.fromLTRB(15, 0, 16, 0),
-      child: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        backgroundImage: Image.network(url, fit: BoxFit.scaleDown,).image,
-        radius: 55,
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          backgroundImage: Image.network(url).image,
+        ),
       ),
     ),
   );
 }
 
-InkWell buildNotification({required VoidCallback onTap}) {
+InkWell buildNotification({required VoidCallback onTap, required int count}) {
   return InkWell(
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent, // Splash color
@@ -181,37 +184,43 @@ InkWell buildNotification({required VoidCallback onTap}) {
         alignment: Alignment.center,
         decoration: const BoxDecoration(
             shape: BoxShape.circle, color: Color(0xff3A3D4C)),
-        child: const Icon(
-          Icons.notifications_outlined,
-          size: 17,
-          color: Color(0xffD2DAFF),
-        )),
-  );
-}
+        child: Stack(
+          children: <Widget> [
+            const Align(
+              alignment: AlignmentDirectional(0, 0),
+              child: Icon(
+                Icons.notifications_outlined,
+                size: 17,
+                color: Color(0xffD2DAFF),
+              ),
+            ),
 
-
-Container buildCheckbox(
-    {required Color iconColor,
-    required Function() onChange,
-    required Color borderColor,
-    required Color backgroundColor}) {
-  return Container(
-    margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-    width: 24,
-    height: 24,
-    decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: borderColor, width: 1),
-        color: Colors.transparent),
-    child: InkWell(
-      onTap: () {
-        onChange;
-      },
-      child: Icon(
-        Icons.check,
-        color: iconColor,
-        size: 11,
-      ),
+            count != 0 ? Align(
+              alignment: const AlignmentDirectional(1, -0.7),
+              child: Container(
+                width: 20,
+                height: 15,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: const Color(0xffE31F1F),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Text(
+                  count.toString(),
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
+                    color: Colors.white
+                  ),
+                ),
+              ),
+            ): Container()
+          ],
+        ),
+        // child: const Icon(
+        //   Icons.notifications_outlined,
+        //   size: 17,
+        //   color: Color(0xffD2DAFF),
+        // )
     ),
   );
 }

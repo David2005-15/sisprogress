@@ -148,7 +148,6 @@ class _Grade10thFirst extends State<Grade10thFirst> {
               buildQuestion("1. Pick your dream university", true),
               buildMode(widget._controller1, uniDataClass.getAllUniversities(), "University", showuniversityErrorText, universityErrorText, (val) {
                 setState(() {
-                  debugPrint(val);
                   questions = uniDataClass.getQuestionsAndAnswers(val);
                   debugPrint((widget._controller1.text == "University of Pennsylvania").toString());
                   widget._controller3.text = "";

@@ -18,7 +18,6 @@ class PersonalDetails extends StatelessWidget {
   final String country;
   final String name;
 
-
   PersonalDetails({
     required this.phone,
     required this.email,
@@ -61,11 +60,9 @@ class PersonalDetails extends StatelessWidget {
   ];
 
   String month = DateFormat("MMMM").format(DateTime.now());
-  String year = DateTime.now().year.toString();
+  String year = DateTime(2008, DateTime.now().month).year.toString();
 
-  List<String> years = [
-    
-  ];
+  List<String> years = List.generate(74, (i) => (2008 - i).toString());
 
   Client httpClient = Client();
 
@@ -76,10 +73,6 @@ class PersonalDetails extends StatelessWidget {
     agecnt.text = age;
     coutnry.value= country;
     fullName.text = name;
-
-    for (int i = 2023; i >= 1950; i--) {
-      years.add(i.toString());
-    }
 
     return StatefulBuilder(
       builder: (context, state) {
@@ -143,7 +136,7 @@ class PersonalDetails extends StatelessWidget {
                     )
                   ],
                 ),
-                  mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: fullName, isPassword: false, initialValue: "Full Name", disabledSymbols: true, showValidationOrNot: isFullNameEmpty, errorText: "Fill this field",) : Container(
+                  mode ?  InputBox(textInputType: TextInputType.text, onChanged: (val) {}, context: context, controller: fullName, isPassword: false, initialValue: "Full Name", disabledSymbols: true, showValidationOrNot: isFullNameEmpty, errorText: "Fill this field", disableNumbers: true,) : Container(
                   margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -437,7 +430,7 @@ class PersonalDetails extends StatelessWidget {
   }
 
   Future<void> _showCalendar(BuildContext context) {
-    DateTime choosenDate = DateTime.now();
+    DateTime choosenDate = DateTime(2008, DateTime.now().month);;
 
     return showDialog(
         context: context,
@@ -460,9 +453,6 @@ class PersonalDetails extends StatelessWidget {
                               state(() {
                                 choosenDate = selectedDay;
                                 agecnt.text = DateFormat("MM/dd/yyyy").format(choosenDate).toString();
-                                // print(widget.age.text);
-                                // updateEvent();
-                                
                               });
 
                               
@@ -553,7 +543,6 @@ class PersonalDetails extends StatelessWidget {
                           margin: const EdgeInsets.fromLTRB(0, 13, 0, 0),
                           child: PopupMenuButton(
                             onSelected: (val) {
-
                               state(() {
                                 month = val;
                                 var value = 0;

@@ -591,22 +591,22 @@ class _CalendarPage extends State<CalendarPage> {
                       children: List<Widget>.from(tasks[i]["SubTasks"]
                           .map((e) => StatefulBuilder(builder: (context, state) {
                         return Container(
-                          margin: const EdgeInsets.fromLTRB(15, 0, 0, 5),
+                          margin: const EdgeInsets.fromLTRB(15, 5, 0, 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(
-                                e["name"].length > 15
-                                    ? e["name"].substring(0, 15)
-                                    : e["name"],
-                                style: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    color: const Color(0xff646464)),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width < 370 ? 120: 200,
+                                child: Text(
+                                  e["name"],
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      color: const Color(0xff646464)),
+                                ),
                               ),
                               Container(
-                                margin:
-                                const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                 child: Row(
                                   children: [
                                     Container(

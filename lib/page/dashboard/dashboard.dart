@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:rive/rive.dart' as rive;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart.dart';
@@ -80,7 +79,8 @@ class _Dashboard extends State<Dashboard> {
               height: 40,
               child: Image.asset(
                 "assets/exellent.gif"
-              ))
+              )
+          )
         ];
       case "Good":
         return [
@@ -106,12 +106,8 @@ class _Dashboard extends State<Dashboard> {
               height: 40,
               child: Image.asset(
                 "assets/good.gif"
-              ))
-          // Image.asset(
-          //   "assets/Good.png",
-          //   height: 30,
-          //   width: 30,
-          // )
+              )
+          )
         ];
       default:
         return [
@@ -123,12 +119,8 @@ class _Dashboard extends State<Dashboard> {
               height: 40,
               child: Image.asset(
                 "assets/bad.gif"
-              ))
-          // Image.asset(
-          //   "assets/Sad.png",
-          //   height: 30,
-          //   width: 30,
-          // )
+              )
+          )
         ];
     }
   }
@@ -161,22 +153,6 @@ class _Dashboard extends State<Dashboard> {
       greeting = value["RandomGreetingMessages"]["text"];
       statusMessage = value["successMesange"]["status"];
       successMessage = value["successMesange"]["textPart1"];
-    });
-  }
-
-  void onTaps(int index) {
-    colors = [
-      const Color(0xffFCD2D1),
-      const Color(0xffFCD2D1),
-      const Color(0xffFCD2D1),
-      const Color(0xffFCD2D1),
-      const Color(0xffFCD2D1),
-      const Color(0xffFCD2D1),
-      const Color(0xffFCD2D1)
-    ];
-
-    setState(() {
-      colors[index] = const Color(0xffFF5C58);
     });
   }
 
@@ -239,7 +215,8 @@ class _Dashboard extends State<Dashboard> {
                               style: GoogleFonts.montserrat(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 20,
-                                  color: getSuccessColor(statusMessage)[1]),
+                                  color: getSuccessColor(statusMessage)[1]
+                              ),
                             ),
                             Container(
                               width: 150,
@@ -306,9 +283,9 @@ class _Dashboard extends State<Dashboard> {
                   ),
                 ], [
                   "Days in\ntraining",
-                  "Completed\nTask",
-                  "Dream\nMilestone",
-                  "Ranking\nPostition"
+                  "Completed\ntask",
+                  "Dream\nmilestone",
+                  "Ranking\nprostition"
                 ], [
                   trainingDays.toInt(),
                   completedTasks.toInt(),
@@ -364,8 +341,7 @@ class _Dashboard extends State<Dashboard> {
                       },
                       calendarBuilders: CalendarBuilders(
                         todayBuilder: ((context, day, focusedDay) {
-                          String monthName =
-                              DateFormat.E().format(day).substring(0, 3);
+                          String monthName = DateFormat.E().format(day).substring(0, 3);
 
                           return Container(
                             height: 63,
@@ -373,7 +349,8 @@ class _Dashboard extends State<Dashboard> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 color: Colors.red,
-                                borderRadius: BorderRadius.circular(12)),
+                                borderRadius: BorderRadius.circular(12)
+                            ),
                             child: Column(
                               children: [
                                 Container(
@@ -564,7 +541,7 @@ class _Dashboard extends State<Dashboard> {
                 PieChart(
                   context: context,
                   title: "Progress Tracker",
-                  halfPerc: "${halfPercentage}pt",
+                  halfPerc: "$halfPercentage PT",
                   redLine:
                       (overallDone / 100) == 0 ? 0.01 : (overallDone / 100),
                   blueLine: (overallProgress / 100) == 0
@@ -590,42 +567,41 @@ Image buildLogoIcon() {
 }
 
 Container buildTitle(List<double> fontSizes, String fullName, String greating) {
-  String value = "Good morning";
+  String value = "Good Evening";
 
-  if (DateTime.now().hour >= 18) {
-    value = "Good evening";
-  } else if (DateTime.now().hour >= 14) {
-    value = "Good afternoon";
+  if (DateTime.now().hour < 12) {
+    value = "Good Morning";
+  } else if (DateTime.now().hour < 18) {
+    value = "Good Afternoon";
   }
 
+
   return Container(
-    height: 120,
-    margin: const EdgeInsets.fromLTRB(15, 0, 0, 2),
-    child: AspectRatio(
-      aspectRatio: 16 / 2.5,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          FittedBox(
-            fit: BoxFit.contain,
-            child: Text(
-              "$value, $fullName !   ",
-              style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.w700,
-                  fontSize: fontSizes[0],
-                  color: Colors.white),
-            ),
-          ),
-          Text(
-            greating,
-            style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w400,
-                fontSize: fontSizes[1],
+    width: double.infinity,
+    margin: const EdgeInsets.fromLTRB(15, 0, 5, 0),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.fromLTRB(0, 0, 10, 2),
+          child: Text(
+            "$value $fullName !  ",
+            style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.w700,
+                fontSize: fontSizes[0],
                 color: Colors.white),
-          )
-        ],
-      ),
+          ),
+        ),
+        Text(
+          greating,
+          style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w400,
+              fontSize: fontSizes[1],
+              color: Colors.white),
+        )
+      ],
     ),
   );
 }
@@ -776,22 +752,22 @@ Future<void> _dialogBuilder(
                     children: List<Widget>.from(tasks[i]["SubTasks"]
                         .map((e) => StatefulBuilder(builder: (context, state) {
                       return Container(
-                        margin: const EdgeInsets.fromLTRB(15, 0, 0, 5),
+                        margin: const EdgeInsets.fromLTRB(15, 5, 0, 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(
-                              e["name"].length > 15
-                                  ? e["name"].substring(0, 15)
-                                  : e["name"],
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: const Color(0xff646464)),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width < 370 ? 120: 200,
+                              child: Text(
+                                e["name"],
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                    color: const Color(0xff646464)),
+                              ),
                             ),
                             Container(
-                              margin:
-                              const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                              margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                               child: Row(
                                 children: [
                                   Container(
@@ -824,7 +800,6 @@ Future<void> _dialogBuilder(
           width: double.infinity,
           child: AlertDialog(
               scrollable: true,
-              // contentPadding: const EdgeInsets.fromLTRB(5, 30, 5, 30),
               backgroundColor: Colors.white,
               title: Text(
                 'Tasks',

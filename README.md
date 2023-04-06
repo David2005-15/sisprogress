@@ -1,4 +1,4 @@
-# sis_progress
+# SIS Progress
 
 A new Flutter project.
 
