@@ -19,6 +19,10 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPassword extends State<ForgotPassword> {
   Client httpClient = Client();
 
+  var text = "Send email";
+
+   var emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,12 +44,15 @@ class _ForgotPassword extends State<ForgotPassword> {
               buildTitle(),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
-                child: InputBox(textInputType: TextInputType.emailAddress, onChanged: (val) => debugPrint(val), context: context, controller: widget.controller, isPassword: false, initialValue: "Your working email",)
+                child: InputBox(disableSpace: true, textInputType: TextInputType.emailAddress, onChanged: (val) => setState((){}), context: context, controller: widget.controller, isPassword: false, initialValue: "Your working email",)
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                child: Button(text: "Send email", onPressed: () async {
+                child: Button(text: text, onPressed: !emailValid.hasMatch(widget.controller.text) ? null :() async {
                   await httpClient.sendPasswordLink(widget.controller.text);
+                  setState(() {
+                    text = "Resend email";
+                  });
                 }, height: 38, width: double.infinity)
               ),
       

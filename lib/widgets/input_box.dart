@@ -15,6 +15,7 @@ class InputBox extends StatefulWidget {
   bool? disabledSymbols;
   bool? inRadioGroup;
   bool? disableNumbers;
+  bool? disableSpace;
 
   InputBox({
     this.initialValue,
@@ -24,6 +25,7 @@ class InputBox extends StatefulWidget {
     this.disabledSymbols,
     this.inRadioGroup,
     this.disableNumbers,
+    this.disableSpace,
     required this.textInputType,
     required this.onChanged,
     required this.context,
@@ -50,6 +52,10 @@ class _InputBox extends State<InputBox> {
     }
     if(widget.disableNumbers == true) {
       formatters.add(FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z]+|\s")));
+    }
+
+    if(widget.disableSpace == true) {
+      formatters.add(FilteringTextInputFormatter.deny(RegExp(r'\s')),);
     }
     super.initState();
     _passwordVisible = false;
@@ -84,7 +90,6 @@ class _InputBox extends State<InputBox> {
         inputFormatters: formatters,
         obscureText: widget.isPassword ? !_passwordVisible: widget.isPassword,
         autocorrect: false,
-        // initialValue: widget.initialValue,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           errorText: widget.showValidationOrNot ?? false ? widget.errorText: null,
@@ -95,7 +100,6 @@ class _InputBox extends State<InputBox> {
             fontSize: 10,
             color: const Color(0xffE31F1F)
           ),
-          // hintText: widget.hintText,
           labelStyle: GoogleFonts.poppins(
             fontWeight: FontWeight.w400,
             fontSize: 15,

@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/notification_data.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
+import 'package:sis_progress/page/home.dart';
+import 'package:sis_progress/widgets/drawers/if_deleted_account.dart';
 import 'dashboard.dart';
 import 'explore_more_goals.dart';
 import 'notification_page.dart';
@@ -95,9 +98,19 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     });
   }
 
+  bool isValid = true;
+
+  void isValidToken() async {
+    var result = await isAccountValid(httpClient);
+
+    setState(() {
+      isValid = result;
+    });
+  }
+
   @override
   void initState() {
-    getNotificationCount();
+
     body = pages[0];
     setImage();
 
@@ -112,6 +125,7 @@ class _ScaffoldHome extends State<ScaffoldHome> {
 
   bool isVisible = false;
 
+
   var format = DateFormat("yyyy-MM-dd");
 
   @override
@@ -119,14 +133,27 @@ class _ScaffoldHome extends State<ScaffoldHome> {
     return Scaffold(
       bottomNavigationBar: NavBar(
           selected: _selected,
-          onChange: (int count) {
-            getNotificationCount();
-            setState(() {
-              _selected = count;
-              body = pages[_selected];
-            });
+          onChange: (int count) async {
 
-            setImage();
+            var result = await isAccountValid(httpClient);
+            if(!result) {
+              getNotificationCount();
+
+              setState(() {
+                _selected = count;
+                body = pages[_selected];
+              });
+            } else {
+              var result = await SharedPreferences.getInstance();
+
+              result.setBool("auth", false);
+              result.remove("token");
+              if(!mounted) return;
+              Navigator.push(context, MaterialPageRoute(builder: (builder) => const HomePage()));
+            }
+
+
+
           }),
       appBar: CustomAppBar(buildLogoIcon(onIcon), <Widget>[
         buildNotification(onTap: onNotification, count: notificationCount),
@@ -216,11 +243,6 @@ InkWell buildNotification({required VoidCallback onTap, required int count}) {
             ): Container()
           ],
         ),
-        // child: const Icon(
-        //   Icons.notifications_outlined,
-        //   size: 17,
-        //   color: Color(0xffD2DAFF),
-        // )
     ),
   );
 }

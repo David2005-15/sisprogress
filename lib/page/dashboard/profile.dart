@@ -7,9 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/universities.dart';
-import 'package:sis_progress/page/change_password.dart';
 import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
 import 'package:sis_progress/widgets/drawers/shimmer_load.dart';
+import 'package:sis_progress/widgets/drawers/upload_image_dialog.dart';
 import 'package:sis_progress/widgets/input_box.dart';
 import '../../http client/http_client.dart';
 import '../../widgets/custom_button.dart';
@@ -158,6 +158,8 @@ class _Profile extends State<Profile> {
     });
   }
 
+  late bool isImageDefault;
+
   void setEmail() async {
     var value = await httpClient.getUserData();
 
@@ -166,6 +168,7 @@ class _Profile extends State<Profile> {
         mail = value["firstEmail"]["email"];
         phone = value["phone"].toString();
         country = value["country"].toString();
+        isImageDefault = value["be"];
         age = value["age"].toString();
         university = value["university"].toString();
         firstAcademic = value["academicProgramFirst"].toString();
@@ -241,7 +244,17 @@ class _Profile extends State<Profile> {
                           Align(
                             alignment: Alignment.bottomRight,
                             child: InkWell(
-                              onTap: updateImage,
+                              onTap: () {
+                                showImageUploadDialog(
+                                    context,
+                                    isImageDefault: isImageDefault,
+                                    uploadImage: updateImage,
+                                    updateStates: () {
+                                      getImage();
+                                      setEmail();
+                                    }
+                                );
+                              },
                               highlightColor: Colors.transparent,
                               splashColor: Colors.transparent,
                               child: Container(
@@ -263,6 +276,8 @@ class _Profile extends State<Profile> {
                                     message: "You can upload an image up to 1 mb",
                                     child: SvgPicture.asset(
                                       "assets/Camera.svg",
+                                      width: 40,
+                                      height: 40,
                                     ),
                                   )),
                             ),
@@ -431,6 +446,7 @@ class _Profile extends State<Profile> {
                     onPressed: () {
                       SharedPreferences.getInstance().then((value) {
                         value.setBool("auth", false);
+                        value.remove("token");
                       });
 
                       Navigator.push(context,
@@ -480,9 +496,9 @@ class _Profile extends State<Profile> {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget> [
-                    InputBox(textInputType: TextInputType.text, onChanged: (val) {state((){});}, context: context, controller: currentPassword, isPassword: true, initialValue: "Current Password",),
-                    InputBox(textInputType: TextInputType.text, onChanged: (val) {state((){});}, context: context, controller: password, isPassword: true, initialValue: "New Password",),
-                    InputBox(textInputType: TextInputType.text, onChanged: (val) {state((){});}, context: context, controller: confirmPassword, isPassword: true, initialValue: "Confirm new password",),
+                    InputBox(disableSpace: true, textInputType: TextInputType.text, onChanged: (val) {state((){});}, context: context, controller: currentPassword, isPassword: true, initialValue: "Current Password",),
+                    InputBox(disableSpace: true, textInputType: TextInputType.text, onChanged: (val) {state((){});}, context: context, controller: password, isPassword: true, initialValue: "New Password",),
+                    InputBox(disableSpace: true, textInputType: TextInputType.text, onChanged: (val) {state((){});}, context: context, controller: confirmPassword, isPassword: true, initialValue: "Confirm new password",),
                   ],
                 ),
                 actionsAlignment: MainAxisAlignment.center,

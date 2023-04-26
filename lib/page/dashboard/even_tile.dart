@@ -72,6 +72,8 @@ class _EventTile extends State<EventTile> {
 
   @override
   Widget build(BuildContext context) {
+    getAllTasks();
+
     return InkWell(
       onTap: () {
         debugPrint(MediaQuery.of(context).size.width.toString());
@@ -148,13 +150,33 @@ class _EventTile extends State<EventTile> {
                               alignment: Alignment.centerLeft,
                               child: Container(
                                 margin: const EdgeInsets.fromLTRB(0, 0, 50, 10),
-                                child: Text(
-                                  widget.substringValue,
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 11,
-                                      color: Colors.black),
+                                child: Row(
+                                  children: [
+                                    Image.asset("assets/taskdone.png", width: 16, height: 16,),
+                                    Container(
+                                      margin: const EdgeInsets.fromLTRB(4, 0, 20, 0),
+                                      child: Text(
+                                        widget.substringValue,
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 11,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                    currentDay >= 0 ? SvgPicture.asset("assets/Group.svg", width: 16, height: 16,): Container(),
+                                    currentDay >= 0 ? Container(
+                                      margin: const EdgeInsets.fromLTRB(4, 0, 0, 0),
+                                      child: Text(
+                                        "${currentDay.toString()} days",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 11,
+                                            color: Colors.black),
+                                      ),
+                                    ): Container(),
+                                  ],
                                 ),
                               ),
                             ),
@@ -574,7 +596,7 @@ class _EventTile extends State<EventTile> {
                                           Align(
                                             alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 0.5),
                                             child: Text(
-                                              "${currentDay.toString()} days",
+                                              "${(currentDay < 0 ? 0: currentDay).toString()} days",
                                               style: GoogleFonts.montserrat(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 12,

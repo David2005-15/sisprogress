@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sis_progress/data%20class/notification_data.dart';
-import 'package:sis_progress/widgets/dashboard/notification_tile.dart';
 import '../../http client/http_client.dart';
 
 class NotificationPage extends StatefulWidget {

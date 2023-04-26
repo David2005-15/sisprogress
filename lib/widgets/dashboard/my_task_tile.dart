@@ -288,460 +288,454 @@ class _MyTaskTile extends State<MyTaskTile> {
                 ),
               ));
             }
-            return GestureDetector(
-              onTap: () {
-                widget.updateState();
-              },
-              child: AlertDialog(
-                scrollable: true,
-                backgroundColor: Colors.white,
-                title: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                                child: SvgPicture.asset(
-                                  "assets/Vector.svg",
-                                  height: 25,
-                                  width: 25,
-                                  // color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 150,
-                                child: Text(
-                                  widget.facultyName,
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: const Color(0xff2E2323)),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                            child: _getUpdateCloseButton(
-                                context, widget.updateState),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: Row(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
-                                alignment: Alignment.center,
-                                child: SvgPicture.asset(
-                                  "assets/Rectangle.svg",
-                                  height: 12,
-                                  width: 12,
-                                  // color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 200,
-                                child: Text(
-                                  widget.companyName,
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: const Color(0xff2E2323)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
-                                child: SvgPicture.asset(
-                                  "assets/Circle.svg",
-                                  height: 12,
-                                  width: 12,
-                                  // color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 200,
-                                child: Text(
-                                  title,
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: const Color(0xff2E2323)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                actions: <Widget>[
-                  SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+            return AlertDialog(
+              scrollable: true,
+              backgroundColor: Colors.white,
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Theme(
-                          data: Theme.of(context)
-                              .copyWith(dividerColor: Colors.transparent),
-                          child: ExpansionTile(
-                            title: SizedBox(
-                              width: MediaQuery.of(context).size.width - 40,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    margin:
-                                    const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                    child: const ImageIcon(
-                                      AssetImage("assets/MyPoints.png"),
-                                      color: Color(0xff3A3D4C),
-                                      size: 15,
-                                    ),
-                                  ),
-                                  Text(
-                                    'My Points',
-                                    style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18,
-                                        color: const Color(0xff3A3D4C)),
-                                  ),
-                                  Text(
-                                    "     ${currentPoint.toString()} ${MediaQuery.of(context).size.width < 370 ? "":"points"}",
-                                    style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 15,
-                                        color: const Color(0xff3a3d4c)),
-                                  )
-                                ],
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                              child: SvgPicture.asset(
+                                "assets/Vector.svg",
+                                height: 25,
+                                width: 25,
+                                // color: Colors.black,
                               ),
                             ),
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        margin: const EdgeInsets.fromLTRB(
-                                            16, 0, 5, 0),
-                                        child: const Icon(
-                                          Icons.rocket_outlined,
-                                          color: Color(0xff3A3D4C),
-                                          size: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Time Points",
-                                        style: GoogleFonts.montserrat(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18,
-                                            color: const Color(0xff3A3D4C)),
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Container(
-                                        margin: const EdgeInsets.fromLTRB(
-                                            30, 10, 30, 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Duration",
-                                              style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15,
-                                                  color:
-                                                  const Color(0xff3A3D4C)),
-                                            ),
-                                            Text(
-                                              "Points",
-                                              style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15,
-                                                  color:
-                                                  const Color(0xff3A3D4C)),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Column(
-                                        children: points.map<Widget>((e) {
-                                          return Container(
-                                            margin: const EdgeInsets.fromLTRB(
-                                                20, 10, 20, 0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  e["taskSpentWeek"] ?? "Hello",
-                                                  style: GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                      FontWeight.w400,
-                                                      fontSize: 14,
-                                                      color: const Color(
-                                                          0xff3A3D4C)),
-                                                ),
-                                                Text(
-                                                  "${e["point"]} point",
-                                                  style: GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                      FontWeight.w400,
-                                                      fontSize: 14,
-                                                      color: const Color(
-                                                          0xff3A3D4C)),
-                                                )
-                                              ],
-                                            ),
-                                          );
-                                        }).toList(),
-                                      )
-                                    ],
-                                  ),
-                                  Container(
-                                      margin: const EdgeInsets.fromLTRB(15, 15, 15, 5),
-                                      width: double.infinity,
-                                      height: 70,
-                                      child: Stack(
-                                        children: <Widget> [
-                                          Align(
-                                            alignment: const AlignmentDirectional(0, 0),
-                                            child: Container(
-                                              height: 10,
-                                              width: double.infinity,
-                                              margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(5),
-                                                  gradient: const LinearGradient(
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                    stops: [
-                                                      0,
-                                                      0.25,
-                                                      0.25,
-                                                      0.5,
-                                                      0.5,
-                                                      0.75,
-                                                      0.75,
-                                                      1
-                                                    ],
-                                                    colors: [
-                                                      Color(0xFFCEE5D0),
-                                                      Color(0xFFCEE5D0),
-                                                      Color(0xFFFFF89A),
-                                                      Color(0xFFFFF89A),
-                                                      Color(0xFFFEBE8F),
-                                                      Color(0xFFFEBE8F),
-                                                      Color(0xFFFE8F8F),
-                                                      Color(0xFFFE8F8F),
-                                                    ],
-                                                  )),
-                                            ),
-                                          ),
-
-                                          Align(
-                                            alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 0),
-                                            child: Container(
-                                              width: 16,
-                                              height: 16,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.purple.shade200,
-                                                  shape: BoxShape.circle),
-                                            ),
-                                          ),
-
-                                          Align(
-                                            alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 1),
-                                            child: Text(
-                                              "${currentPoint.toString()} point",
-                                              style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 12,
-                                                  color: const Color(0xff3A3D4C)),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 0.5),
-                                            child: Text(
-                                              "${currentDay.toString()} days",
-                                              style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 12,
-                                                  color:
-                                                  const Color(0xff3A3D4C)),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
+                            SizedBox(
+                              width: 150,
+                              child: Text(
+                                widget.facultyName,
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: const Color(0xff2E2323)),
+                              ),
+                            ),
+                          ],
                         ),
-                        Theme(
-                          data: Theme.of(context)
-                              .copyWith(dividerColor: Colors.transparent),
-                          child: ExpansionTile(
-                            title: Row(
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                          child: _getUpdateCloseButton(
+                              context, () {}),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: Row(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
+                              alignment: Alignment.center,
+                              child: SvgPicture.asset(
+                                "assets/Rectangle.svg",
+                                height: 12,
+                                width: 12,
+                                // color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                widget.companyName,
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: const Color(0xff2E2323)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
+                              child: SvgPicture.asset(
+                                "assets/Circle.svg",
+                                height: 12,
+                                width: 12,
+                                // color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                title,
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: const Color(0xff2E2323)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Theme(
+                        data: Theme.of(context)
+                            .copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          title: SizedBox(
+                            width: MediaQuery.of(context).size.width - 40,
+                            child: Row(
                               children: [
                                 Container(
                                   margin:
                                   const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                   child: const ImageIcon(
-                                    AssetImage("assets/Subtask.png"),
+                                    AssetImage("assets/MyPoints.png"),
                                     color: Color(0xff3A3D4C),
-                                    size: 20,
+                                    size: 15,
                                   ),
                                 ),
                                 Text(
-                                  'Subtasks',
+                                  'My Points',
                                   style: GoogleFonts.montserrat(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 18,
                                       color: const Color(0xff3A3D4C)),
                                 ),
+                                Text(
+                                  "     ${(currentPoint.toString().split(".")[1] == "0" ? currentPoint.toInt() : currentPoint).toString()} ${MediaQuery.of(context).size.width < 370 ? "":"points"}",
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15,
+                                      color: const Color(0xff3a3d4c)),
+                                )
                               ],
                             ),
-                            children: <Widget>[
-                              Container(
-                                  height: 150,
-                                  alignment: Alignment.centerLeft,
-                                  margin:
-                                  const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: taskContent,
-                                    ),
-                                  )),
-                            ],
                           ),
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _putFeedback(context, widget.taskId,
-                                  widget.description, feedback);
-                            },
-                            child: Text(
-                              "Leave your feedback",
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20,
-                                  color: const Color(0xff355CCA),
-                                  decoration: TextDecoration.underline),
-                            )),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
-                          alignment: Alignment.center,
-                          child: Text(
-                            "You can start this task from ${DateFormat.MMMM().format(DateTime.parse(widget.chosenDate.toIso8601String()))} ${widget.chosenDate.day}th",
-                            style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                color: Colors.black),
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(10, 8, 10, 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 102,
-                                height: 36,
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    await httpClient.removeTask(widget.taskId);
-                                    if (!mounted) return;
-                                    Navigator.pop(context);
-                                    widget.updateState();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      side: const BorderSide(width: 1.5, color: Color(0xffE31F1F))
-                                  ),
-                                  child: Text(
-                                    "Cancel",
-                                    style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                        color: const Color(0xffE31F1F)
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.fromLTRB(
+                                          16, 0, 5, 0),
+                                      child: const Icon(
+                                        Icons.rocket_outlined,
+                                        color: Color(0xff3A3D4C),
+                                        size: 20,
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      "Time Points",
+                                      style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                          color: const Color(0xff3A3D4C)),
+                                    )
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  // crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.fromLTRB(
+                                          30, 10, 30, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Duration",
+                                            style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15,
+                                                color:
+                                                const Color(0xff3A3D4C)),
+                                          ),
+                                          Text(
+                                            "Points",
+                                            style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15,
+                                                color:
+                                                const Color(0xff3A3D4C)),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Column(
+                                      children: points.map<Widget>((e) {
+                                        return Container(
+                                          margin: const EdgeInsets.fromLTRB(
+                                              20, 10, 20, 0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              Text(
+                                                e["taskSpentWeek"] ?? "Hello",
+                                                style: GoogleFonts.montserrat(
+                                                    fontWeight:
+                                                    FontWeight.w400,
+                                                    fontSize: 14,
+                                                    color: const Color(
+                                                        0xff3A3D4C)),
+                                              ),
+                                              Text(
+                                                "${e["point"]} point",
+                                                style: GoogleFonts.montserrat(
+                                                    fontWeight:
+                                                    FontWeight.w400,
+                                                    fontSize: 14,
+                                                    color: const Color(
+                                                        0xff3A3D4C)),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    )
+                                  ],
+                                ),
+                                Container(
+                                    margin: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+                                    width: double.infinity,
+                                    height: 70,
+                                    child: Stack(
+                                      children: <Widget> [
+                                        Align(
+                                          alignment: const AlignmentDirectional(0, 0),
+                                          child: Container(
+                                            height: 10,
+                                            width: double.infinity,
+                                            margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(5),
+                                                gradient: const LinearGradient(
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                  stops: [
+                                                    0,
+                                                    0.25,
+                                                    0.25,
+                                                    0.5,
+                                                    0.5,
+                                                    0.75,
+                                                    0.75,
+                                                    1
+                                                  ],
+                                                  colors: [
+                                                    Color(0xFFCEE5D0),
+                                                    Color(0xFFCEE5D0),
+                                                    Color(0xFFFFF89A),
+                                                    Color(0xFFFFF89A),
+                                                    Color(0xFFFEBE8F),
+                                                    Color(0xFFFEBE8F),
+                                                    Color(0xFFFE8F8F),
+                                                    Color(0xFFFE8F8F),
+                                                  ],
+                                                )),
+                                          ),
+                                        ),
 
+                                        Align(
+                                          alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 0),
+                                          child: Container(
+                                            width: 16,
+                                            height: 16,
+                                            decoration: BoxDecoration(
+                                                color: Colors.purple.shade200,
+                                                shape: BoxShape.circle),
+                                          ),
+                                        ),
+
+                                        Align(
+                                          alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 1),
+                                          child: Text(
+                                            "${currentPoint.toString()} point",
+                                            style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12,
+                                                color: const Color(0xff3A3D4C)),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 0.5),
+                                          child: Text(
+                                            "${(currentDay < 0 ? 0: currentDay).toString()} days",
+                                            style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12,
+                                                color:
+                                                const Color(0xff3A3D4C)),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      Theme(
+                        data: Theme.of(context)
+                            .copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          title: Row(
+                            children: [
+                              Container(
+                                margin:
+                                const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: const ImageIcon(
+                                  AssetImage("assets/Subtask.png"),
+                                  color: Color(0xff3A3D4C),
+                                  size: 20,
                                 ),
                               ),
-                              SizedBox(
-                                width: 102,
-                                height: 36,
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    await httpClient.removeTask(widget.taskId);
-                                    if (!mounted) return;
-                                    Navigator.pop(context);
-                                    widget.updateState();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xffE31F1F)
-                                  ),
-                                  child: Text(
-                                    "Delete",
-                                    style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                        color: Colors.white
-                                    ),
-                                  ),
-                                ),
-                              )
+                              Text(
+                                'Subtasks',
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                    color: const Color(0xff3A3D4C)),
+                              ),
                             ],
                           ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                          children: <Widget>[
+                            Container(
+                                height: 150,
+                                alignment: Alignment.centerLeft,
+                                margin:
+                                const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                    children: taskContent,
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _putFeedback(context, widget.taskId,
+                                widget.description, feedback);
+                          },
+                          child: Text(
+                            "Leave your feedback",
+                            style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 20,
+                                color: const Color(0xff355CCA),
+                                decoration: TextDecoration.underline),
+                          )),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
+                        alignment: Alignment.center,
+                        child: Text(
+                          "You can start this task from ${DateFormat.MMMM().format(DateTime.parse(widget.chosenDate.toIso8601String()))} ${widget.chosenDate.day}th",
+                          style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Colors.black),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(10, 8, 10, 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 102,
+                              height: 36,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  await httpClient.removeTask(widget.taskId);
+                                  if (!mounted) return;
+                                  Navigator.pop(context);
+                                  widget.updateState();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    side: const BorderSide(width: 1.5, color: Color(0xffE31F1F))
+                                ),
+                                child: Text(
+                                  "Cancel",
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                      color: const Color(0xffE31F1F)
+                                  ),
+                                ),
+
+                              ),
+                            ),
+                            SizedBox(
+                              width: 102,
+                              height: 36,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  await httpClient.removeTask(widget.taskId);
+                                  if (!mounted) return;
+                                  Navigator.pop(context);
+                                  widget.updateState();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xffE31F1F)
+                                ),
+                                child: Text(
+                                  "Delete",
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                      color: Colors.white
+                                  ),
+                                ),
+
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
             );
           });
-        }).then((value) {
-      widget.updateState();
-    });
+        });
   }
 
   Future<void> _dialogBuilder(
@@ -826,10 +820,8 @@ class _MyTaskTile extends State<MyTaskTile> {
                                         subtaskId.remove(widget.subtasks[i][1]);
                                       });
                                     }
-                                    debugPrint(subtaskId.toString());
                                   },
                                 );
-                                widget.updateState();
                               },
                               child: Container(
                                   width: 18,
@@ -860,509 +852,500 @@ class _MyTaskTile extends State<MyTaskTile> {
                         ),
                       ],
                     )
-                    // buildCheckbox(iconColor: Colors.blue, onChange: onChange, borderColor: borderColor, backgroundColor: backgroundColor)
                   ],
                 ),
               ));
             }
-            return GestureDetector(
-              onTap: () {
-                widget.updateState();
-              },
-              child: AlertDialog(
-                scrollable: true,
-                backgroundColor: Colors.white,
-                title: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                                child: SvgPicture.asset(
-                                  "assets/Vector.svg",
-                                  height: 25,
-                                  width: 25,
-                                  // color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 150,
-                                child: Text(
-                                  widget.facultyName,
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: const Color(0xff2E2323)),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                            child: _getUpdateCloseButton(
-                                context, widget.updateState),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: Row(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
-                                alignment: Alignment.center,
-                                child: SvgPicture.asset(
-                                  "assets/Rectangle.svg",
-                                  height: 12,
-                                  width: 12,
-                                  // color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 200,
-                                child: Text(
-                                  widget.companyName,
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: const Color(0xff2E2323)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
-                                child: SvgPicture.asset(
-                                  "assets/Circle.svg",
-                                  height: 12,
-                                  width: 12,
-                                  // color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 200,
-                                child: Text(
-                                  title,
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: const Color(0xff2E2323)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                actions: <Widget>[
-                  SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+            return AlertDialog(
+              scrollable: true,
+              backgroundColor: Colors.white,
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Theme(
-                          data: Theme.of(context)
-                              .copyWith(dividerColor: Colors.transparent),
-                          child: ExpansionTile(
-                            title: SizedBox(
-                              width: MediaQuery.of(context).size.width - 40,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    margin:
-                                    const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                    child: const ImageIcon(
-                                      AssetImage("assets/MyPoints.png"),
-                                      color: Color(0xff3A3D4C),
-                                      size: 15,
-                                    ),
-                                  ),
-                                  Text(
-                                    'My Points',
-                                    style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18,
-                                        color: const Color(0xff3A3D4C)),
-                                  ),
-                                  Text(
-                                    "     ${currentPoint.toString()} ${MediaQuery.of(context).size.width < 370 ? "": "points"}",
-                                    style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 15,
-                                        color: const Color(0xff3a3d4c)),
-                                  )
-                                ],
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                              child: SvgPicture.asset(
+                                "assets/Vector.svg",
+                                height: 25,
+                                width: 25,
+                                // color: Colors.black,
                               ),
                             ),
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        margin: const EdgeInsets.fromLTRB(
-                                            16, 0, 5, 0),
-                                        child: const Icon(
-                                          Icons.rocket_outlined,
-                                          color: Color(0xff3A3D4C),
-                                          size: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Time Points",
-                                        style: GoogleFonts.montserrat(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18,
-                                            color: const Color(0xff3A3D4C)),
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Container(
-                                        margin: const EdgeInsets.fromLTRB(
-                                            30, 10, 30, 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Duration",
-                                              style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15,
-                                                  color:
-                                                  const Color(0xff3A3D4C)),
-                                            ),
-                                            Text(
-                                              "Points",
-                                              style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15,
-                                                  color:
-                                                  const Color(0xff3A3D4C)),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Column(
-                                        children: points.map<Widget>((e) {
-                                          return Container(
-                                            margin: const EdgeInsets.fromLTRB(
-                                                20, 10, 20, 0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  e["taskSpentWeek"] ?? "Hello",
-                                                  style: GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                      FontWeight.w400,
-                                                      fontSize: 14,
-                                                      color: const Color(
-                                                          0xff3A3D4C)),
-                                                ),
-                                                Text(
-                                                  "${e["point"]} point",
-                                                  style: GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                      FontWeight.w400,
-                                                      fontSize: 14,
-                                                      color: const Color(
-                                                          0xff3A3D4C)),
-                                                )
-                                              ],
-                                            ),
-                                          );
-                                        }).toList(),
-                                      )
-                                    ],
-                                  ),
-                                  Container(
-                                      margin: const EdgeInsets.fromLTRB(15, 15, 15, 5),
-                                      width: double.infinity,
-                                      height: 70,
-                                      child: Stack(
-                                        children: <Widget> [
-                                          Align(
-                                            alignment: const AlignmentDirectional(0, 0),
-                                            child: Container(
-                                              height: 10,
-                                              width: double.infinity,
-                                              margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(5),
-                                                  gradient: const LinearGradient(
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                    stops: [
-                                                      0,
-                                                      0.25,
-                                                      0.25,
-                                                      0.5,
-                                                      0.5,
-                                                      0.75,
-                                                      0.75,
-                                                      1
-                                                    ],
-                                                    colors: [
-                                                      Color(0xFFCEE5D0),
-                                                      Color(0xFFCEE5D0),
-                                                      Color(0xFFFFF89A),
-                                                      Color(0xFFFFF89A),
-                                                      Color(0xFFFEBE8F),
-                                                      Color(0xFFFEBE8F),
-                                                      Color(0xFFFE8F8F),
-                                                      Color(0xFFFE8F8F),
-                                                    ],
-                                                  )),
-                                            ),
-                                          ),
-
-                                          Align(
-                                            alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 0),
-                                            child: Container(
-                                              width: 16,
-                                              height: 16,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.purple.shade200,
-                                                  shape: BoxShape.circle),
-                                            ),
-                                          ),
-
-                                          Align(
-                                            alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 1),
-                                            child: Text(
-                                              "${currentPoint.toString()} point",
-                                              style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 12,
-                                                  color: const Color(0xff3A3D4C)),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 0.5),
-                                            child: Text(
-                                              "${currentDay.toString()} days",
-                                              style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 12,
-                                                  color:
-                                                  const Color(0xff3A3D4C)),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                  ),
-
-                                  // Align(
-                                  //   alg
-                                  //   child: Container(
-                                  //     width: double.infinity,
-                                  //     margin:
-                                  //         const EdgeInsets.fromLTRB(15, 0, 15, 5),
-                                  //     child: Transform(
-                                  //       transform: Matrix4.translationValues(
-                                  //           currentDay.toDouble(), 0, 0.0),
-                                  //       child: Column(
-                                  //         children: [
-                                  //           Text(
-                                  //             "${currentPoint.toString()} point",
-                                  //             style: GoogleFonts.montserrat(
-                                  //                 fontWeight: FontWeight.w500,
-                                  //                 fontSize: 12,
-                                  //                 color:
-                                  //                     const Color(0xff3A3D4C)),
-                                  //           ),
-                                  //           Text(
-                                  //             "${currentDay.toString()} days",
-                                  //             style: GoogleFonts.montserrat(
-                                  //                 fontWeight: FontWeight.w500,
-                                  //                 fontSize: 12,
-                                  //                 color:
-                                  //                     const Color(0xff3A3D4C)),
-                                  //           )
-                                  //         ],
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // )
-                                ],
-                              )
-                            ],
-                          ),
+                            SizedBox(
+                              width: 150,
+                              child: Text(
+                                widget.facultyName,
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: const Color(0xff2E2323)),
+                              ),
+                            ),
+                          ],
                         ),
-                        Theme(
-                          data: Theme.of(context)
-                              .copyWith(dividerColor: Colors.transparent),
-                          child: ExpansionTile(
-                            title: Row(
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                          child: _getUpdateCloseButton(
+                              context, () {}),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: Row(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
+                              alignment: Alignment.center,
+                              child: SvgPicture.asset(
+                                "assets/Rectangle.svg",
+                                height: 12,
+                                width: 12,
+                                // color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                widget.companyName,
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: const Color(0xff2E2323)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
+                              child: SvgPicture.asset(
+                                "assets/Circle.svg",
+                                height: 12,
+                                width: 12,
+                                // color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                title,
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: const Color(0xff2E2323)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Theme(
+                        data: Theme.of(context)
+                            .copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          title: SizedBox(
+                            width: MediaQuery.of(context).size.width - 40,
+                            child: Row(
                               children: [
                                 Container(
                                   margin:
                                   const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                   child: const ImageIcon(
-                                    AssetImage("assets/Subtask.png"),
+                                    AssetImage("assets/MyPoints.png"),
                                     color: Color(0xff3A3D4C),
-                                    size: 20,
+                                    size: 15,
                                   ),
                                 ),
                                 Text(
-                                  'Subtasks',
+                                  'My Points',
                                   style: GoogleFonts.montserrat(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 18,
                                       color: const Color(0xff3A3D4C)),
                                 ),
+                                Text(
+                                  "     ${(currentPoint.toString().split(".")[1] == "0" ? currentPoint.toInt() : currentPoint).toString()} ${MediaQuery.of(context).size.width < 370 ? "": "points"}",
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15,
+                                      color: const Color(0xff3a3d4c)),
+                                )
                               ],
                             ),
-                            children: <Widget>[
-                              Container(
-                                  height: 150,
-                                  alignment: Alignment.centerLeft,
-                                  margin:
-                                  const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: taskContent,
-                                    ),
-                                  )),
-                              Container(
-                                margin:
-                                const EdgeInsets.fromLTRB(16, 10, 16, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      width: 104,
-                                      height: 36,
-                                      child: OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          backgroundColor: Colors.transparent,
-                                          shadowColor: Colors.transparent,
-                                          foregroundColor:
-                                          const Color(0xff355CCA),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(5.0),
-                                          ),
-                                          side: const BorderSide(
-                                              color: Color(0xff355CCA),
-                                              width: 1),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                          "Cancel",
-                                          style: GoogleFonts.montserrat(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 15,
-                                              color: const Color(0xff355CCA)),
-                                        ),
-                                      ),
-                                    ),
+                          ),
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: <Widget>[
                                     Container(
-                                      width: 104,
-                                      height: 36,
-                                      margin:
-                                      const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                          const Color(0xff355CCA),
-                                          shadowColor: Colors.transparent,
-                                          foregroundColor: Colors.white,
-                                        ),
-                                        onPressed: !(cantYouSee.every(
-                                                (element) => element == true))
-                                            ? subtaskId.isNotEmpty
-                                            ? () async {
-                                          for (var id in subtaskId) {
-                                            await httpClient
-                                                .doneSubtask(
-                                                id, true);
-                                            widget.updateState();
-                                          }
-                                          getAllTasks();
-                                          widget.updateState();
-
-                                          if (!mounted) return;
-                                          Navigator.pop(context);
-                                        }
-                                            : null
-                                            : null,
-                                        child: Text(
-                                          "Submit",
-                                          style: GoogleFonts.montserrat(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 15,
-                                              color: Colors.white),
-                                        ),
+                                      margin: const EdgeInsets.fromLTRB(
+                                          16, 0, 5, 0),
+                                      child: const Icon(
+                                        Icons.rocket_outlined,
+                                        color: Color(0xff3A3D4C),
+                                        size: 20,
                                       ),
+                                    ),
+                                    Text(
+                                      "Time Points",
+                                      style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                          color: const Color(0xff3A3D4C)),
                                     )
                                   ],
                                 ),
-                              )
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  // crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: const EdgeInsets.fromLTRB(
+                                          30, 10, 30, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Duration",
+                                            style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15,
+                                                color:
+                                                const Color(0xff3A3D4C)),
+                                          ),
+                                          Text(
+                                            "Points",
+                                            style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15,
+                                                color:
+                                                const Color(0xff3A3D4C)),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Column(
+                                      children: points.map<Widget>((e) {
+                                        return Container(
+                                          margin: const EdgeInsets.fromLTRB(
+                                              20, 10, 20, 0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              Text(
+                                                e["taskSpentWeek"] ?? "Hello",
+                                                style: GoogleFonts.montserrat(
+                                                    fontWeight:
+                                                    FontWeight.w400,
+                                                    fontSize: 14,
+                                                    color: const Color(
+                                                        0xff3A3D4C)),
+                                              ),
+                                              Text(
+                                                "${e["point"]} point",
+                                                style: GoogleFonts.montserrat(
+                                                    fontWeight:
+                                                    FontWeight.w400,
+                                                    fontSize: 14,
+                                                    color: const Color(
+                                                        0xff3A3D4C)),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    )
+                                  ],
+                                ),
+                                Container(
+                                    margin: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+                                    width: double.infinity,
+                                    height: 70,
+                                    child: Stack(
+                                      children: <Widget> [
+                                        Align(
+                                          alignment: const AlignmentDirectional(0, 0),
+                                          child: Container(
+                                            height: 10,
+                                            width: double.infinity,
+                                            margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(5),
+                                                gradient: const LinearGradient(
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                  stops: [
+                                                    0,
+                                                    0.25,
+                                                    0.25,
+                                                    0.5,
+                                                    0.5,
+                                                    0.75,
+                                                    0.75,
+                                                    1
+                                                  ],
+                                                  colors: [
+                                                    Color(0xFFCEE5D0),
+                                                    Color(0xFFCEE5D0),
+                                                    Color(0xFFFFF89A),
+                                                    Color(0xFFFFF89A),
+                                                    Color(0xFFFEBE8F),
+                                                    Color(0xFFFEBE8F),
+                                                    Color(0xFFFE8F8F),
+                                                    Color(0xFFFE8F8F),
+                                                  ],
+                                                )),
+                                          ),
+                                        ),
+
+                                        Align(
+                                          alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 0),
+                                          child: Container(
+                                            width: 16,
+                                            height: 16,
+                                            decoration: BoxDecoration(
+                                                color: Colors.purple.shade200,
+                                                shape: BoxShape.circle),
+                                          ),
+                                        ),
+
+                                        Align(
+                                          alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 1),
+                                          child: Text(
+                                            "${currentPoint.toString()} point",
+                                            style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12,
+                                                color: const Color(0xff3A3D4C)),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: AlignmentDirectional((currentDay * 2 - 60) / 60, 0.5),
+                                          child: Text(
+                                            "${currentDay.toString()} days",
+                                            style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12,
+                                                color:
+                                                const Color(0xff3A3D4C)),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                ),
+
+                                // Align(
+                                //   alg
+                                //   child: Container(
+                                //     width: double.infinity,
+                                //     margin:
+                                //         const EdgeInsets.fromLTRB(15, 0, 15, 5),
+                                //     child: Transform(
+                                //       transform: Matrix4.translationValues(
+                                //           currentDay.toDouble(), 0, 0.0),
+                                //       child: Column(
+                                //         children: [
+                                //           Text(
+                                //             "${currentPoint.toString()} point",
+                                //             style: GoogleFonts.montserrat(
+                                //                 fontWeight: FontWeight.w500,
+                                //                 fontSize: 12,
+                                //                 color:
+                                //                     const Color(0xff3A3D4C)),
+                                //           ),
+                                //           Text(
+                                //             "${currentDay.toString()} days",
+                                //             style: GoogleFonts.montserrat(
+                                //                 fontWeight: FontWeight.w500,
+                                //                 fontSize: 12,
+                                //                 color:
+                                //                     const Color(0xff3A3D4C)),
+                                //           )
+                                //         ],
+                                //       ),
+                                //     ),
+                                //   ),
+                                // )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      Theme(
+                        data: Theme.of(context)
+                            .copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          title: Row(
+                            children: [
+                              Container(
+                                margin:
+                                const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: const ImageIcon(
+                                  AssetImage("assets/Subtask.png"),
+                                  color: Color(0xff3A3D4C),
+                                  size: 20,
+                                ),
+                              ),
+                              Text(
+                                'Subtasks',
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                    color: const Color(0xff3A3D4C)),
+                              ),
                             ],
                           ),
+                          children: <Widget>[
+                            Container(
+                                height: 150,
+                                alignment: Alignment.centerLeft,
+                                margin:
+                                const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                    children: taskContent,
+                                  ),
+                                )),
+                            Container(
+                              margin:
+                              const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: 104,
+                                    height: 36,
+                                    child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                        foregroundColor:
+                                        const Color(0xff355CCA),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(5.0),
+                                        ),
+                                        side: const BorderSide(
+                                            color: Color(0xff355CCA),
+                                            width: 1),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        "Cancel",
+                                        style: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            color: const Color(0xff355CCA)),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 104,
+                                    height: 36,
+                                    margin:
+                                    const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                        const Color(0xff355CCA),
+                                        shadowColor: Colors.transparent,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      onPressed: !(cantYouSee.every(
+                                              (element) => element == true))
+                                          ? subtaskId.isNotEmpty
+                                          ? () async {
+                                        for (var id in subtaskId) {
+                                          await httpClient
+                                              .doneSubtask(
+                                              id, true);
+                                        }
+                                        getAllTasks();
+                                        widget.updateState();
+
+                                        if (!mounted) return;
+                                        Navigator.pop(context);
+                                      }
+                                          : null
+                                          : null,
+                                      child: Text(
+                                        "Submit",
+                                        style: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
                         ),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _putFeedback(context, widget.taskId,
-                                  widget.description, feedback);
-                            },
-                            child: Text(
-                              "Leave your feedback",
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20,
-                                  color: const Color(0xff355CCA),
-                                  decoration: TextDecoration.underline),
-                            ))
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _putFeedback(context, widget.taskId,
+                                widget.description, feedback);
+                          },
+                          child: Text(
+                            "Leave your feedback",
+                            style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 20,
+                                color: const Color(0xff355CCA),
+                                decoration: TextDecoration.underline),
+                          ))
+                    ],
+                  ),
+                )
+              ],
             );
           });
-        }).then((value) {
-      widget.updateState();
-    });
+        });
   }
 
   Future<void> _putFeedback(BuildContext context, int taskId,

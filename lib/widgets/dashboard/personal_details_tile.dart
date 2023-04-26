@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/dropdown.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
+import 'package:sis_progress/page/dashboard/account_deletion.dart';
+import 'package:sis_progress/page/home.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/drop_down.dart';
 import 'package:sis_progress/widgets/input_box.dart';
@@ -377,17 +380,379 @@ class PersonalDetails extends StatelessWidget {
                           }
                         });
                       }
-
                     }, height: 38, width: 128),
                   ],
                 ): Container()
                   ],
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.fromLTRB(25, 25, 15, 0),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(width: 1.5, color: Color(0xffBFBFBF))
+                    )
+                  ),
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () {
+                      deleteAccount(context, true);
+                    },
+                    child: Text(
+                      "Delete My account",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
+                        decoration: TextDecoration.underline,
+                        color: Colors.red
+                      ),
+                    ),
+                  ),
+                ),
+
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.fromLTRB(25, 0, 15, 0),
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () {
+                      deleteAccount(context, false);
+                    },
+                    child: Text(
+                      "Deactivate My account",
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                          decoration: TextDecoration.underline,
+                          color: Colors.red
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),
           ),
         );
       }
+    );
+  }
+
+  void deleteAccount(BuildContext context, bool isDelete) {
+    var reason = TextEditingController();
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: const Color(0xff121623),
+            title: Stack(
+              children: [
+                Align(
+                  alignment: const AlignmentDirectional(0, 0),
+                  child: Container(
+                    width: double.infinity,
+                    child: Text(
+                      isDelete ? "Account deletion" : "Account deactivation",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                        color: Colors.white
+                      ),
+                    ),
+                  ),
+                ),
+
+                Align(
+                  alignment: const AlignmentDirectional(1, 1),
+                  child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                        deleteAccountInput(context, isDelete);
+                      },
+                      child: Text(
+                        "Skip",
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: const Color(0xffBFBFBF)
+                        )
+                      )
+                  ),
+                )
+              ],
+            ),
+            contentPadding: const EdgeInsets.fromLTRB(25, 5, 25, 0),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Please type the reason why do you want to ${isDelete ? "delete": "deactivate"} your account.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    color: Colors.white
+                  ),
+                ),
+
+                Container(
+                  height: 140,
+                  margin: const EdgeInsets.only(top: 20),
+                  child: TextFormField(
+                    controller: reason,
+                    expands: false,
+                    maxLines: 8,
+                    maxLength: 100,
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 12,
+                        color: const Color(0xffD2DAFF)
+                    ),
+
+                    decoration: InputDecoration(
+                      hintText: "Enter the reason",
+                      hintStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          fontStyle: FontStyle.normal,
+                          color: const Color(0xffD2DAFF)
+                      ),
+                      counterStyle: GoogleFonts.poppins(color: Colors.transparent),
+                      errorStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 10,
+                          color: const Color(0xffE31F1F)
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
+                      ),
+                      border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xffD2DAFF), width: 1)
+                      ),
+                      focusColor: const Color(0xffD2DAFF),
+                      focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xffD2DAFF))
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            actions: <Widget> [
+              FittedBox(
+                fit: BoxFit.contain,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 38,
+                      width: 110,
+                      margin: const EdgeInsets.fromLTRB(22, 20, 22, 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            side: const BorderSide(width: 1.5, color: Color(0xffD2DAFF))
+                        ),
+                        child: Text(
+                            "Cancel",
+                            style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                                color: const Color(0xffD2DAFF)
+                            )
+                        ),
+                      ),
+                    ),
+                    Button(text: "Next", onPressed: () {
+                      Navigator.pop(context);
+                      httpClient.addReason(reason.text, isDelete);
+                      deleteAccountInput(context, isDelete);
+                    }, height: 38, width: 110),
+                  ],
+                ),
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  void deleteAccountInput(BuildContext context, bool isDelete) {
+    var password = TextEditingController();
+
+    bool showPasswordErrorMessage = false;
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, state) {
+              return AlertDialog(
+                backgroundColor: const Color(0xff121623),
+                title: Text(
+                  isDelete ? "Account deletion": "Account deactivation",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.white
+                  ),
+                ),
+                contentPadding: const EdgeInsets.fromLTRB(25, 5, 25, 0),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      "${isDelete ? "Deleting": "Deactivating"} your account will result in the immediate removal of all your data, with no option for recovery. Please enter your password to initiate the ${isDelete ? "deletion": "deactivation"} process.",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Colors.white
+                      ),
+                    ),
+
+                    InputBox(textInputType: TextInputType.text, onChanged: (val) {state((){});}, context: context, controller: password, isPassword: true, disableSpace: true, initialValue: "Password", showValidationOrNot: showPasswordErrorMessage, errorText: "Invalid password",)
+                  ]
+                ),
+                actions: <Widget> [
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 38,
+                          width: 110,
+                          margin: const EdgeInsets.fromLTRB(22, 20, 22, 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                side: const BorderSide(width: 1.5, color: Color(0xffD2DAFF))
+                            ),
+                            child: Text(
+                                "Cancel",
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                    color: const Color(0xffD2DAFF)
+                                )
+                            ),
+                          ),
+                        ),
+                        Button(text: "Next", onPressed: password.text.isEmpty ? null: ()  async {
+                          var result = null;
+
+                          if(isDelete) {
+                            result = await httpClient.removeAccount(password.text);
+                          } else {
+                            result = await httpClient.deactivateAccount(password.text);
+                          }
+
+                          state(() {
+                            showPasswordErrorMessage = false;
+                          });
+
+                          if(result == "invalid password") {
+                            state(() {
+                              showPasswordErrorMessage = true;
+                            });
+                          } else {
+                            if(isDelete) {
+                              Navigator.pop(context);
+                              submitAccountDeletionRequest(context);
+                            } else {
+                              SharedPreferences.getInstance().then((value) {
+                                value.setBool("auth", false);
+                                value.remove("token");
+                              });
+
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                            }
+
+                          }
+
+                        }, height: 38, width: 110),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            }
+          );
+        }
+    );
+  }
+
+  void submitAccountDeletionRequest(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: const Color(0xff121623),
+            title: Text(
+              "Account deletion",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                  color: Colors.white
+              ),
+            ),
+            content: Container(
+              margin: const EdgeInsets.fromLTRB(5, 15, 5, 5),
+              child: Text(
+                "Your account deletion request has been submitted. You will receive a confirmation email shortly. To complete the deletion process, please follow the instructions in the email.",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 13,
+                  color: Colors.white
+                ),
+              ),
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              Container(
+                height: 38,
+                width: 110,
+                margin: const EdgeInsets.fromLTRB(22, 20, 22, 15),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    SharedPreferences.getInstance().then((value) {
+                      value.setBool("auth", false);
+                      value.remove("token");
+                    });
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      side: const BorderSide(width: 1.5, color: Color(0xffD2DAFF))
+                  ),
+                  child: Text(
+                      "Cancel",
+                      style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                          color: const Color(0xffD2DAFF)
+                      )
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
     );
   }
 

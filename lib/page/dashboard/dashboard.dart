@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,8 @@ import 'package:sis_progress/widgets/dashboard/pie_chart.dart';
 import 'package:sis_progress/widgets/dashboard/pie_chart_with_progress.dart';
 import 'package:sis_progress/widgets/tile.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+final getGreeting = StateProvider((re) => "Hello");
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});

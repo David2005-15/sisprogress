@@ -456,7 +456,8 @@ class _CalendarPage extends State<CalendarPage> {
                   style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
                       fontSize: 20,
-                      color: Colors.white),
+                      color: Colors.white
+                  ),
                 ),
               ),
               Column(

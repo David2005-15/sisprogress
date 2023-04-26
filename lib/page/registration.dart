@@ -196,6 +196,7 @@ class _Registration extends State<Registration> {
                           ),
                         )),
                     InputBox(
+                      disableSpace: true,
                       controller: widget.fullName,
                       context: context,
                       isPassword: false,
@@ -226,7 +227,6 @@ class _Registration extends State<Registration> {
                                 fontWeight: FontWeight.w400,
                                 fontSize: 10,
                                 color: const Color(0xffE31F1F)),
-                            // hintText: widget.hintText,
                             labelStyle: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 15,
