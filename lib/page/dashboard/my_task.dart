@@ -110,7 +110,7 @@ class _MyTask extends State<MyTask> {
                   List<List<dynamic>> swap = [];
                   List<String> temp = [];
                   List<bool> temp2 = [];
-                  List<int> temp3 = [];
+                  List<double> temp3 = [];
 
                   e["SubTasks"].forEach((p0) {
                     swap.add([
@@ -123,7 +123,7 @@ class _MyTask extends State<MyTask> {
                       temp2.add(true);
                     }
                     temp.add("${p0["points"]} Points");
-                    temp3.add(p0["points"]);
+                    temp3.add(double.parse(p0["points"].toString()));
                   });
 
                   String substringValue = "${temp2.length}/${swap.length}";

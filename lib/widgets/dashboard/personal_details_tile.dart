@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -385,49 +386,117 @@ class PersonalDetails extends StatelessWidget {
                 ): Container()
                   ],
                 ),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.fromLTRB(25, 25, 15, 0),
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(width: 1.5, color: Color(0xffBFBFBF))
-                    )
-                  ),
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () {
-                      deleteAccount(context, true);
-                    },
-                    child: Text(
-                      "Delete My account",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        decoration: TextDecoration.underline,
-                        color: Colors.red
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(25, 25, 2, 0),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(width: 1.5, color: Color(0xffBFBFBF))
+                        )
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: TextButton(
+                        onPressed: () {
+                          deleteAccount(context, true);
+                        },
+                        child: Text(
+                          "Delete My account",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            decoration: TextDecoration.underline,
+                            color: Colors.red
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xff3A3D4C)
+                      ),
+                      width: 18,
+                      height: 18,
+                      alignment: Alignment.center,
+                      child: Tooltip(
+                          preferBelow: false,
+                          message: "Deleting your account will result in the immediate removal of all your associated data, eliminating any chance of recovery in the future.",
+                          textStyle: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 9,
+                              color: Colors.white
+                          ),
+                          triggerMode: TooltipTriggerMode.tap,
+                          decoration: BoxDecoration(
+                              color: const Color(0xff3A3D4C),
+                              borderRadius: BorderRadius.circular(2)
+                          ),
+                          showDuration: const Duration(seconds: 10),
+                          margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                          child: const Icon(
+                            Icons.question_mark_rounded,
+                            color: Colors.white,
+                            size: 16,
+                          )
+                      ),
+                    )
+                  ],
                 ),
 
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.fromLTRB(25, 0, 15, 0),
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () {
-                      deleteAccount(context, false);
-                    },
-                    child: Text(
-                      "Deactivate My account",
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          decoration: TextDecoration.underline,
-                          color: Colors.red
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(25, 10, 2, 0),
+                      alignment: Alignment.centerLeft,
+                      child: TextButton(
+                        onPressed: () {
+                          deleteAccount(context, false);
+                        },
+                        child: Text(
+                          "Deactivate My account",
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15,
+                              decoration: TextDecoration.underline,
+                              color: Colors.red
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+
+                    Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xff3A3D4C)
+                      ),
+                      width: 18,
+                      height: 18,
+                      child: Tooltip(
+                          preferBelow: false,
+                          message: "Deactivating your account will put it on hold for a month before permanent deletion. Reactivate by logging in within this period to retain data. Note that your task time will still progress before deletion occurs.",
+                          textStyle: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 9,
+                              color: Colors.white
+                          ),
+                          triggerMode: TooltipTriggerMode.tap,
+                          decoration: BoxDecoration(
+                              color: const Color(0xff3A3D4C),
+                              borderRadius: BorderRadius.circular(2)
+                          ),
+                          showDuration: const Duration(seconds: 10),
+                          margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                          child: const Icon(
+                            Icons.question_mark_rounded,
+                            color: Colors.white,
+                            size: 16,
+                          )
+                      ),
+                    )
+                  ],
                 )
               ],
             ),
@@ -608,7 +677,7 @@ class PersonalDetails extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
-                      "${isDelete ? "Deleting": "Deactivating"} your account will result in the immediate removal of all your data, with no option for recovery. Please enter your password to initiate the ${isDelete ? "deletion": "deactivation"} process.",
+                      "${isDelete ? "Deleting": "Deactivating"} your account will result in the immediate removal of all your data, with no option for recovery. Please enter your password to initiate the ${isDelete ? "deletion": "deactivation"} process.\nYou will receive a confirmation email shortly.",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.montserrat(
                           fontWeight: FontWeight.w400,
