@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
+import 'package:sis_progress/page/before_dashboard.dart';
 import 'package:sis_progress/page/forgot_password.dart';
+import 'package:sis_progress/page/grade_befire_dashboard.dart';
 import 'package:sis_progress/page/home.dart';
 import 'package:sis_progress/page/registration.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
 import 'package:sis_progress/widgets/drawers/app_bar.dart';
 import 'package:sis_progress/widgets/input_box.dart';
 import 'dashboard/scaffold_keeper.dart';
+import 'new_reg.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -45,8 +48,21 @@ class _LoginPage extends State<LoginPage> {
     return emailRegex.hasMatch(email);
   }
 
+  bool show = false;
+
+  void checkShow() async {
+    var prefs = await SharedPreferences.getInstance();
+
+    var tempShow = prefs.getBool("show");
+
+    setState(() {
+      show = tempShow!;
+    });
+  }
+
   @override
   void initState() {
+    checkShow();
     super.initState();
   }
 
@@ -107,13 +123,26 @@ class _LoginPage extends State<LoginPage> {
                         showEmailValidation = false;
                       });
                     }
-    
+
                     try {
                       var value = await httpClient.loginUser(widget.email.text, widget.password.text);
+                      var user = await httpClient.getUserData();
+                      
+                      if(user["legacy"] == null) {
+                        if(user["grade"] == 9) {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => GradeDashboard()));
+                          return;
+                        } else {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => BeforeDashboard()));
+                          return;
+                        }
+                      }
+                      
                       if(value["success"]) {
                         SharedPreferences.getInstance().then((value) {
                           value.setBool("auth", true);
                         });
+
                         if(!mounted) return;
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const ScaffoldHome()));
                       }
@@ -146,7 +175,7 @@ class _LoginPage extends State<LoginPage> {
                                 
                         TextButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => NewReg()));
                           }, 
                           child: Text(
                             "Registration",

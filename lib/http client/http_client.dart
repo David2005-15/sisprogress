@@ -32,12 +32,10 @@ class Client {
       "Authorization": "Bearer ${prefs.getString("token")}"
     };
 
-    var body = {
-      "reasone": reason,
-      "type": isDelete ? "Delete": "Deactivate"
-    };
+    var body = {"reasone": reason, "type": isDelete ? "Delete" : "Deactivate"};
 
-    await dio.post("https://sisprogress.online/user/deletionReasone", data: body);
+    await dio.post("https://sisprogress.online/user/deletionReasone",
+        data: body);
   }
 
   Future<dynamic> deactivateAccount(String password) async {
@@ -49,13 +47,12 @@ class Client {
 
     var body = {"password": password};
 
-    var response = await dio
-        .patch("https://sisprogress.online/user/deactivate", data: body,
-        options: Options(
-          validateStatus: (status) {
-            return status! < 500;
-          },
-        ));
+    var response = await dio.patch("https://sisprogress.online/user/deactivate",
+        data: body, options: Options(
+      validateStatus: (status) {
+        return status! < 500;
+      },
+    ));
 
     return response.data;
   }
@@ -136,10 +133,43 @@ class Client {
     dio.delete("https://sisprogress.online/addEmail/delete");
   }
 
+  Future newRegister(
+      String fullName,
+      String password,
+      String phone,
+      String email,
+      String age,
+      String country,
+      int grade,
+      String university,
+      String academic1,
+      String? academic2,
+      String? academic3,
+      String? academic4,
+      String recentSchool) async {
+    var body = {
+      "fullName": fullName,
+      "password": password,
+      "email": email,
+      "phone": phone,
+      "age": age,
+      "country": country,
+      "grade": grade,
+      "university": university,
+      "academicProgramFirst": academic1,
+      "academicProgramSecond": academic2,
+      "academicProgramThird": academic3,
+      'academicProgramFourth': academic4,
+      "recentSchool": recentSchool
+    };
+
+    await dio.post("https://sisprogress.online/newRegister/", data: body);
+  }
+
   Future sendVerificationLink(String email) async {
     var body = {"email": email};
 
-    await dio.post("https://sisprogress.online/register/sendMail", data: body);
+    await dio.post("https://sisprogress.online/sendMail", data: body);
   }
 
   Future<dynamic> getAllActivities() async {
@@ -382,6 +412,54 @@ class Client {
     return calendarTasks.data["myTasks"];
   }
 
+  Future<Map<String, dynamic>> updateUserInfo(
+      {required String term,
+      required String planType,
+      required bool aid,
+      required bool legacy,
+      required String area,
+      required bool applying,
+      required String testSubmit,
+      required bool achievements,
+      required bool admission,
+      required List<String> activityName}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {
+      "Authorization": "Bearer ${prefs.getString("token")}"
+    };
+
+    // body{
+    //   termOption: STRING,
+    // planType: STRING,
+    // aid: BOOLEAN,
+    // legacy: BOOLEAN,
+    // area: STRING,
+    // applyingFrom: BOOLEAN,
+    // testSubmit: STRING,
+    // achievements: BOOLEAN,
+    // admission: BOOLEAN,
+    // activityName: Array,
+    // }
+
+    var body = {
+      "termOption": term,
+      "planType": planType,
+      "aid": aid,
+      "legacy": legacy,
+      "area": area,
+      "applyingFrom": applying,
+      "testSubmit": testSubmit,
+      "achievements": achievements,
+      "admission": admission,
+      "activityName": activityName
+    };
+
+    var response = await dio.patch("https://sisprogress.online/newRegister/", data: body);
+
+    return response.data;
+  }
+
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -395,6 +473,17 @@ class Client {
     return token.data;
   }
 
+  Future changeActivity(List<String> activities) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dio.options.headers = {
+      "Authorization": "Bearer ${prefs.getString("token")}"
+    };
+
+    dio.patch("https://sisprogress.online/settings/activities",
+        data: {"newActivityName": activities});
+  }
+
   Future<dynamic> getUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -402,12 +491,12 @@ class Client {
 
     var userData = await dio.post("https://sisprogress.online/user/isLogined",
         data: isLoggedData, options: Options(
-          validateStatus: (status) {
-            return status! < 500;
-          },
-        ));
+      validateStatus: (status) {
+        return status! < 500;
+      },
+    ));
 
-    if(userData.statusCode == 200) {
+    if (userData.statusCode == 200) {
       prefs.setString("user id", userData.data["id"].toString());
       prefs.setString("university", userData.data["university"].toString());
     }
@@ -523,7 +612,7 @@ class Client {
       "report": false,
       "hadtests": false,
       "workExperience": data.essayWorkExp,
-      "addinfo``  ": true,
+      "addinfo": true,
       "moreInfo": data.details,
       "academicProgramFirst": data.firstAcademic,
       "academicProgramSecond": data.secondAcademic,
@@ -539,7 +628,11 @@ class Client {
 
   Future<dynamic> checkIfEmailExists(String mail) async {
     var response = await dio.get("https://sisprogress.online/addEmail/isFree",
-        queryParameters: {"email": mail});
+        queryParameters: {"email": mail}, options: Options(
+      validateStatus: (status) {
+        return status! < 500;
+      },
+    ));
 
     return response.data;
   }

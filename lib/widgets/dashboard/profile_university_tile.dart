@@ -7,6 +7,8 @@ import 'package:sis_progress/data%20class/registration_data_class.dart';
 import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/http%20client/http_client.dart';
 import 'package:sis_progress/widgets/custom_button.dart';
+import 'package:sis_progress/widgets/drawers/acativity_to_map.dart';
+import 'package:sis_progress/widgets/drop_down_field.dart';
 // import 'package:sis_progress/widgets/input_box.dart';
 
 typedef University = List<String>;
@@ -30,6 +32,13 @@ class UniversityTile extends StatefulWidget {
   final ThirdAcademic thirdAcademic;
   final ThirdAcademic fourthAcademic;
 
+  // List<String> academics = [];
+  // var columbiaFaculty;
+  // var pensylvaniaFaculty;
+  // var pensylvaniaSecond;
+  // var pensylvaniaThird;
+  // var pensylvaniaFourth;
+
   const UniversityTile(
       {required this.points,
       required this.university,
@@ -51,13 +60,6 @@ class UniversityTile extends StatefulWidget {
 }
 
 class _UniversityTile extends State<UniversityTile> {
-  late TextEditingController _controller1 = TextEditingController(text: widget.selectedUniversity);
-  late TextEditingController _controller3 = TextEditingController();
-  late TextEditingController _controller4 = TextEditingController();
-  late TextEditingController _controller5 = TextEditingController();
-  late TextEditingController _controller6 = TextEditingController();
-  late TextEditingController _controller7 = TextEditingController();
-
   late TextEditingController dreamPointCont = TextEditingController(
       text:
           '${widget.points[widget.university.indexOf(widget.selectedUniversity)][0]}');
@@ -73,6 +75,15 @@ class _UniversityTile extends State<UniversityTile> {
   var uniDataClass = RegistrationDataClass();
   dynamic questions = [];
 
+  List<String> academics = [];
+  var columbiaFaculty;
+  var pensylvaniaFaculty;
+  var pensylvaniaSecond;
+  var pensylvaniaThird;
+  var pensylvaniaFourth;
+  var university;
+  var showAcademic = true;
+
   @override
   void initState() {
 
@@ -82,87 +93,117 @@ class _UniversityTile extends State<UniversityTile> {
   int value = 0;
 
   bool isChangeButtonDisabled() {
-    if(_controller1.text == "Columbia University") {
-      if(_controller4.text == "") {
-        return true;
+    if(widget.selectedUniversity == university) {
+      if(widget.selectedUniversity == "Columbia University") {
+        if(widget.secondAcademic == getValueAt(academics, 0) && widget.thirdAcademic == getValueAt(academics, 1) && columbiaFaculty == widget.firstAcademic) {
+          return true;
+        } else {
+          return false;
+        }
       }
 
-      if(_controller5.text == "") {
-        return true;
-      }
+      if(widget.selectedUniversity != "Columbia University" && widget.selectedUniversity != "University of Pennsylvania") {
+        if(widget.firstAcademic == getValueAt(academics, 0)) return true;
+        if(widget.secondAcademic == getValueAt(academics, 1)) return true;
+        if(widget.thirdAcademic == getValueAt(academics, 0)) return true;
 
-      return false;
-    }
-    else if(_controller1.text == "University of Pennsylvania") {
-      if(_controller5.text == "") {
-        return true;
-      }
-
-      if(_controller3.text == "" && _controller5.text != "School of Nursing"){
-        return true;
-      } else {
         return false;
+
       }
     }
-    else {
-      return (_controller1.text == widget.selectedUniversity)
-          && (_controller4.text == widget.firstAcademic)
-          && (_controller3.text == widget.secondAcademic || _controller3.text.isEmpty)
-          && (_controller5.text == widget.thirdAcademic || _controller5.text.isEmpty);
-    }
+
+    return false;
   }
+
+  bool disabled = true;
 
   @override
   Widget build(BuildContext context) {
-    if (widget.selectedUniversity == "Columbia University") {
-      _controller1.text = widget.selectedUniversity;
-      if (widget.firstAcademic != "null") {
-        _controller4.text = widget.firstAcademic!;
-      }
-      if (widget.secondAcademic != "null") {
-        _controller5.text = widget.secondAcademic!;
-      }
-      if (widget.thirdAcademic != "null") {
-        _controller6.text = widget.thirdAcademic!;
-      }
-      if(widget.fourthAcademic != "null") {
-        _controller7.text = widget.fourthAcademic!;
-      }
-    } else if (widget.selectedUniversity == "University of Pennsylvania") {
-      _controller1.text = widget.selectedUniversity;
-      if (widget.firstAcademic != "null") {
-        _controller5.text = widget.firstAcademic!;
-      }
-      if (widget.secondAcademic != "null") {
-        _controller3.text = widget.secondAcademic!;
-      }
-      if (widget.thirdAcademic != "null") {
-        _controller4.text = widget.thirdAcademic!;
-      }
-    } else {
-      _controller1.text = widget.selectedUniversity;
+    disabled = isChangeButtonDisabled();
+    university = widget.selectedUniversity;
 
-      if (widget.firstAcademic != "null") {
-        _controller4.text = widget.firstAcademic!;
-      } else {
-        _controller4.text = "";
+    if(widget.selectedUniversity == "Columbia University") {
+      columbiaFaculty = widget.firstAcademic;
+
+      if(widget.secondAcademic != "null") {
+        academics.add(widget.secondAcademic!);
       }
-      if (widget.secondAcademic != "null") {
-        _controller3.text = widget.secondAcademic!;
-      } else {
-        _controller3.text = "";
+
+      if(widget.thirdAcademic != "null") {
+        academics.add(widget.thirdAcademic!);
       }
-      if (widget.thirdAcademic != "null") {
-        _controller5.text = widget.thirdAcademic!;
-      } else {
-        _controller5.text = "";
+
+      if(widget.fourthAcademic != "null") {
+        academics.add(widget.fourthAcademic!);
+      }
+    } else if(widget.selectedUniversity == "University of Pennsylvania") {
+      pensylvaniaFaculty = widget.firstAcademic;
+      pensylvaniaSecond = widget.secondAcademic;
+      pensylvaniaThird = widget.thirdAcademic;
+      pensylvaniaFourth = widget.fourthAcademic;
+    } else {
+      if(widget.firstAcademic != "null") {
+        academics.add(widget.firstAcademic!);
+      }
+
+      if(widget.secondAcademic != "null") {
+        academics.add(widget.secondAcademic!);
+      }
+
+      if(widget.thirdAcademic != "null") {
+        academics.add(widget.thirdAcademic!);
       }
     }
-
-    questions =
-        uniDataClass.getQuestionsAndAnswers(widget.selectedUniversity);
+    // if (widget.selectedUniversity == "Columbia University") {
+    //   _controller1.text = widget.selectedUniversity;
+    //   if (widget.firstAcademic != "null") {
+    //     _controller4.text = widget.firstAcademic!;
+    //   }
+    //   if (widget.secondAcademic != "null") {
+    //     _controller5.text = widget.secondAcademic!;
+    //   }
+    //   if (widget.thirdAcademic != "null") {
+    //     _controller6.text = widget.thirdAcademic!;
+    //   }
+    //   if(widget.fourthAcademic != "null") {
+    //     _controller7.text = widget.fourthAcademic!;
+    //   }
+    // } else if (widget.selectedUniversity == "University of Pennsylvania") {
+    //   _controller1.text = widget.selectedUniversity;
+    //   if (widget.firstAcademic != "null") {
+    //     _controller5.text = widget.firstAcademic!;
+    //   }
+    //   if (widget.secondAcademic != "null") {
+    //     _controller3.text = widget.secondAcademic!;
+    //   }
+    //   if (widget.thirdAcademic != "null") {
+    //     _controller4.text = widget.thirdAcademic!;
+    //   }
+    // } else {
+    //   _controller1.text = widget.selectedUniversity;
+    //
+    //   if (widget.firstAcademic != "null") {
+    //     _controller4.text = widget.firstAcademic!;
+    //   } else {
+    //     _controller4.text = "";
+    //   }
+    //   if (widget.secondAcademic != "null") {
+    //     _controller3.text = widget.secondAcademic!;
+    //   } else {
+    //     _controller3.text = "";
+    //   }
+    //   if (widget.thirdAcademic != "null") {
+    //     _controller5.text = widget.thirdAcademic!;
+    //   } else {
+    //     _controller5.text = "";
+    //   }
+    // }
+    //
+    // questions =
+    //     uniDataClass.getQuestionsAndAnswers(widget.selectedUniversity);
 
     return StatefulBuilder(builder: (context, state) {
+      disabled = isChangeButtonDisabled();
       return InkWell(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
@@ -196,7 +237,7 @@ class _UniversityTile extends State<UniversityTile> {
                       Container(
                         margin: const EdgeInsets.fromLTRB(20, 13, 0, 0),
                         child: Text(
-                          "University choice",
+                          "Academic profile",
                           style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
@@ -302,38 +343,470 @@ class _UniversityTile extends State<UniversityTile> {
                     ),
                   ),
 
-                  widget.mode ? buildMode(_controller1, uniDataClass.getAllUniversities(),
-                      "University", null, "Hello", (val) {
-                    state(() {
-                      questions = uniDataClass.getQuestionsAndAnswers(val);
-                      _controller3.text = "";
-                      _controller5.text = "";
-                      _controller4.text = "";
-                    });
-                  }): Container(),
+                  // widget.mode ? buildMode(_controller1, uniDataClass.getAllUniversities(),
+                  //     "University", null, "Hello", (val) {
+                  //   state(() {
+                  //     questions = uniDataClass.getQuestionsAndAnswers(val);
+                  //     _controller3.text = "";
+                  //     _controller5.text = "";
+                  //     _controller4.text = "";
+                  //   });
+                  // }): Container(),
+                  //
+                  // widget.mode ? questions.isNotEmpty
+                  //     ? Column(
+                  //         children: [
+                  //           _controller1.text == "University of Pennsylvania" ? buildQuestion(uniDataClass.getPennsylvaniaUniversityQuestion(), true) : buildQuestion(questions[0][0], true),
+                  //           _controller1.text == "University of Pennsylvania" ? buildMode(_controller5, uniDataClass.getPennsylvaniaUniversityFaculties(), "Academic", false, "Hello", (p0) {state(() {_controller3.text = "";}); debugPrint(p0);}) : buildMode(_controller4, questions[1][0].keys.toList(), "Academic", false, "Hello", (p0) {state(() { _controller3.text = ""; _controller6.text= "";});}),
+                  //           _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildQuestion(questions[0][1], false),
+                  //           _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildMode(_controller3, uniDataClass.removeDuplicates(questions[1][1].keys.toList(), [_controller4.text]), "Academic", false, "Hello", (p0) {state(() {});}),
+                  //           _controller4.text != "" && _controller1.text == "Columbia University" ? buildQuestion("First Intended Area of Study", true): Container(),
+                  //           _controller4.text != "" && _controller1.text == "Columbia University" ? buildMode(_controller5, uniDataClass.getColumbiaValues(_controller4.text), "Academic", false, "Hello", (p0) {state(() {});}): Container(),
+                  //           _controller4.text != "" && _controller1.text == "Columbia University" ? buildQuestion("Second Intended Area of Study", false): Container(),
+                  //           _controller4.text != "" && _controller1.text == "Columbia University" ? buildMode(_controller6, uniDataClass.removeDuplicates(uniDataClass.getColumbiaValues(_controller4.text), [_controller5.text]), "Academic", false, "Hello", (p0) {}): Container(),
+                  //           _controller4.text != "" && _controller1.text == "Columbia University" ? buildQuestion("Third Intended Area of Study", false): Container(),
+                  //           _controller4.text != "" && _controller1.text == "Columbia University" ? buildMode(_controller7, uniDataClass.removeDuplicates(uniDataClass.getColumbiaValues(_controller4.text), [_controller5.text, _controller6.text]), "Academic", false, "Hello", (p0) {}): Container(),
+                  //           _controller1.text == "Johns Hopkins University" || _controller1.text == "Princeton University" || _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildQuestion(questions[0][2], false),
+                  //           _controller1.text == "Johns Hopkins University" || _controller1.text == "Princeton University" || _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildMode(_controller5, uniDataClass.removeDuplicates(questions[1][2].keys.toList(), [_controller4.text, _controller3.text]), "Academic", false, "Hello", (p0) {state((){});}),
+                  //           _controller1.text == "University of Pennsylvania" && _controller5.text != "" ? buildQuestion("Primary Major of Interest", false): Container(),
+                  //           _controller5.text != "" && uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller5.text) != null? buildMode(_controller3, uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller5.text), "Academic", null, "Hello", (p0) {state(() {_controller4.text = "";});}): Container(),
+                  //           _controller3.text != "" && uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller3.text) != null? buildQuestion("Secondary School Choice (if not selected for primary program choice)", false): Container(),
+                  //           _controller3.text != "" && uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller3.text) != null? buildMode(_controller4, uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller3.text), "Academic", null, "Hello", (p0) {}): Container()
+                  //         ],
+                  //       )
+                  //     : Container(): Container(),
 
-                  widget.mode ? questions.isNotEmpty
-                      ? Column(
-                          children: [
-                            _controller1.text == "University of Pennsylvania" ? buildQuestion(uniDataClass.getPennsylvaniaUniversityQuestion(), true) : buildQuestion(questions[0][0], true),
-                            _controller1.text == "University of Pennsylvania" ? buildMode(_controller5, uniDataClass.getPennsylvaniaUniversityFaculties(), "Academic", false, "Hello", (p0) {state(() {_controller3.text = "";}); debugPrint(p0);}) : buildMode(_controller4, questions[1][0].keys.toList(), "Academic", false, "Hello", (p0) {state(() { _controller3.text = ""; _controller6.text= "";});}),
-                            _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildQuestion(questions[0][1], false),
-                            _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildMode(_controller3, uniDataClass.removeDuplicates(questions[1][1].keys.toList(), [_controller4.text]), "Academic", false, "Hello", (p0) {state(() {});}),
-                            _controller4.text != "" && _controller1.text == "Columbia University" ? buildQuestion("First Intended Area of Study", true): Container(),
-                            _controller4.text != "" && _controller1.text == "Columbia University" ? buildMode(_controller5, uniDataClass.getColumbiaValues(_controller4.text), "Academic", false, "Hello", (p0) {state(() {});}): Container(),
-                            _controller4.text != "" && _controller1.text == "Columbia University" ? buildQuestion("Second Intended Area of Study", false): Container(),
-                            _controller4.text != "" && _controller1.text == "Columbia University" ? buildMode(_controller6, uniDataClass.removeDuplicates(uniDataClass.getColumbiaValues(_controller4.text), [_controller5.text]), "Academic", false, "Hello", (p0) {}): Container(),
-                            _controller4.text != "" && _controller1.text == "Columbia University" ? buildQuestion("Third Intended Area of Study", false): Container(),
-                            _controller4.text != "" && _controller1.text == "Columbia University" ? buildMode(_controller7, uniDataClass.removeDuplicates(uniDataClass.getColumbiaValues(_controller4.text), [_controller5.text, _controller6.text]), "Academic", false, "Hello", (p0) {}): Container(),
-                            _controller1.text == "Johns Hopkins University" || _controller1.text == "Princeton University" || _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildQuestion(questions[0][2], false),
-                            _controller1.text == "Johns Hopkins University" || _controller1.text == "Princeton University" || _controller1.text == "Columbia University" || _controller1.text == "University of Pennsylvania" ? Container() : buildMode(_controller5, uniDataClass.removeDuplicates(questions[1][2].keys.toList(), [_controller4.text, _controller3.text]), "Academic", false, "Hello", (p0) {state((){});}),
-                            _controller1.text == "University of Pennsylvania" && _controller5.text != "" ? buildQuestion("Primary Major of Interest", false): Container(),
-                            _controller5.text != "" && uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller5.text) != null? buildMode(_controller3, uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller5.text), "Academic", null, "Hello", (p0) {state(() {_controller4.text = "";});}): Container(),
-                            _controller3.text != "" && uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller3.text) != null? buildQuestion("Secondary School Choice (if not selected for primary program choice)", false): Container(),
-                            _controller3.text != "" && uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller3.text) != null? buildMode(_controller4, uniDataClass.getPennsylvaniaUniversitySubfaculties(_controller3.text), "Academic", null, "Hello", (p0) {}): Container()
-                          ],
-                        )
-                      : Container(): Container(),
+                  if (!widget.mode) Container() else Form(
+                      child: Column(
+                        children: <Widget> [
+                          DropDownField(
+                              value: university,
+                              validator: (value) {
+                                if (value != null) {
+                                  return null;
+                                }
+
+                                return "Please choose your dream university";
+                              },
+                              onChange: (value) {
+                                state(() {
+                                  university = value;
+                                  disabled = isChangeButtonDisabled();
+
+                                  showAcademic = true;
+                                  academics.clear();
+                                  pensylvaniaFaculty = null;
+                                  pensylvaniaSecond = null;
+                                  pensylvaniaThird = null;
+                                  pensylvaniaFourth = null;
+                                  columbiaFaculty = null;
+                                  // print("******" + RegistrationDataClass().universities["university"].keys);
+                                });
+                              },
+                              context: context,
+                              initialValue: "Pick your dream university",
+                              items: Universities().universities),
+
+                          university.toString().contains("Columbia") ? Column(
+                            children: [
+                              DropDownField(
+                                  value: columbiaFaculty,
+                                  validator: (val) {
+                                    if(val == null) {
+                                      return "Please choose college";
+                                    }
+
+                                    return null;
+                                  },
+                                  onChange: (val) {
+                                    state(() {
+                                      columbiaFaculty = val;
+                                    });
+                                  },
+                                  context: context,
+                                  initialValue: "Academic Program",
+                                  items: const [
+                                    "Columbia College",
+                                    "Columbia Engineering"
+                                  ]),
+                              Visibility(
+                                visible: columbiaFaculty
+                                    .toString()
+                                    .isNotNullOrEmpty,
+                                child: Container(
+                                    margin: const EdgeInsets.fromLTRB(
+                                        23, 0, 23, 5),
+                                    child: LayoutBuilder(builder:
+                                        (BuildContext context,
+                                        BoxConstraints constraints) {
+                                      return TextFormField(
+                                        readOnly: true,
+                                        validator: (val) {
+                                          if(academics.isEmpty) {
+                                            return "Please choose one academic";
+                                          }
+
+                                          return null;
+                                        },
+                                        style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 15,
+                                            fontStyle: FontStyle.normal,
+                                            color: Colors.white),
+                                        decoration: InputDecoration(
+                                          alignLabelWithHint: true,
+                                          labelText: academics.isEmpty ? "Academic program": academics.join(", "),
+                                          labelStyle: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 15,
+                                              fontStyle: FontStyle.normal,
+                                              color: const Color(0xffD2DAFF)),
+                                          hintStyle: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 15,
+                                              fontStyle: FontStyle.normal,
+                                              color: const Color(0xffD2DAFF)),
+                                          enabledBorder:
+                                          const UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color:
+                                                  Color(0xffD2DAFF),
+                                                  width: 1)),
+                                          border: const UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color(0xffD2DAFF),
+                                                  width: 1)),
+                                          focusColor: const Color(0xffD2DAFF),
+                                          focusedBorder:
+                                          const UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color:
+                                                  Color(0xff36519D))),
+                                          suffixIcon: PopupMenuButton<String>(
+                                            color: const Color(0xffD2DAFF),
+                                            constraints:
+                                            BoxConstraints.expand(
+                                                height: 150,
+                                                width:
+                                                constraints.maxWidth),
+                                            icon: const Icon(
+                                              Icons.arrow_drop_down,
+                                              color: Colors.grey,
+                                            ),
+                                            onSelected: (String value) {
+                                              // controller.text = value;
+                                            },
+                                            itemBuilder:
+                                                (BuildContext context) {
+                                              return RegistrationDataClass()
+                                                  .univer[university]
+                                              [columbiaFaculty]
+                                                  .keys
+                                                  .map<PopupMenuItem<String>>(
+                                                      (String value) {
+                                                    return PopupMenuItem(
+                                                        value: value,
+                                                        child: StatefulBuilder(
+                                                          builder:
+                                                              (context, state) {
+                                                            return Row(
+                                                              children: [
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    state(() {
+                                                                      // academics.clear();
+
+                                                                      if (academics
+                                                                          .contains(
+                                                                          value)) {
+                                                                        academics
+                                                                            .remove(
+                                                                            value);
+                                                                      } else if (academics
+                                                                          .length <
+                                                                          RegistrationDataClass().univer[university]
+                                                                          [
+                                                                          "length"]) {
+                                                                        academics.add(
+                                                                            value);
+                                                                      }
+
+                                                                      // print(academics);
+                                                                    });
+                                                                  },
+                                                                  child:
+                                                                  Container(
+                                                                    width: 24,
+                                                                    height: 24,
+                                                                    alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            5),
+                                                                        border: Border.all(
+                                                                            width:
+                                                                            1.5,
+                                                                            color:
+                                                                            const Color(0xff355CCA))),
+                                                                    child: academics.contains(
+                                                                        value)
+                                                                        ? const Icon(
+                                                                        Icons
+                                                                            .check,
+                                                                        size:
+                                                                        18,
+                                                                        color:
+                                                                        Color(0xff355CCA))
+                                                                        : null,
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                    margin: const EdgeInsets
+                                                                        .only(
+                                                                        left: 10),
+                                                                    child: Text(
+                                                                        value))
+                                                              ],
+                                                            );
+                                                          },
+                                                        ));
+                                                  }).toList();
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    })),
+                              ),
+                            ],
+                          ) : Container(),
+
+                          showAcademic &&
+                              !university.toString().contains("Columbia") && !university.toString().contains("Pennsylvania") ? Container(
+                              margin: const EdgeInsets.fromLTRB(23, 0, 23, 5),
+                              child: LayoutBuilder(builder:
+                                  (BuildContext context,
+                                  BoxConstraints constraints) {
+                                return TextFormField(
+                                  readOnly: true,
+                                  validator: (val) {
+                                    if(academics.isEmpty){
+                                      return "Please select one academic";
+                                    }
+
+                                    return null;
+                                  },
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15,
+                                      fontStyle: FontStyle.normal,
+                                      color: Colors.white),
+                                  decoration: InputDecoration(
+                                    alignLabelWithHint: true,
+                                    labelText: academics.isEmpty ? "Academic program": academics.join(", "),
+                                    labelStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        fontStyle: FontStyle.normal,
+                                        color: const Color(0xffD2DAFF)),
+                                    hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        fontStyle: FontStyle.normal,
+                                        color: const Color(0xffD2DAFF)),
+                                    enabledBorder: const UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xffD2DAFF),
+                                            width: 1)),
+                                    border: const UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xffD2DAFF),
+                                            width: 1)),
+                                    focusColor: const Color(0xffD2DAFF),
+                                    focusedBorder: const UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xff36519D))),
+                                    suffixIcon: PopupMenuButton<String>(
+                                      color: const Color(0xffD2DAFF),
+                                      constraints: BoxConstraints.expand(
+                                          height: 150,
+                                          width: constraints.maxWidth),
+                                      icon: const Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Colors.grey,
+                                      ),
+                                      onSelected: (String value) {
+                                        // controller.text = value;
+                                      },
+                                      itemBuilder: (BuildContext context) {
+                                        return RegistrationDataClass()
+                                            .univer[university]["academics"]
+                                            .keys
+                                            .map<PopupMenuItem<String>>(
+                                                (String value) {
+                                              return PopupMenuItem(
+                                                  value: value,
+                                                  child: StatefulBuilder(
+                                                    builder: (context, st) {
+                                                      return Row(
+                                                        children: [
+                                                          InkWell(
+                                                            onTap: () {
+                                                              st(() {
+                                                                if (academics
+                                                                    .contains(
+                                                                    value)) {
+                                                                  academics
+                                                                      .remove(
+                                                                      value);
+                                                                } else if (academics
+                                                                    .length <
+                                                                    RegistrationDataClass()
+                                                                        .univer[
+                                                                    university]
+                                                                    [
+                                                                    "length"]) {
+                                                                  academics
+                                                                      .add(value);
+                                                                }
+                                                              });
+
+                                                              state(() {
+
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                              width: 24,
+                                                              height: 24,
+                                                              alignment: Alignment
+                                                                  .center,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      5),
+                                                                  border: Border.all(
+                                                                      width: 1.5,
+                                                                      color: const Color(
+                                                                          0xff355CCA))),
+                                                              child: academics
+                                                                  .contains(
+                                                                  value)
+                                                                  ? const Icon(
+                                                                  Icons.check,
+                                                                  size: 18,
+                                                                  color: Color(
+                                                                      0xff355CCA))
+                                                                  : null,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                              margin:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 10),
+                                                              child: Text(value))
+                                                        ],
+                                                      );
+                                                    },
+                                                  ));
+                                            }).toList();
+                                      },
+                                    ),
+                                  ),
+                                );
+                              })) : Container(),
+
+                          university.toString().contains("Pennsylvania") ? Column(
+                            children: [
+                              DropDownField(
+                                value: pensylvaniaFaculty,
+                                validator: (val) {
+                                  if(val == null) {
+                                    return "Please choose college";
+                                  }
+
+                                  return null;
+                                },
+                                onChange: (val) {
+                                  state(() {
+                                    pensylvaniaSecond = null;
+                                    pensylvaniaThird = null;
+                                    pensylvaniaFourth = null;
+                                    pensylvaniaFaculty = val;
+                                  });
+                                },
+                                context: context,
+                                initialValue: "Academic Program",
+                                items: RegistrationDataClass().univer["University of Pennsylvania"].keys.toList(),
+                              ),
+
+                              RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaFaculty] != null ? !RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaFaculty].containsKey("hasMany") && pensylvaniaFaculty != "School of Nursing" ? DropDownField(
+                                value: pensylvaniaSecond,
+                                validator: (val) {
+                                  if(val == null) {
+                                    return "Please choose academic";
+                                  }
+
+                                  return null;
+                                },
+                                onChange: (val) {
+                                  state(() {
+                                    pensylvaniaThird = null;
+                                    pensylvaniaFourth = null;
+                                    debugPrint(pensylvaniaFaculty.toString());
+                                    debugPrint(RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaFaculty]["academics"].toString());
+                                    pensylvaniaSecond = val;
+                                  });
+                                },
+                                context: context,
+                                initialValue: "Academic Program",
+                                items: RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaFaculty] != null && !RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaFaculty].containsKey("hasMany") && pensylvaniaFaculty != "School of Nursing" ? RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaFaculty]["academics"].keys.toList(): [],
+                              ) : Container(): Container(),
+
+                              RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaFaculty] != null ? RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaFaculty].containsKey("hasMany") && pensylvaniaThird != "School of Nursing" ? DropDownField(
+                                  value: pensylvaniaThird,
+                                  validator: (val) {
+                                    if(val == null) {
+                                      "Please choose academic";
+                                    }
+
+                                    return null;
+                                  },
+                                  onChange: (val) {
+                                    state(() {
+                                      pensylvaniaThird = val;
+                                    });
+                                  },
+                                  context: context,
+                                  initialValue: "Academic Program",
+                                  items: RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaFaculty] != null ? RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaFaculty]["academicLinks"].toList(): []
+                              ): Container(): Container(),
+                              //
+                              pensylvaniaThird.toString() != "null" && pensylvaniaThird != "School of Nursing" ? DropDownField(
+                                  value: pensylvaniaFourth,
+                                  validator: (val) {
+                                    if(val == null) {
+                                      return "Please choose academic";
+                                    }
+
+                                    return null;
+                                  },
+                                  onChange: (val) {
+                                    state(() {
+                                      pensylvaniaFourth = val;
+                                    });
+                                  },
+                                  context: context,
+                                  initialValue: "Academic Program",
+                                  items: pensylvaniaThird.toString() != "null" && pensylvaniaThird != "School of Nursing" ? RegistrationDataClass().univer["University of Pennsylvania"][pensylvaniaThird]["academics"].keys.toList(): []
+                              ): Container()
+                            ],
+                          ): Container(),
+                        ],
+                      )
+                  ),
 
                   !widget.mode ? Container(
                     margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
@@ -403,8 +876,16 @@ class _UniversityTile extends State<UniversityTile> {
                               margin: const EdgeInsets.fromLTRB(22, 20, 22, 10),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  _controller1 =
-                                      TextEditingController(text: widget.selectedUniversity);
+                                  // _controller1 =
+                                  //     TextEditingController(text: widget.selectedUniversity);
+                                  university == widget.selectedUniversity;
+                                  showAcademic = true;
+                                  academics.clear();
+                                  pensylvaniaFaculty = null;
+                                  pensylvaniaSecond = null;
+                                  pensylvaniaThird = null;
+                                  pensylvaniaFourth = null;
+                                  columbiaFaculty = null;
                                   widget.onSave();
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -424,30 +905,48 @@ class _UniversityTile extends State<UniversityTile> {
                             ),
                             Button(
                                 text: "Change",
-                                onPressed: isChangeButtonDisabled() ? null : () async {
+                                onPressed: () async {
                                   var body = {
-                                    "university": _controller1.text,
+                                    "university": university,
                                   };
 
-                                  if(_controller1.text == "Columbia University") {
-                                    body["academicProgramFirst"] = _controller4.text;
-                                    body["academicProgramSecond"] = _controller5.text;
-                                    body["academicProgramThird"] = _controller6.text;
-                                    body["academicProgramFourth"] = _controller7.text;
-                                  } else if(_controller1.text == "University of Pennsylvania") {
-                                    body["academicProgramFirst"] = _controller5.text;
-                                    body["academicProgramSecond"] = _controller3.text;
-                                    body["academicProgramThird"] = _controller4.text;
+                                  if(university == "Columbia University") {
+                                    body["academicProgramFirst"] = columbiaFaculty;
+                                    body["academicProgramSecond"] = getValueAt(academics, 0);
+                                    body["academicProgramThird"] = getValueAt(academics, 1);
+                                    body["academicProgramFourth"] = getValueAt(academics, 2);
+                                  } else if(university == "University of Pennsylvania") {
+                                    body["academicProgramFirst"] = pensylvaniaFaculty;
+                                    body["academicProgramSecond"] = pensylvaniaSecond;
+                                    body["academicProgramThird"] = pensylvaniaThird;
+                                    body["academicProgramFourth"] = pensylvaniaFourth;
                                   } else {
-                                    body["academicProgramFirst"] = _controller4.text;
-                                    if(_controller3.text.isNotNullOrEmpty) {
-                                      body["academicProgramSecond"] = _controller3.text;
-                                    }
-
-                                    if(_controller5.text.isNotNullOrEmpty) {
-                                      body["academicProgramThird"] = _controller5.text;
-                                    }
+                                    body["academicProgramFirst"] = getValueAt(academics, 0);
+                                    body["academicProgramSecond"] = getValueAt(academics, 1);
+                                    body["academicProgramThird"] = getValueAt(academics, 2);
                                   }
+
+
+
+                                  // if(_controller1.text == "Columbia University") {
+                                  //   body["academicProgramFirst"] = _controller4.text;
+                                  //   body["academicProgramSecond"] = _controller5.text;
+                                  //   body["academicProgramThird"] = _controller6.text;
+                                  //   body["academicProgramFourth"] = _controller7.text;
+                                  // } else if(_controller1.text == "University of Pennsylvania") {
+                                  //   body["academicProgramFirst"] = _controller5.text;
+                                  //   body["academicProgramSecond"] = _controller3.text;
+                                  //   body["academicProgramThird"] = _controller4.text;
+                                  // } else {
+                                  //   body["academicProgramFirst"] = _controller4.text;
+                                  //   if(_controller3.text.isNotNullOrEmpty) {
+                                  //     body["academicProgramSecond"] = _controller3.text;
+                                  //   }
+                                  //
+                                  //   if(_controller5.text.isNotNullOrEmpty) {
+                                  //     body["academicProgramThird"] = _controller5.text;
+                                  //   }
+                                  // }
 
                                   await httpClient
                                       .updateUniversityAndAcademic(body)

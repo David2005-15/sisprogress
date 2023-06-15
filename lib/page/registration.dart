@@ -80,13 +80,16 @@ class _Registration extends State<Registration> {
         isSmall = true;
       }
 
-      if (widget.password.text.contains(RegExp(r'[^\w\s]+')) &&
-          widget.password.text.length >= 8) {
-        cotain8charecters = const Color(0xff94B49F);
+      if (widget.password.text.contains(RegExp(r'[^\w\s]+'))) {
         containSpecial = const Color(0xff94B49F);
 
-        isCharecter = true;
         isSymbol = true;
+      }
+
+      if(widget.password.text.length >= 8) {
+        cotain8charecters = const Color(0xff94B49F);
+
+        isCharecter = true;
       }
     });
   }
@@ -196,7 +199,7 @@ class _Registration extends State<Registration> {
                           ),
                         )),
                     InputBox(
-                      disableSpace: true,
+                      disableSpace: false,
                       controller: widget.fullName,
                       context: context,
                       isPassword: false,
@@ -318,10 +321,16 @@ class _Registration extends State<Registration> {
                                       color: containSmall,
                                       fontSize: 13)),
                               TextSpan(
-                                  text: 123456.toString(),
+                                  text: 1.toString(),
                                   style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w400,
                                       color: containNumber,
+                                      fontSize: 13)),
+                              TextSpan(
+                                  text: 23456.toString(),
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
+                                      color: cotain8charecters,
                                       fontSize: 13)),
                               TextSpan(
                                   text: "*",

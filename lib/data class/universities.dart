@@ -52,7 +52,7 @@ class Universities {
     'Ayb School',    'UWC Dilijan',
     'Quantum College',
     'Shirakatsy Lyceum',
-    'PhysMath School',];
+    'PhysMath School', 'Other'];
 
   final List<String> academics = [
   "Biological Sciences",
@@ -150,7 +150,7 @@ final List<String> clubCategories = [
   "Other Club/Activity"
 ];
 
-List<String> countryList = [    'Afghanistan',
+List<String> countryList = ['Afghanistan',
     'Albania',    'Algeria',
     'Andorra',    'Angola',
     'Antigua & Deps',    'Argentina',

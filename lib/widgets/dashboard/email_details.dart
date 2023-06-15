@@ -110,7 +110,7 @@ class _Emaildetails extends State<Emaildetails> {
                       Container(
                         margin: const EdgeInsets.fromLTRB(20, 13, 0, 0),
                         child: Text(
-                          "Email Details",
+                          "Contact information",
                           style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,

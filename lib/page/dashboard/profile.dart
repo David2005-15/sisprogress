@@ -8,11 +8,13 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sis_progress/data%20class/universities.dart';
 import 'package:sis_progress/widgets/dashboard/personal_details_tile.dart';
+import 'package:sis_progress/widgets/drawers/acativity_to_map.dart';
 import 'package:sis_progress/widgets/drawers/shimmer_load.dart';
 import 'package:sis_progress/widgets/drawers/upload_image_dialog.dart';
 import 'package:sis_progress/widgets/input_box.dart';
 import '../../http client/http_client.dart';
 import '../../widgets/custom_button.dart';
+import '../../widgets/dashboard/activity_tile.dart';
 import '../../widgets/dashboard/email_details.dart';
 import '../../widgets/dashboard/profile_university_tile.dart';
 import '../login.dart';
@@ -58,6 +60,7 @@ class _Profile extends State<Profile> {
   late String targetPoints = "";
   late String safetyPoints = "";
   late String image = "http://drive.google.com/uc?export=view&id=1T4h9d1wyGy-apEyrTW_D6C1UvdLSE166";
+  var grade = 9;
 
   bool isLoading = true;
 
@@ -66,6 +69,7 @@ class _Profile extends State<Profile> {
     var value = await httpClient.getUserData();
     setState(() {
       fullName = value["fullName"];
+      grade = value["grade"];
       prefs.setString("country", value["country"]);
     });
   }
@@ -95,7 +99,7 @@ class _Profile extends State<Profile> {
   }
 
   Future updateImage() async {
-    var image = await _picker.pickImage(source: ImageSource.gallery, maxWidth: 120, maxHeight: 120);
+    var image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
 
     if (mounted) {
       setState(() {
@@ -140,6 +144,16 @@ class _Profile extends State<Profile> {
     setUsername();
   }
 
+  List<dynamic> selection = [];
+
+  void setSelections() async {
+    var temp = await httpClient.getAllActivities();
+
+    setState(() {
+      selection = temp;
+    });
+  }
+
   @override
   void initState() {
     getPoint();
@@ -147,6 +161,7 @@ class _Profile extends State<Profile> {
     setUsername();
     printValue();
     getImage();
+    setSelections();
 
     super.initState();
   }
@@ -160,11 +175,16 @@ class _Profile extends State<Profile> {
 
   late bool isImageDefault;
 
+  Map<String, int> activity = {};
+  Map<String, int> tempActivity = {};
+
   void setEmail() async {
     var value = await httpClient.getUserData();
 
     if (mounted) {
       setState(() {
+        activity = convertToMap(value["activityName"]);
+        tempActivity = Map.from(activity);
         mail = value["firstEmail"]["email"];
         phone = value["phone"].toString();
         country = value["country"].toString();
@@ -185,6 +205,8 @@ class _Profile extends State<Profile> {
       });
     }
   }
+
+  bool activityMode = false;
 
   @override
   Widget build(BuildContext context) {
@@ -333,6 +355,92 @@ class _Profile extends State<Profile> {
                       totalPoints.toString(),
                       "Dream\nmilestone"),
                 ],
+              ),
+              Visibility(
+                visible: grade == 10,
+                child: ActivityTile(
+                  selection: selection,
+                  onSubmit: () async {
+                    await httpClient.changeActivity(convertToList(tempActivity));
+
+                    setEmail();
+                    setState(() {
+                      activityMode = !activityMode;
+                    });
+                  },
+                  onSelect: (val) {
+                    int sum = 0;
+                    if(tempActivity.isNotEmpty) {
+                      sum = tempActivity.values.reduce((value, element) => value + element);
+                    }
+
+                    setState(() {
+
+                      // int sum = activities.values.reduce((value, element) => value + element);
+                      // print(sum);
+
+                      if(!tempActivity.containsKey(val) && sum < 10) {
+                        tempActivity[val] = 1;
+                      } else {
+                        tempActivity.remove(val);
+                      }
+
+                    });
+
+                  },
+                  onSubtract: (val) {
+                    setState(() {
+                      if(tempActivity.containsKey(val)) {
+                        tempActivity.update(val, (value) {
+                          if(value > 0) {
+                            value -= 1;
+                          }
+
+                          return value;
+                        });
+                      }
+                    });
+                  },
+                  onAdd: (val) {
+                    int sum = 0;
+                    if(tempActivity.isNotEmpty) {
+                      sum = tempActivity.values.reduce((value, element) => value + element);
+                    }
+
+                    setState(() {
+
+                      if(tempActivity.containsKey(val) && sum < 10) {
+                        tempActivity.update(val, (value) {
+                          if(value < 10) {
+                            value += 1;
+                          }
+
+                          return value;
+                        });
+                      }
+                    });
+                  },
+                  mode: activityMode,
+                  onClose: () {
+                    setState(() {
+                      tempActivity = Map.from(activity);
+                      activityMode = !activityMode;
+                    });
+                  },
+                  onRemove: (val) {
+                    setState(() {
+                      tempActivity.remove(val);
+                    });
+                  },
+
+                  selectedActivities: tempActivity,
+
+                  onEdit: () {
+                    setState(() {
+                      activityMode = !activityMode;
+                    });
+                  },
+                ),
               ),
               UniversityTile(
                   onEdit: changeMode,

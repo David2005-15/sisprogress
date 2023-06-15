@@ -196,6 +196,7 @@ class _CalendarPage extends State<CalendarPage> {
                     int monthIndex = parsedMonth.month;
                     chosenDate =
                         DateTime(int.parse(year), monthIndex, date.day);
+                    print(chosenDate);
                     updateEvent();
                   });
 
@@ -207,7 +208,7 @@ class _CalendarPage extends State<CalendarPage> {
                     DateFormat monthFormat = DateFormat.MMMM();
                     DateTime parsedMonth = monthFormat.parse(month);
                     int monthIndex = parsedMonth.month;
-                    chosenDate = DateTime(date.year, monthIndex, date.day);
+                    chosenDate = DateTime(date.year, monthIndex, 1);
                     updateEvent();
                   });
 
@@ -508,15 +509,16 @@ class _CalendarPage extends State<CalendarPage> {
       Client httpClient,
       DateTime date,
       VoidCallback reload) {
-    List<Widget> taskContent = [];
+
     List<bool> boolean = [];
     List<bool> cantYouSee = [];
-
 
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
+          List<Widget> taskContent = [];
+
           for (int i = 0; i < tasks.length; i++) {
             boolean.add(false);
             cantYouSee.add(tasks[i]["isFree"]);
@@ -651,6 +653,159 @@ class _CalendarPage extends State<CalendarPage> {
                       color: const Color(0xff2E2323)),
                 ),
                 actions: <Widget>[
+                  Container(
+                    height: 30,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+                    child: TextField(
+                      style: GoogleFonts.poppins(
+                          decoration: TextDecoration.none,
+                          fontSize: 11,
+                          color: Colors.white
+                      ),
+
+                      onChanged: (val) {
+                        setState(() {
+                          tasks = tasks.where((element) => element["positionName"].toString().contains(val)).toList();
+
+                          for (int i = 0; i < tasks.length; i++) {
+                            boolean.add(false);
+                            cantYouSee.add(tasks[i]["isFree"]);
+
+                            taskContent.add(
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+                                child: Theme(
+                                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                                  child: Container(
+                                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(width: 1.5, color: Color(0xffD4D4D4)),
+                                      ),
+                                    ),
+                                    child: ExpansionTile(
+                                      title: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          SizedBox(
+                                            width: 100,
+                                            child: Text(
+                                              tasks[i]["positionName"],
+                                              style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 14,
+                                                  color: const Color(0xff2E2323)),
+                                            ),
+                                          ),
+                                          StatefulBuilder(builder: ((context, state) {
+                                            return InkWell(
+                                              onTap: () {
+                                                state(() {
+                                                  if (tasks[i]["isFree"] == true) {
+                                                    boolean[i] = !boolean[i];
+                                                    setState(() {
+                                                      boolean[i]
+                                                          ? addedTasks.add(tasks[i])
+                                                          : addedTasks.remove(tasks[i]);
+                                                    });
+                                                  }
+                                                });
+                                              },
+                                              child: Container(
+                                                  width: 24,
+                                                  height: 24,
+                                                  decoration: BoxDecoration(
+                                                      color: tasks[i]["isFree"] == false
+                                                          ? Colors.transparent
+                                                          : boolean[i]
+                                                          ? const Color(0xff355CCA)
+                                                          : Colors.transparent,
+                                                      borderRadius: BorderRadius.circular(5),
+                                                      border: Border.all(
+                                                          width: 1,
+                                                          color: tasks[i]["isFree"] == false
+                                                              ? const Color(0xffAAC4FF)
+                                                              : const Color(0xffAAC4FF))),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 18,
+                                                    color: tasks[i]["isFree"] == false
+                                                        ? const Color(0xffAAC4FF)
+                                                        : boolean[i]
+                                                        ? Colors.white
+                                                        : Colors.transparent,
+                                                  )),
+                                            );
+                                          }))
+                                        ],
+                                      ),
+                                      children: List<Widget>.from(tasks[i]["SubTasks"]
+                                          .map((e) => StatefulBuilder(builder: (context, state) {
+                                        return Container(
+                                          margin: const EdgeInsets.fromLTRB(15, 5, 0, 5),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width < 370 ? 120: 200,
+                                                child: Text(
+                                                  e["name"],
+                                                  style: GoogleFonts.montserrat(
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 14,
+                                                      color: const Color(0xff646464)),
+                                                ),
+                                              ),
+                                              Container(
+                                                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      margin: const EdgeInsets.fromLTRB(
+                                                          8, 0, 5, 0),
+                                                      child: Text(
+                                                        "${e["points"]} Points",
+                                                        style: GoogleFonts.montserrat(
+                                                            fontWeight: FontWeight.w600,
+                                                            fontSize: 14,
+                                                            color: Colors.black54),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      }))
+                                          .toList()),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        });
+                      },
+
+                      decoration: InputDecoration(
+                        // focusColor: Colors.transparent,
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                              borderSide: const BorderSide(color: Colors.transparent)
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                            borderSide: const BorderSide(color: Colors.transparent)
+                          ),
+                          filled: true,
+                          hintStyle: GoogleFonts.poppins(color: Colors.white, fontSize: 11),
+                          hintText: "Search task",
+                          fillColor: const Color(0xff355CCA)),
+                    ),
+                  ),
                   Container(
                     margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                     height: 300,

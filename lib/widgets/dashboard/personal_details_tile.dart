@@ -113,7 +113,7 @@ class PersonalDetails extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.fromLTRB(20, 13, 0, 0),
                       child: Text(
-                        "Personal Details",
+                        "Profile information",
                         style: GoogleFonts.montserrat(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,

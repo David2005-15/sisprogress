@@ -227,7 +227,7 @@ class _EventTile extends State<EventTile> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: MediaQuery.of(context).size.width < 370 ? 100 :130,
+                            width: MediaQuery.of(context).size.width < 370 ? 100 : 130,
                             child: Text(
                               widget.subtasks[i][0],
                               style: GoogleFonts.poppins(
@@ -687,7 +687,7 @@ class _EventTile extends State<EventTile> {
                                 height: 36,
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    await httpClient.removeTask(widget.taskId);
+                                    // await httpClient.removeTask(widget.taskId);
                                     if (!mounted) return;
                                     Navigator.pop(context);
                                     widget.updateState();
@@ -1522,70 +1522,70 @@ class _EventTile extends State<EventTile> {
                                   fontSize: 12,
                                   color: const Color(0xffAAC4FF))),
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        SizedBox(
-                          width: 104,
-                          height: 36,
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              foregroundColor: const Color(0xff355CCA),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 104,
+                                height: 36,
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                    foregroundColor: const Color(0xff355CCA),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    side: const BorderSide(
+                                        color: Color(0xff355CCA), width: 1),
+                                  ),
+                                  onPressed: () {
+                                    widget.updateState();
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    "Cancel",
+                                    style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                        color: const Color(0xff355CCA)),
+                                  ),
+                                ),
                               ),
-                              side: const BorderSide(
-                                  color: Color(0xff355CCA), width: 1),
-                            ),
-                            onPressed: () {
-                              widget.updateState();
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              "Cancel",
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 15,
-                                  color: const Color(0xff355CCA)),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 104,
-                          height: 36,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff355CCA),
-                              shadowColor: Colors.transparent,
-                              foregroundColor: Colors.white,
-                            ),
-                            onPressed: answer.text.isNotEmpty
-                                ? () {
+                              SizedBox(
+                                width: 104,
+                                height: 36,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xff355CCA),
+                                    shadowColor: Colors.transparent,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  onPressed: answer.text.isNotEmpty
+                                      ? () {
                                     var httpClient = Client();
                                     httpClient.sendEssay(answer.text, taskId);
                                     widget.updateState();
                                     Navigator.pop(context);
                                   }
-                                : null,
-                            child: Text(
-                              "Submit",
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 15,
-                                  color: Colors.white),
-                            ),
+                                      : null,
+                                  child: Text(
+                                    "Submit",
+                                    style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         )
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             );

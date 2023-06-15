@@ -46,7 +46,7 @@ class ExploreTile extends StatelessWidget {
                     borderRadius: const BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
                     child: url != null ? Image.network(url!) : const Image(
                       image: AssetImage("assets/Books.png"),
-                      height: 95,
+                      height: 70,
                       fit: BoxFit.cover
                     ),
                   ),

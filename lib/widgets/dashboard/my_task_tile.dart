@@ -682,7 +682,7 @@ class _MyTaskTile extends State<MyTaskTile> {
                               height: 36,
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  await httpClient.removeTask(widget.taskId);
+                                  // await httpClient.removeTask(widget.taskId);
                                   if (!mounted) return;
                                   Navigator.pop(context);
                                   widget.updateState();

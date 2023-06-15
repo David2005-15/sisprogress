@@ -73,6 +73,8 @@ class _MyTask extends State<MyTask> {
 
   final GlobalKey _menuKey = GlobalKey();
 
+  var filterController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     filter(statusText);
@@ -89,6 +91,79 @@ class _MyTask extends State<MyTask> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               buildTitle(),
+              Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 20),
+                child: Stack(
+                  children: <Widget> [
+                    Align(
+                      alignment: const AlignmentDirectional(0, 0),
+                      child: Container(
+                        height: 30,
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: TextField(
+                          style: GoogleFonts.poppins(
+                            decoration: TextDecoration.none,
+                            fontSize: 11,
+                            color: Colors.white
+                          ),
+                          controller: filterController,
+                          onChanged: (val) async {
+                            await printAllTasks();
+                            setState(() {
+                              tasks = tasks.where((element) => element["positionName"].toString().contains(val)).toList();
+                            });
+                          },
+                          decoration: InputDecoration(
+                              // focusColor: Colors.transparent,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                                borderSide: const BorderSide(color: Colors.transparent)
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                              ),
+                              filled: true,
+                              hintStyle: GoogleFonts.poppins(color: Colors.white, fontSize: 11),
+                              hintText: "Search task",
+                              fillColor: const Color(0xff3A3D4C)),
+                        ),
+                      ),
+                    ),
+
+                    Align(
+                      alignment: const AlignmentDirectional(1, 0),
+                      child: Container(
+                        width: 50,
+                        height: 30,
+                        margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff121623),
+                          borderRadius: BorderRadius.circular(40)
+                        ),
+                      ),
+                    ),
+
+                    Align(
+                      alignment: const AlignmentDirectional(1, 1),
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 0, 25, 0),
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: const Color(0xff3A3D4C)
+                        ),
+                        child: const Icon(
+                          Icons.search,
+                          color: Color(0xffB1B2FF),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               FilterDropDown(
                 statuses: status,
                 status: statusText,
